@@ -60,5 +60,12 @@
     "remainingProductionTime": "Remaining Production Time",
     "modeSelection": "Mode Selection",
     "fillAllFields": "Please fill out all fields",
-    "succesfullySaved": "Succesfully saved"
+    "succesfullySaved": "Succesfully saved",
+    "errorSaving": "Error saving",
+    "entryAdded": "Entry added",
+    "editInfo": "Edit Info",
+    "machineQRCode": "Machine QR Code",
+    "noInternetConnection": "No internet connection",
+    "retry": "Retry",
+    "today": "Today"
 }

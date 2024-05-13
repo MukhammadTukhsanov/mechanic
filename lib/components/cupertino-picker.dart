@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit_example/generated/l10n.dart';
@@ -42,9 +41,11 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
             ? SizedBox(height: 0)
             : Text(
                 widget.label!,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Color(0xff336699),
-                  fontSize: 22,
+                  fontSize:
+                      widget.labelFontSize == null ? 22 : widget.labelFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -166,7 +167,7 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
               Center(
                 key: ValueKey<int>(i),
                 child: Text(
-                  (i == 1) ? "$i day" : "$i ${S.of(context).days}",
+                  "$i ${S.of(context).days}",
                   style: TextStyle(
                     fontSize: 32,
                   ),

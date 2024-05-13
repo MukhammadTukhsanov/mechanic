@@ -36,9 +36,9 @@
     "partNumber": "Teilenummer",
     "partName": "Teilname",
     "cavity": "Kavität",
-    "cycleTime": "Taktzeit",
+    "cycleTime": "Zykluszeit",
     "partStatusOk": "Teilstatus OK",
-    "pieceNumber": "Stückzahl",
+    "pieceNumber": "Stückzahl kumuliert",
     "note": "Notiz",
     "toolCleaningShiftF1Done": "Werkzeugreinigung Schicht F1 erledigt",
     "notNeeded": "Nicht benötigt",
@@ -60,5 +60,12 @@
     "remainingProductionDays": "Verbleibende Produktionszeit in Tagen",
     "modeSelection": "Modusauswahl",
     "fillAllFields": "Bitte füllen Sie alle Felder aus",
-    "succesfullySaved": "Erfolgreich gespeichert"
+    "succesfullySaved": "Erfolgreich gespeichert",
+    "errorSaving": "Fehler beim Speichern",
+    "entryAdded": "Eintrag hinzugefügt",
+    "editInfo": "Informationen bearbeiten",
+    "machineQRCode": "Maschinen QR-Code",
+    "noInternetConnection": "Keine Internetverbindung",
+    "retry": "Wiederholen",
+    "today": "Heute"
 }

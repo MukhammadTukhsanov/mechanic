@@ -6,10 +6,13 @@ import 'package:flutter_nfc_kit_example/components/button.dart';
 import 'package:flutter_nfc_kit_example/global/index.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
 // ignore: must_be_immutable
 
 class MachineStatus extends StatefulWidget {
+  final BehaviorSubject<bool> valueChanges = BehaviorSubject<bool>();
+
   late bool onStatus = true;
   late String machine;
 
@@ -23,14 +26,12 @@ class _MachineStatusState extends State<MachineStatus> {
   String status = 'yellow';
 
   void initState() {
-    print("object");
     getDevice();
   }
 
   void getDevice() {
     var response = http.get(
-      Uri.parse(
-          'http://${ipAdress}/api/machines/${widget.machine}/status'), // 80735001
+      Uri.parse('http://$ipAdress/api/status/${key}/${widget.machine}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -38,7 +39,7 @@ class _MachineStatusState extends State<MachineStatus> {
     response.then((value) {
       var data = jsonDecode(value.body);
       setState(() {
-        status = data['machineStatus'] == "completed" ? "success" : "yellow";
+        status = data['status'] == "ok" ? "success" : "yellow";
       });
     }).catchError((error) {
       print(error);
@@ -47,12 +48,6 @@ class _MachineStatusState extends State<MachineStatus> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.onStatus) {
-      getDevice();
-      print("object readed");
-      setState(() => widget.onStatus = false);
-    }
-    // getDevice();
     return Row(children: [
       Expanded(
           child: Padding(

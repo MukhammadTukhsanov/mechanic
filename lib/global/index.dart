@@ -1,4 +1,7 @@
-String token = '';
+import 'package:flutter_nfc_kit_example/generated/l10n.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+String key = '0004650166692';
 String user = '';
 // String ipAdress = '192.168.100.23:7878';
 String ipAdress = '34.31.212.138';
@@ -21,4 +24,19 @@ var globalDevices = [
   "KM 50-1",
   "KM 420-1",
   "F250iA-1",
+];
+
+final monthNames = [
+  S.current.january,
+  S.current.february,
+  S.current.march,
+  S.current.april,
+  S.current.may,
+  S.current.june,
+  S.current.july,
+  S.current.august,
+  S.current.september,
+  S.current.october,
+  S.current.november,
+  S.current.december
 ];

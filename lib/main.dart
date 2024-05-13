@@ -29,23 +29,21 @@ class Router extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
-      locale: Locale('de'),
+      locale: Locale('en'),
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/login',
-      // 8040701
-      // cycle time
       routes: {
         // '/login': (context) => EditInfo(),
         // '/splash': (context) => SplashScreen(),
-        // '/comment': (context) => CommentPage(),
-        // '/': (context) => Dashboard(),
-        '/login': (context) => HomePage(),
+        // '/login': (context) => CommentPage(),
+        '/login': (context) => Dashboard(),
+        // '/login': (context) => HomePage(),
         // '/login': (context) => Login(),
         // '/chooseMode': (context) => ChooseMode(),
-        // '/edit': (context) => EditPage(),
+        // '/login': (context) => EditPage(),
       },
     );
   }

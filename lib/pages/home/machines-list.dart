@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_nfc_kit_example/components/machineStatus.dart';
 import 'package:flutter_nfc_kit_example/global/index.dart';
-import 'package:http/http.dart' as http;
 
 class MachineStatusList extends StatefulWidget {
   bool changeStatus;

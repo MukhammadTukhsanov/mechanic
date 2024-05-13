@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Button extends StatelessWidget {
   final String? text;
@@ -22,11 +23,12 @@ class Button extends StatelessWidget {
           onPressed: onPressed as void Function()?,
           child: Text(
             text!,
-            style: TextStyle(
+            style: GoogleFonts.lexend(
+                textStyle: TextStyle(
               color: type == "outline" ? Color(0xff848484) : Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w400,
-            ),
+            )),
           ),
           style: ButtonStyle(
             backgroundColor: type == "outline"
@@ -35,10 +37,9 @@ class Button extends StatelessWidget {
                     ? MaterialStateProperty.all<Color>(Color(0xffe6b400))
                     : type == "success"
                         ? MaterialStateProperty.all<Color>(Color(0xff5CB85C))
-                        : MaterialStateProperty.all<Color>(
-                            const Color(0xff336699)),
+                        : MaterialStateProperty.all<Color>(Color(0xff336699)),
             padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              const EdgeInsets.symmetric(
+              EdgeInsets.symmetric(
                 horizontal: 20,
               ),
             ),

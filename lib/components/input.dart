@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Input extends StatelessWidget {
-  const Input({
-    Key? key,
-    this.label = '',
-    required this.controller,
-    this.prefixIcon,
-    this.labelText,
-    this.isPassword = false,
-    this.disabled = false,
-    this.maxLines = 1,
-    this.readOnly = false,
-    this.keyboardType,
-    this.numericOnly,
-    this.showCrusor = true,
-    this.onEditingComplete,
-    this.focusNode,
-    this.validator = true,
-  }) : super(key: key);
+  const Input(
+      {Key? key,
+      this.label = '',
+      required this.controller,
+      this.prefixIcon,
+      this.labelText,
+      this.isPassword = false,
+      this.disabled = false,
+      this.maxLines = 1,
+      this.readOnly = false,
+      this.keyboardType,
+      this.numericOnly,
+      this.showCrusor = true,
+      this.onEditingComplete,
+      this.focusNode,
+      this.validator = true,
+      this.onChanged,
+      this.inputFormatters,
+      this.maxLength})
+      : super(key: key);
 
   final String? label;
   final bool? showCrusor;
@@ -34,26 +38,31 @@ class Input extends StatelessWidget {
   final VoidCallback? onEditingComplete;
   final FocusNode? focusNode;
   final bool? validator;
+  final int? maxLength;
+  final Function(String)? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
+    // print("langugae is ${Localizations.localeOf(context).languageCode}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         label == ''
             ? SizedBox(height: 0)
-            : Text(
-                label!,
-                style: TextStyle(
-                  color: Color(0xff336699),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            : Text(label!,
+                style: GoogleFonts.lexend(
+                  textStyle: TextStyle(
+                    color: Color(0xff336699),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )),
         label == '' ? SizedBox(height: 0) : SizedBox(height: 10),
         Container(
           color: disabled ? Color.fromARGB(30, 132, 132, 132) : Colors.white,
           child: TextFormField(
+            maxLength: maxLength,
             validator: validator == true
                 ? (value) {
                     if (value == null || value.isEmpty) {
@@ -65,21 +74,15 @@ class Input extends StatelessWidget {
             onEditingComplete: onEditingComplete,
             showCursor: showCrusor,
             keyboardType: keyboardType ?? TextInputType.text,
-            inputFormatters: [
-              numericOnly == true
-                  ? FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
-                  : FilteringTextInputFormatter.singleLineFormatter
-            ],
-            // keyboardType: keyboardType ?? TextInputType.text,
-            // inputFormatters: numericOnly == true
-            //     ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
-            //     : null,
+            inputFormatters: inputFormatters,
+            // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             readOnly: readOnly ?? false,
             maxLines: maxLines,
             textAlignVertical: TextAlignVertical.top,
             enabled: !disabled,
             controller: controller,
             obscureText: isPassword,
+            onChanged: onChanged,
             focusNode: focusNode,
             decoration: InputDecoration(
               errorStyle: TextStyle(fontSize: 0),
@@ -89,7 +92,7 @@ class Input extends StatelessWidget {
               prefixIcon: prefixIcon == null
                   ? null
                   : Icon(prefixIcon, color: Color(0xff848484), size: 30),
-              labelText: labelText,
+              labelText: labelText ?? null,
               labelStyle: TextStyle(color: Color(0xff848484), fontSize: 18),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xff336699), width: 1.5),

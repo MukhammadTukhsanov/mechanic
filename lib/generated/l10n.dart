@@ -669,6 +669,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Error saving`
+  String get errorSaving {
+    return Intl.message(
+      'Error saving',
+      name: 'errorSaving',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Entry added`
+  String get entryAdded {
+    return Intl.message(
+      'Entry added',
+      name: 'entryAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Info`
+  String get editInfo {
+    return Intl.message(
+      'Edit Info',
+      name: 'editInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Machine QR Code`
+  String get machineQRCode {
+    return Intl.message(
+      'Machine QR Code',
+      name: 'machineQRCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No internet connection`
+  String get noInternetConnection {
+    return Intl.message(
+      'No internet connection',
+      name: 'noInternetConnection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get retry {
+    return Intl.message(
+      'Retry',
+      name: 'retry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get today {
+    return Intl.message(
+      'Today',
+      name: 'today',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -4,9 +4,38 @@ import 'package:flutter_nfc_kit_example/components/cupertino-picker.dart';
 import 'package:flutter_nfc_kit_example/components/input.dart';
 import 'package:flutter_nfc_kit_example/components/switch.dart';
 import 'package:flutter_nfc_kit_example/generated/l10n.dart';
+import 'package:flutter_nfc_kit_example/global/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EditPage extends StatefulWidget {
+  String machineQrCode;
+  String createdAt;
+  String shift;
+  String barcodeProductionNo;
+  String cavity;
+  String cycleTime;
+  String partStatus;
+  String note;
+  String toolCleaning;
+  String remainingProductionTime;
+  String remainingProductionDays;
+  String operatingHours;
+
+  EditPage({
+    Key? key,
+    required this.machineQrCode,
+    required this.createdAt,
+    required this.shift,
+    required this.barcodeProductionNo,
+    required this.cavity,
+    required this.cycleTime,
+    required this.partStatus,
+    required this.note,
+    required this.toolCleaning,
+    required this.remainingProductionTime,
+    required this.remainingProductionDays,
+    required this.operatingHours,
+  }) : super(key: key);
   @override
   State<EditPage> createState() => _EditPageState();
 }
@@ -16,7 +45,7 @@ class _EditPageState extends State<EditPage> {
   bool machineStopped = false;
   bool partStatus = true;
 
-  TextEditingController userController = TextEditingController();
+  TextEditingController _machineQRCode = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController shiftController = TextEditingController();
@@ -36,6 +65,22 @@ class _EditPageState extends State<EditPage> {
   int remainingMinute = 0;
   int operatingHours = 0;
   int operatingMinute = 0;
+
+  void initState() {
+    super.initState();
+    _machineQRCode.text = user;
+    dateController.text = widget.createdAt;
+    timeController.text = "12:34";
+    shiftController.text = widget.shift;
+    _machineIdController.text = widget.machineQrCode;
+    _productionNumberController.text = widget.barcodeProductionNo;
+    _partNameController.text = "Part Name";
+    _partNumberController.text = "Part Number";
+    _cavityController.text = widget.cavity;
+    _numberOfPiecesAcumulatedController.text = "52";
+    _noteController.text = widget.note;
+    remainingController.text = widget.remainingProductionDays;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,10 +145,10 @@ class _EditPageState extends State<EditPage> {
                         padding: const EdgeInsets.all(20.0),
                         child: Column(children: [
                           Input(
-                              label: S.of(context).user,
-                              labelText: "User",
+                              label: S.of(context).machineQRCode,
+                              prefixIcon: Icons.qr_code,
                               disabled: true,
-                              controller: userController),
+                              controller: _machineQRCode),
                           SizedBox(height: 20.0),
                           Row(children: [
                             SwitchWithText(
@@ -129,14 +174,12 @@ class _EditPageState extends State<EditPage> {
                             Expanded(
                                 child: Input(
                                     label: S.of(context).date,
-                                    labelText: "07/11/2023",
                                     disabled: true,
                                     controller: dateController)),
                             SizedBox(width: 20.0),
                             Expanded(
                                 child: Input(
                                     label: S.of(context).time,
-                                    labelText: "12 : 34",
                                     disabled: true,
                                     controller: timeController))
                           ]),
@@ -144,13 +187,7 @@ class _EditPageState extends State<EditPage> {
                           Input(
                               label: S.of(context).shift,
                               disabled: true,
-                              labelText: "N3",
                               controller: shiftController),
-                          SizedBox(height: 20.0),
-                          Input(
-                              controller: _machineIdController,
-                              label: "Machine ID",
-                              labelText: "- - -"),
                           SizedBox(height: 20.0),
                           Row(children: [
                             Expanded(
@@ -162,18 +199,15 @@ class _EditPageState extends State<EditPage> {
                             Expanded(
                                 child: Input(
                                     label: S.of(context).partName,
-                                    labelText: S.of(context).partName,
                                     controller: _partNameController))
                           ]),
                           SizedBox(height: 20.0),
                           Input(
                               label: S.of(context).partNumber,
-                              labelText: S.of(context).partNumber,
                               controller: _partNumberController),
                           SizedBox(height: 20.0),
                           Input(
                               label: S.of(context).cavity,
-                              labelText: S.of(context).cavity,
                               keyboardType: TextInputType.number,
                               controller: _cavityController),
                           SizedBox(height: 20.0),
@@ -188,12 +222,10 @@ class _EditPageState extends State<EditPage> {
                           SizedBox(height: 20.0),
                           Input(
                               label: S.of(context).numberOfPiecesAcumulated,
-                              labelText: "52",
                               controller: _numberOfPiecesAcumulatedController),
                           SizedBox(height: 20.0),
                           Input(
                               label: S.of(context).note,
-                              labelText: S.of(context).note,
                               controller: _noteController),
                           SizedBox(height: 20.0),
                           Column(children: [

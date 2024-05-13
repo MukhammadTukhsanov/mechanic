@@ -28,10 +28,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Stornieren"),
         "cavity": MessageLookupByLibrary.simpleMessage("Kavität"),
         "comment": MessageLookupByLibrary.simpleMessage("Kommentar"),
-        "cycleTime": MessageLookupByLibrary.simpleMessage("Taktzeit"),
+        "cycleTime": MessageLookupByLibrary.simpleMessage("Zykluszeit"),
         "date": MessageLookupByLibrary.simpleMessage("Datum"),
         "days": MessageLookupByLibrary.simpleMessage("tage"),
         "december": MessageLookupByLibrary.simpleMessage("Dezember"),
+        "editInfo":
+            MessageLookupByLibrary.simpleMessage("Informationen bearbeiten"),
+        "entryAdded":
+            MessageLookupByLibrary.simpleMessage("Eintrag hinzugefügt"),
+        "errorSaving":
+            MessageLookupByLibrary.simpleMessage("Fehler beim Speichern"),
         "february": MessageLookupByLibrary.simpleMessage("Februar"),
         "fillAllFields": MessageLookupByLibrary.simpleMessage(
             "Bitte füllen Sie alle Felder aus"),
@@ -42,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "june": MessageLookupByLibrary.simpleMessage("Juni"),
         "login": MessageLookupByLibrary.simpleMessage("Anmeldung"),
         "machineID": MessageLookupByLibrary.simpleMessage("Maschinen ID"),
+        "machineQRCode":
+            MessageLookupByLibrary.simpleMessage("Maschinen QR-Code"),
         "machineStopped":
             MessageLookupByLibrary.simpleMessage("Maschine gestoppt"),
         "march": MessageLookupByLibrary.simpleMessage("März"),
@@ -52,6 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Bestehende Einträge bearbeiten"),
         "monday": MessageLookupByLibrary.simpleMessage("Montag"),
         "no": MessageLookupByLibrary.simpleMessage("Nein"),
+        "noInternetConnection":
+            MessageLookupByLibrary.simpleMessage("Keine Internetverbindung"),
         "notNeeded": MessageLookupByLibrary.simpleMessage("Nicht benötigt"),
         "note": MessageLookupByLibrary.simpleMessage("Notiz"),
         "november": MessageLookupByLibrary.simpleMessage("November"),
@@ -63,7 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "partName": MessageLookupByLibrary.simpleMessage("Teilname"),
         "partNumber": MessageLookupByLibrary.simpleMessage("Teilenummer"),
         "partStatusOk": MessageLookupByLibrary.simpleMessage("Teilstatus OK"),
-        "pieceNumber": MessageLookupByLibrary.simpleMessage("Stückzahl"),
+        "pieceNumber":
+            MessageLookupByLibrary.simpleMessage("Stückzahl kumuliert"),
         "preparationOfShift":
             MessageLookupByLibrary.simpleMessage("Vorbereitung der Schicht OK"),
         "productionNumber":
@@ -74,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Verbleibende Produktionszeit"),
         "requiredField": MessageLookupByLibrary.simpleMessage(
             "Dieses Feld ist erforderlich"),
+        "retry": MessageLookupByLibrary.simpleMessage("Wiederholen"),
         "saturday": MessageLookupByLibrary.simpleMessage("Samstag"),
         "save": MessageLookupByLibrary.simpleMessage("Speichern"),
         "scanBarcodeProductionNo": MessageLookupByLibrary.simpleMessage(
@@ -88,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sunday": MessageLookupByLibrary.simpleMessage("Sonntag"),
         "thursday": MessageLookupByLibrary.simpleMessage("Donnerstag"),
         "time": MessageLookupByLibrary.simpleMessage("Zeit"),
+        "today": MessageLookupByLibrary.simpleMessage("Heute"),
         "tokenId": MessageLookupByLibrary.simpleMessage("Token ID"),
         "tokenNotValid":
             MessageLookupByLibrary.simpleMessage("Token ID ist nicht gültig"),

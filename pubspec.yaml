@@ -23,6 +23,7 @@ dependencies:
   dio: ^5.4.3+1
   cupertino_http: ^1.4.0
   rxdart: ^0.27.7
+  connectivity_plus: ^6.0.3
 
 dev_dependencies:
   flutter_test:

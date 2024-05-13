@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_nfc_kit_example/components/button.dart';
 import 'package:flutter_nfc_kit_example/components/cupertino-picker.dart';
 import 'package:flutter_nfc_kit_example/components/input.dart';
-import 'package:flutter_nfc_kit_example/components/machineStatus.dart';
 import 'package:flutter_nfc_kit_example/components/switch.dart';
 import 'package:flutter_nfc_kit_example/generated/l10n.dart';
 import 'package:flutter_nfc_kit_example/global/index.dart';
+import 'package:flutter_nfc_kit_example/pages/comment/index.dart';
 import 'package:flutter_nfc_kit_example/pages/home/machines-list.dart';
+import 'package:flutter_nfc_kit_example/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
@@ -21,19 +23,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _toolMounted = true;
+  bool _toolMounted = false;
   bool _machineStopped = false;
   bool _partStatusOK = true;
   bool err = false;
   bool added = false;
   bool isStatus = false;
+  bool stopTimer = false;
+  bool operatingHoursImportant = false;
 
   String radioValue = 'yes';
   String errText = '';
+  String shift = 'S1';
 
   int days = 0;
-  int instHours = 0;
-  int instMinute = 0;
+  int instRemainingProductionHours = 0;
+  int instRemainingProductionMinute = 0;
+
+  int instOperatingHours = 0;
+  int instOperatingMinute = 0;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -44,17 +52,38 @@ class _HomePageState extends State<HomePage> {
   final cavityController = TextEditingController();
   final cycleTimeController = TextEditingController();
   final pieceNumberController = TextEditingController();
-  final noteController = TextEditingController(); // remaining production time
-  final timeController = TextEditingController(); // remaining production time
-  final operatingHoursController = TextEditingController();
+  final noteController = TextEditingController();
+  final timeController = TextEditingController();
 
   final FocusNode _machineQRFocus = FocusNode();
   final FocusNode _productionNoFocus = FocusNode();
+
+  late DateTime lastWeekdayOfMonth;
+
+  ConnectivityResult _connectivityResult = ConnectivityResult.none;
+
   @override
   void initState() {
     super.initState();
+    _timer();
+    DateTime currentDate = DateTime.now();
+    lastWeekdayOfMonth = getLastWeekdayOfMonth(currentDate);
+    makeImportantOperatingHours();
+    getTimePeriod();
     _machineQRFocus.addListener(_onFocusChange);
     _productionNoFocus.addListener(setProductionNo);
+    _checkConnectivity();
+    Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> results) {
+      setState(() {
+        if (results.isNotEmpty) {
+          _connectivityResult = results.last;
+        } else {
+          _connectivityResult = ConnectivityResult.none;
+        }
+      });
+    });
   }
 
   @override
@@ -66,10 +95,17 @@ class _HomePageState extends State<HomePage> {
     cycleTimeController.dispose();
     pieceNumberController.dispose();
     noteController.dispose();
-    operatingHoursController.dispose();
     _machineQRFocus.dispose();
     _productionNoFocus.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkConnectivity() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {
+      _connectivityResult = connectivityResult[
+          0]; // Extract the first ConnectivityResult from the list
+    });
   }
 
   void _onFocusChange() {
@@ -78,20 +114,71 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  final monthNames = [
-    S.current.january,
-    S.current.february,
-    S.current.march,
-    S.current.april,
-    S.current.may,
-    S.current.june,
-    S.current.july,
-    S.current.august,
-    S.current.september,
-    S.current.october,
-    S.current.november,
-    S.current.december
-  ];
+  DateTime getLastWeekdayOfMonth(DateTime date) {
+    // Get the first day of the next month
+    DateTime nextMonth = DateTime(date.year, date.month + 1, 1);
+
+    // Get the last day of the current month
+    DateTime lastDayOfMonth = nextMonth.subtract(Duration(days: 1));
+
+    // If the last day is Saturday or Sunday, find the previous Friday
+    if (lastDayOfMonth.weekday == DateTime.saturday ||
+        lastDayOfMonth.weekday == DateTime.sunday) {
+      return lastDayOfMonth
+          .subtract(Duration(days: lastDayOfMonth.weekday - 5));
+    }
+
+    return lastDayOfMonth;
+  }
+
+  void makeImportantOperatingHours() {
+    if ((lastWeekdayOfMonth.weekday == 6 &&
+            DateTime.now().day == lastWeekdayOfMonth.day - 1) ||
+        (lastWeekdayOfMonth.weekday == 7 &&
+            DateTime.now().day == lastWeekdayOfMonth.day - 2)) {
+      setState(() {
+        operatingHoursImportant = true;
+      });
+    } else {
+      setState(() {
+        operatingHoursImportant = false;
+      });
+    }
+  }
+
+  void _timer() {
+    var response = http.get(
+      Uri.parse('http://$ipAdress/api/machines/$key/start'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    response.then((value) {
+      var data = jsonDecode(value.body);
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
+  getTimePeriod() {
+    DateTime now = DateTime.now();
+
+    int currentTime = now.hour * 60 + now.minute;
+
+    if (currentTime >= 6 * 60 && currentTime <= 14 * 60 + 30) {
+      setState(() {
+        shift = "F1";
+      });
+    } else if (currentTime >= 14 * 60 && currentTime <= 22 * 60 + 30) {
+      setState(() {
+        shift = "S2";
+      });
+    } else {
+      setState(() {
+        shift = "N3";
+      });
+    }
+  }
 
   final hour = DateTime.now().hour < 10
       ? '0${DateTime.now().hour}'
@@ -101,10 +188,7 @@ class _HomePageState extends State<HomePage> {
       : DateTime.now().minute.toString();
 
   addEntry() async {
-    showSnackBarFun(context, "text");
-    if (machineQRCodeController.text == '' &&
-        productionNumberController.text == '' &&
-        _machineStopped == true) {
+    if (machineQRCodeController.text == '' && _machineStopped == true) {
       setState(() {
         errText = S.of(context).fillAllFields;
         err = true;
@@ -122,8 +206,7 @@ class _HomePageState extends State<HomePage> {
         cavityController.text == '' &&
         cycleTimeController.text == '' &&
         pieceNumberController.text == '' &&
-        noteController.text == '' &&
-        operatingHoursController.text == '') {
+        noteController.text == '') {
       setState(() {
         errText = S.of(context).fillAllFields;
         err = true;
@@ -141,31 +224,43 @@ class _HomePageState extends State<HomePage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        "createdAt":
-            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} - ${DateTime.now().hour}:${DateTime.now().minute}: ${DateTime.now().second}",
-        "token": "$token",
-        "shift": "S1",
-        "machineQrCode": "${machineQRCodeController.text}",
+        "createdAt": "${DateTime.now()}", // String
+        "token": "$key", // String
+        "shift": "$shift", // String
+        "machineQrCode": "${machineQRCodeController.text}", // String
         "toolMounted": _toolMounted, // true or false
-        "machineMounted": _machineStopped, // true or fadouble.pa lse
-        "barcodeProductionNo": "${productionNumberController.text}",
-        "cavity": double.parse(cavityController.text),
-        "cycleTime": "${cycleTimeController.text}",
-        "partStatus": "${_partStatusOK ? 'OK' : 'Not OK'}",
-        "pieceNumber": double.parse(pieceNumberController.text),
-        "note": "${noteController.text}",
-        "toolCleaning": "$radioValue",
-        "remainingProductionTime": instHours * 60 + instMinute,
-        "operatingHours": double.parse(operatingHoursController.text),
-        "remainingProductionDays": days,
-        "machineStatus": "completed",
+        "machineStopped": _machineStopped, // true or false
+        "barcodeProductionNo": "${productionNumberController.text}", // String
+        "cavity": double.parse(cavityController.text), // double
+        "cycleTime": "${cycleTimeController.text}", // String
+        "partStatus": _partStatusOK, // true or false
+        "pieceNumber": double.parse(pieceNumberController.text), // double
+        "note": "${noteController.text}", // String
+        "toolCleaning": "$radioValue", // String
+        "remainingProductionDays": days, // int
+        "remainingProductionTime": instRemainingProductionHours * 60 +
+            instRemainingProductionMinute, // int
+        "operatingHours": "$instOperatingHours".padLeft(2, "0") +
+            ":" +
+            "$instOperatingMinute".padLeft(2, "0"), // double
       }),
     );
-    if (response.statusCode == 422) {
-      setState(() {
-        errText = S.of(context).fillAllFields;
-        err = true;
+    print("body: ${response.body}");
+    print(response.statusCode);
+    if (response.statusCode == 400) {
+      showSnackBarFun(context, S.of(context).errorSaving, "error");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+      Timer(Duration(seconds: 3), () {
+        setState(() {
+          err = false;
+        });
       });
+    }
+    if (response.statusCode == 422) {
+      showSnackBarFun(context, S.of(context).errorSaving, "error");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
       Timer(Duration(seconds: 3), () {
         setState(() {
           err = false;
@@ -173,45 +268,51 @@ class _HomePageState extends State<HomePage> {
       });
     }
     if (response.statusCode == 200) {
-      print(response.body);
-      machineQRCodeController.text = '';
-      productionNumberController.text = '';
-      cavityController.text = '';
-      cycleTimeController.text = '';
-      pieceNumberController.text = '';
-      noteController.text = '';
-      operatingHoursController.text = '';
-      Timer(Duration(seconds: 3), () {
-        setState(() {
-          isStatus = true;
-          isStatus = true;
-          added = true;
-        });
-      });
+      var data = jsonDecode(response.body);
+      print("body: ${data}");
+      print(data['total']);
+      showSnackBarFun(context, S.of(context).entryAdded, "success");
+      if (data['total'] == globalDevices.length) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => CommentPage()));
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      }
     }
-
-    // response((value) {
-    //   machineQRCodeController.text = '';
-    //   productionNumberController.text = '';
-    //   cavityController.text = '';
-    //   cycleTimeController.text = '';
-    //   pieceNumberController.text = '';
-    //   noteController.text = '';
-    //   operatingHoursController.text = '';
-    //   Timer(Duration(seconds: 3), () {
-    //     setState(() {
-    //       isStatus = !isStatus;
-    //       added = false;
-    //     });
-    //   });
   }
 
-  bool keyboardOpened = false;
+  onChangedQrCode(String value) {
+    print("value: $value");
+    globalDevices.forEach((element) {
+      if (element == value) {
+        _machineQRFocus.unfocus();
+        print("element: $element");
+      }
+    });
+  }
 
-  showSnackBarFun(context, String text) {
+  onChangeToolMounted() {
+    if (_toolMounted) {
+      onMachineStopped();
+      setState(() {
+        _machineStopped = false;
+      });
+    } else {
+      onMachineStopped();
+      setState(() {
+        _machineStopped = true;
+      });
+    }
+    setState(() {
+      _toolMounted = !_toolMounted;
+    });
+  }
+
+  showSnackBarFun(context, String text, String status) {
     SnackBar snackBar = SnackBar(
-      content: Text(text, style: TextStyle(fontSize: 20)),
-      backgroundColor: Colors.indigo,
+      content: Text(text, style: TextStyle(fontSize: 20, color: Colors.white)),
+      backgroundColor: status == "success" ? Colors.green : Colors.red,
       dismissDirection: DismissDirection.up,
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
@@ -223,11 +324,38 @@ class _HomePageState extends State<HomePage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Future rebuild() async {}
+  onMachineStopped() {
+    if (!_machineStopped) {
+      setState(() {
+        cavityController.text = '0';
+        pieceNumberController.text = '0';
+      });
+    } else {
+      setState(() {
+        cavityController.text = '';
+        pieceNumberController.text = '';
+
+        productionNumberController.text = '';
+        partNumberController.text = '';
+        partNameController.text = '';
+        cycleTimeController.text = '';
+        noteController.text = '';
+      });
+    }
+    ;
+    setState(() {
+      _machineStopped = !_machineStopped;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("token: $token");
-    return Material(
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ChooseMode()));
+          return false;
+        },
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -273,7 +401,13 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(right: 20.0),
                       child: IconButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            setState(() {
+                              stopTimer = true;
+                            });
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ChooseMode();
+                            }));
                           },
                           icon: Icon(Icons.logout,
                               color: Colors.red, size: 30.0)))
@@ -287,166 +421,188 @@ class _HomePageState extends State<HomePage> {
                       blurRadius: 3,
                       offset: Offset(0, 3))
                 ]))),
-            body: Row(children: [
-              Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: SingleChildScrollView(
-                      reverse: false,
-                      child: Container(
-                          color: Colors.white,
-                          width: 145,
-                          child: Column(children: [
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            MachineStatusList(
-                              changeStatus: isStatus,
-                            ),
-                          ])))),
-              Expanded(
-                  child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: SingleChildScrollView(
-                          child: Container(
-                              color: Colors.white,
-                              width: 120,
-                              child: Padding(
-                                  padding: EdgeInsets.all(20.0),
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Column(children: [
-                                      Stack(
-                                        children: [
-                                          Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                  DateTime.now()
-                                                          .day
-                                                          .toString() +
-                                                      ' ' +
-                                                      monthNames[
-                                                          DateTime.now().month -
-                                                              1] +
-                                                      ' ' +
-                                                      DateTime.now()
-                                                          .year
-                                                          .toString() +
-                                                      ' | ' +
-                                                      hour +
-                                                      ':' +
-                                                      minute +
-                                                      ' | ' +
-                                                      "${S.of(context).shift}  S2",
-                                                  textAlign: TextAlign.left,
-                                                  style: GoogleFonts.lexend(
-                                                      textStyle: TextStyle(
-                                                          color:
-                                                              Color(0xff848484),
-                                                          fontSize: 22,
-                                                          fontWeight: FontWeight
-                                                              .w400)))),
-                                          err
-                                              ? Container(
-                                                  width: MediaQuery.of(context)
+            body: _connectivityResult == ConnectivityResult.none
+                ? Center(
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
+                      SizedBox(height: 20),
+                      Text(S.of(context).noInternetConnection,
+                          style: GoogleFonts.lexend(
+                              textStyle: const TextStyle(
+                                  color: Color(0xff848484),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600)))
+                    ],
+                  ))
+                : Row(children: [
+                    Container(
+                        height: MediaQuery.of(context).size.height,
+                        child: SingleChildScrollView(
+                            reverse: false,
+                            child: Container(
+                                color: Colors.white,
+                                width: 145,
+                                child: Column(children: [
+                                  SizedBox(
+                                    height: 20.0,
+                                  ),
+                                  MachineStatusList(
+                                    changeStatus: isStatus,
+                                  ),
+                                ])))),
+                    Expanded(
+                        child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: SingleChildScrollView(
+                                child: Container(
+                                    color: Colors.white,
+                                    width: 120,
+                                    child: Padding(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Form(
+                                          key: _formKey,
+                                          child: Column(children: [
+                                            Stack(
+                                              children: [
+                                                Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                        DateTime.now()
+                                                                .day
+                                                                .toString() +
+                                                            ' ' +
+                                                            monthNames[
+                                                                DateTime.now()
+                                                                        .month -
+                                                                    1] +
+                                                            ' ' +
+                                                            DateTime.now()
+                                                                .year
+                                                                .toString() +
+                                                            ' | ' +
+                                                            hour +
+                                                            ':' +
+                                                            minute +
+                                                            ' | ' +
+                                                            "${S.of(context).shift}  ${shift}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: GoogleFonts.lexend(
+                                                            textStyle: TextStyle(
+                                                                color: Color(
+                                                                    0xff848484),
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)))),
+                                                err
+                                                    ? Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            2,
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(Icons.error,
+                                                                color: Colors
+                                                                    .white),
+                                                            SizedBox(
+                                                                width: 20.0),
+                                                            Text(errText,
+                                                                style: GoogleFonts.lexend(
+                                                                    textStyle: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight.w400))),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : SizedBox(height: 0.0),
+                                              ],
+                                            ),
+                                            SizedBox(height: 16.0),
+                                            Input(
+                                                onChanged: onChangedQrCode,
+                                                focusNode: _machineQRFocus,
+                                                controller:
+                                                    machineQRCodeController,
+                                                prefixIcon: Icons.qr_code,
+                                                labelText: S
+                                                    .of(context)
+                                                    .scanMachineQRCode),
+                                            SizedBox(height: 16.0),
+                                            Stack(children: [
+                                              SwitchWithText(
+                                                  value: _toolMounted,
+                                                  label:
+                                                      S.of(context).toolMounted,
+                                                  onChange:
+                                                      onChangeToolMounted),
+                                              Positioned(
+                                                  right: MediaQuery.of(context)
                                                           .size
                                                           .width /
-                                                      2,
-                                                  height: 40,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.red,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(Icons.error,
-                                                          color: Colors.white),
-                                                      SizedBox(width: 20.0),
-                                                      Text(errText,
-                                                          style: GoogleFonts.lexend(
-                                                              textStyle: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400))),
-                                                    ],
-                                                  ),
-                                                )
-                                              : SizedBox(height: 0.0),
-                                        ],
-                                      ),
-                                      SizedBox(height: 16.0),
-                                      Input(
-                                          focusNode: _machineQRFocus,
-                                          controller: machineQRCodeController,
-                                          prefixIcon: Icons.qr_code,
-                                          labelText:
-                                              S.of(context).scanMachineQRCode),
-                                      SizedBox(height: 16.0),
-                                      Stack(children: [
-                                        SwitchWithText(
-                                            value: _toolMounted,
-                                            label: S.of(context).toolMounted,
-                                            onChange: () {
-                                              setState(() {
-                                                _toolMounted = !_toolMounted;
-                                              });
-                                            }),
-                                        Positioned(
-                                            right: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                30,
-                                            child: SwitchWithText(
-                                                value: _machineStopped,
-                                                label: S
-                                                    .of(context)
-                                                    .machineStopped,
-                                                onChange: () {
-                                                  setState(() {
-                                                    _machineStopped =
-                                                        !_machineStopped;
-                                                  });
-                                                }))
-                                      ]),
+                                                      30,
+                                                  child: SwitchWithText(
+                                                    value: _machineStopped,
+                                                    label: S
+                                                        .of(context)
+                                                        .machineStopped,
+                                                    onChange: !_toolMounted
+                                                        ? onMachineStopped
+                                                        : null,
+                                                  ))
+                                            ]),
 
-                                      SizedBox(height: 16.0),
-                                      ///////////////////////////////////////////////////////////////////////
-                                      _machineStopped
-                                          ? SizedBox(height: 0.0)
-                                          : IsStoped(),
-                                      Row(children: [
-                                        Expanded(
-                                            child: Button(
-                                                type: "outline",
-                                                text: S.of(context).cancel,
+                                            SizedBox(height: 16.0),
+                                            ///////////////////////////////////////////////////////////////////////
+                                            _machineStopped
+                                                ? SizedBox(height: 0.0)
+                                                : IsStoped(),
+                                            Row(children: [
+                                              Expanded(
+                                                  child: Button(
+                                                      type: "outline",
+                                                      text:
+                                                          S.of(context).cancel,
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          stopTimer = true;
+                                                        });
+                                                        Navigator.pop(context);
+                                                      })),
+                                              SizedBox(width: 20.0),
+                                              Expanded(
+                                                  child: Button(
+                                                text: S.of(context).save,
                                                 onPressed: () {
-                                                  // navigate back
-                                                  Navigator.pop(context);
-                                                })),
-                                        SizedBox(width: 20.0),
-                                        Expanded(
-                                            child: Button(
-                                          text: S.of(context).save,
-                                          onPressed: () {
-                                            setState(() {
-                                              isStatus = !isStatus;
-                                            });
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              addEntry();
-                                            }
-                                          },
-                                        ))
-                                      ])
-                                    ]),
-                                  ))))))
-            ])));
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    addEntry();
+                                                  }
+                                                },
+                                              ))
+                                            ])
+                                          ]),
+                                        ))))))
+                  ])));
   }
 
   setProductionNo() {
@@ -464,8 +620,8 @@ class _HomePageState extends State<HomePage> {
 
     response.then((value) {
       var data = jsonDecode(value.body);
-      print(data);
-      if (data["Partnumber"] != 0 && data['Partname'] != 0) {
+      print("partData: $data");
+      if (data["Partnumber"] != "0" && data['Partname'] != "0") {
         partNumberController.text = "${data['Partnumber']}";
         partNameController.text = "${data['Partname']}";
       } else {
@@ -491,8 +647,12 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         Input(
+            validator: _machineStopped ? false : true,
+            maxLength: 9,
             focusNode: _productionNoFocus,
             keyboardType: TextInputType.number,
+            numericOnly: true,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             controller: productionNumberController,
             prefixIcon: Icons.qr_code,
             labelText: S.of(context).scanBarcodeProductionNo),
@@ -515,16 +675,22 @@ class _HomePageState extends State<HomePage> {
         ]),
         SizedBox(height: 16.0),
         Input(
+            labelText: S.of(context).cavity,
+            validator: _machineStopped ? false : true,
+            numericOnly: true,
             keyboardType: TextInputType.number,
             controller: cavityController,
-            labelText: S.of(context).cavity,
-            numericOnly: true),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
         SizedBox(height: 16.0),
         Input(
-            controller: cycleTimeController,
-            keyboardType: TextInputType.number,
+            labelText: S.of(context).cycleTime,
+            validator: _machineStopped ? false : true,
             numericOnly: true,
-            labelText: S.of(context).cycleTime),
+            keyboardType: TextInputType.number,
+            controller: cycleTimeController,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.-><,]'))
+            ]),
         SizedBox(height: 16.0),
         SwitchWithText(
             value: _partStatusOK,
@@ -536,12 +702,15 @@ class _HomePageState extends State<HomePage> {
             }),
         SizedBox(height: 16.0),
         Input(
-            controller: pieceNumberController,
             labelText: S.of(context).pieceNumber,
+            validator: _machineStopped ? false : true,
+            numericOnly: true,
             keyboardType: TextInputType.number,
-            numericOnly: true),
+            controller: pieceNumberController,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
         SizedBox(height: 16.0),
         Input(
+            validator: _machineStopped ? false : true,
             controller: noteController,
             maxLines: 4,
             labelText: S.of(context).note),
@@ -623,7 +792,8 @@ class _HomePageState extends State<HomePage> {
           Expanded(
               child: ModalCupertinoPicker(
             label: S.of(context).remainingProductionDays,
-            labelFontSize: 22,
+            labelFontSize:
+                Localizations.localeOf(context).languageCode == 'de' ? 15 : 22,
             selectedDate: days,
             onSelect: (index) {
               setState(() {
@@ -635,27 +805,48 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: ModalCupertinoPicker(
               label: S.of(context).remainingProductionTime,
-              labelFontSize: 22,
+              labelFontSize:
+                  Localizations.localeOf(context).languageCode == 'de'
+                      ? 15
+                      : 22,
               hours: true,
-              selectedDate: instHours,
+              selectedDate: instRemainingProductionHours,
               onSetHour: (value) {
                 setState(() {
-                  instHours = value.hour;
-                  instMinute = value.minute;
+                  instRemainingProductionHours = value.hour;
+                  instRemainingProductionMinute = value.minute;
                 });
               },
             ),
           )
         ]),
         SizedBox(height: 16.0),
-        Input(
-            controller: operatingHoursController,
-            labelText: S.of(context).operatingHours,
-            keyboardType: TextInputType.number,
-            numericOnly: true),
-        SizedBox(height: 16.0),
+        // operatingHoursImportant
+        // ?
+        ModalCupertinoPicker(
+          label: S.of(context).operatingHours,
+          hours: true,
+          selectedDate: instOperatingHours,
+          onSetHour: (value) {
+            setState(() {
+              instOperatingHours = value.hour;
+              instOperatingMinute = value.minute;
+            });
+          },
+        ),
+        // Input(
+        //     validator: operatingHoursImportant,
+        //     // disabled: !operatingHoursImportant,
+        //     controller: operatingHoursController,
+        //     labelText: S.of(context).operatingHours,
+        //     keyboardType: TextInputType.number,
+        //     numericOnly: true),
+        // : SizedBox(height: 0.0),
+        // operatingHoursImportant
+        // ?
+        SizedBox(height: 16.0)
+        // : SizedBox(height: 0.0),
       ],
     );
   }
-  // }
 }

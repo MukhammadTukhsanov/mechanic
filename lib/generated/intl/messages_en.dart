@@ -32,6 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "date": MessageLookupByLibrary.simpleMessage("Date"),
         "days": MessageLookupByLibrary.simpleMessage("days"),
         "december": MessageLookupByLibrary.simpleMessage("December"),
+        "editInfo": MessageLookupByLibrary.simpleMessage("Edit Info"),
+        "entryAdded": MessageLookupByLibrary.simpleMessage("Entry added"),
+        "errorSaving": MessageLookupByLibrary.simpleMessage("Error saving"),
         "february": MessageLookupByLibrary.simpleMessage("February"),
         "fillAllFields":
             MessageLookupByLibrary.simpleMessage("Please fill out all fields"),
@@ -42,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "june": MessageLookupByLibrary.simpleMessage("June"),
         "login": MessageLookupByLibrary.simpleMessage("Log In"),
         "machineID": MessageLookupByLibrary.simpleMessage("Machine ID"),
+        "machineQRCode":
+            MessageLookupByLibrary.simpleMessage("Machine QR Code"),
         "machineStopped":
             MessageLookupByLibrary.simpleMessage("Machine Stopped"),
         "march": MessageLookupByLibrary.simpleMessage("March"),
@@ -52,6 +57,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Modify Existing Entries"),
         "monday": MessageLookupByLibrary.simpleMessage("Monday"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
+        "noInternetConnection":
+            MessageLookupByLibrary.simpleMessage("No internet connection"),
         "notNeeded": MessageLookupByLibrary.simpleMessage("Not needed"),
         "note": MessageLookupByLibrary.simpleMessage("Note"),
         "november": MessageLookupByLibrary.simpleMessage("November"),
@@ -74,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Remaining Production Time"),
         "requiredField":
             MessageLookupByLibrary.simpleMessage("Please fill out this field"),
+        "retry": MessageLookupByLibrary.simpleMessage("Retry"),
         "saturday": MessageLookupByLibrary.simpleMessage("Saturday"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "scanBarcodeProductionNo":
@@ -88,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sunday": MessageLookupByLibrary.simpleMessage("Sunday"),
         "thursday": MessageLookupByLibrary.simpleMessage("Thursday"),
         "time": MessageLookupByLibrary.simpleMessage("Time"),
+        "today": MessageLookupByLibrary.simpleMessage("Today"),
         "tokenId": MessageLookupByLibrary.simpleMessage("Token ID"),
         "tokenNotValid":
             MessageLookupByLibrary.simpleMessage("Token ID is not valid"),

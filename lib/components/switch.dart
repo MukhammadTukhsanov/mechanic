@@ -19,14 +19,14 @@ class SwitchWithText extends StatelessWidget {
         Text(
           label!,
           style: GoogleFonts.lexend(
-              textStyle: const TextStyle(
+              textStyle: TextStyle(
                   color: Color(0xff336699),
                   fontSize: 22,
                   fontWeight: FontWeight.w500)),
         ),
         label == ""
-            ? const SizedBox()
-            : const SizedBox(
+            ? SizedBox()
+            : SizedBox(
                 width: 20,
               ),
         GestureDetector(
@@ -38,31 +38,34 @@ class SwitchWithText extends StatelessWidget {
               color: value ? Color(0xff336699) : Color(0xff848484),
               borderRadius: BorderRadius.circular(40),
               border: Border.all(
-                color: const Color(0xff848484),
+                color: Color(0xff848484),
                 width: 1.5,
               ),
             ),
             child: Center(
               child: Stack(children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  padding: EdgeInsets.symmetric(horizontal: 3),
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          S.of(context).yes,
-                          style: TextStyle(
-                              color: value ? Colors.white : Colors.transparent,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        Text(S.of(context).yes,
+                            style: GoogleFonts.lexend(
+                              textStyle: TextStyle(
+                                  color:
+                                      value ? Colors.white : Colors.transparent,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
+                            )),
                         Text(S.of(context).no,
-                            style: TextStyle(
-                                color:
-                                    value ? Colors.transparent : Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold)),
+                            style: GoogleFonts.lexend(
+                                textStyle: TextStyle(
+                                    color: value
+                                        ? Colors.transparent
+                                        : Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold))),
                       ],
                     ),
                   ),
