@@ -1,7 +1,7 @@
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
 
-String key = '0004650166692';
+// String key = '0004650166692';
+String key = '';
 String user = '';
 // String ipAdress = '192.168.100.23:7878';
 String ipAdress = '34.31.212.138';

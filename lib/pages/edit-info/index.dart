@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
-import 'package:flutter_nfc_kit_example/global/index.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:schichtbuch_shift/global/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;

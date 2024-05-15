@@ -40,7 +40,7 @@ android {
 
 
     defaultConfig {
-        applicationId "im.nfc.flutter_nfc_kit_example"
+        applicationId "im.nfc.schichtbuch_shift"
         minSdkVersion 26
         targetSdkVersion 34
         compileSdkVersion 34

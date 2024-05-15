@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/components/button.dart';
-import 'package:flutter_nfc_kit_example/components/input.dart';
-import 'package:flutter_nfc_kit_example/components/switch.dart';
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
-import 'package:flutter_nfc_kit_example/global/index.dart';
-import 'package:flutter_nfc_kit_example/pages/mode/index.dart';
+import 'package:schichtbuch_shift/components/button.dart';
+import 'package:schichtbuch_shift/components/input.dart';
+import 'package:schichtbuch_shift/components/switch.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:schichtbuch_shift/global/index.dart';
+import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
@@ -55,9 +55,7 @@ class _CommentState extends State<CommentPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    response.then((value) {
-      var data = jsonDecode(value.body);
-    }).catchError((error) {
+    response.then((value) {}).catchError((error) {
       print(error);
     });
   }
@@ -81,6 +79,7 @@ class _CommentState extends State<CommentPage> {
             }))
         .then((value) {
       if (value.statusCode == 200) {
+        _timer();
         showSnackBarFun(context, S.of(context).entryAdded, "success");
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ChooseMode()));
@@ -250,7 +249,6 @@ class _CommentState extends State<CommentPage> {
                                         text: S.of(context).cancel,
                                         type: "outline",
                                         onPressed: () {
-                                          _timer();
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(

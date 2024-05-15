@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SwitchWithText extends StatelessWidget {

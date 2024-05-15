@@ -22,11 +22,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "ProductNo": MessageLookupByLibrary.simpleMessage("Product No"),
         "addEntry": MessageLookupByLibrary.simpleMessage("Add Entry"),
         "april": MessageLookupByLibrary.simpleMessage("April"),
         "august": MessageLookupByLibrary.simpleMessage("August"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cavity": MessageLookupByLibrary.simpleMessage("Cavity"),
+        "changeEntry": MessageLookupByLibrary.simpleMessage("Change Entry"),
         "comment": MessageLookupByLibrary.simpleMessage("Comment"),
         "cycleTime": MessageLookupByLibrary.simpleMessage("Cycle Time"),
         "date": MessageLookupByLibrary.simpleMessage("Date"),
@@ -44,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "july": MessageLookupByLibrary.simpleMessage("July"),
         "june": MessageLookupByLibrary.simpleMessage("June"),
         "login": MessageLookupByLibrary.simpleMessage("Log In"),
+        "machine": MessageLookupByLibrary.simpleMessage("Machine"),
         "machineID": MessageLookupByLibrary.simpleMessage("Machine ID"),
         "machineQRCode":
             MessageLookupByLibrary.simpleMessage("Machine QR Code"),
@@ -56,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "modifyExistingEntries":
             MessageLookupByLibrary.simpleMessage("Modify Existing Entries"),
         "monday": MessageLookupByLibrary.simpleMessage("Monday"),
+        "newEntry": MessageLookupByLibrary.simpleMessage("New Entry"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "noInternetConnection":
             MessageLookupByLibrary.simpleMessage("No internet connection"),
@@ -91,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "september": MessageLookupByLibrary.simpleMessage("September"),
         "shift": MessageLookupByLibrary.simpleMessage("Shift"),
         "shiftLog": MessageLookupByLibrary.simpleMessage("Shift Log"),
+        "status": MessageLookupByLibrary.simpleMessage("Status"),
         "succesfullySaved":
             MessageLookupByLibrary.simpleMessage("Succesfully saved"),
         "sunday": MessageLookupByLibrary.simpleMessage("Sunday"),

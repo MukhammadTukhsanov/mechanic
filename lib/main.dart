@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_nfc_kit_example/pages/comment/index.dart';
-import 'package:flutter_nfc_kit_example/pages/dashboard/index.dart';
-import 'package:flutter_nfc_kit_example/pages/edit-info/index.dart';
-import 'package:flutter_nfc_kit_example/pages/edit/index.dart';
-import 'package:flutter_nfc_kit_example/pages/home/index.dart';
-import 'package:flutter_nfc_kit_example/pages/login/index.dart';
-import 'package:flutter_nfc_kit_example/pages/mode/index.dart';
-import 'package:flutter_nfc_kit_example/pages/splash-screen/index.dart';
+import 'package:schichtbuch_shift/pages/comment/index.dart';
+import 'package:schichtbuch_shift/pages/dashboard/index.dart';
+import 'package:schichtbuch_shift/pages/edit-info/index.dart';
+import 'package:schichtbuch_shift/pages/edit/index.dart';
+import 'package:schichtbuch_shift/pages/home/index.dart';
+import 'package:schichtbuch_shift/pages/login/index.dart';
+import 'package:schichtbuch_shift/pages/mode/index.dart';
+import 'package:schichtbuch_shift/pages/splash-screen/index.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -29,7 +29,7 @@ class Router extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
-      locale: Locale('en'),
+      locale: Locale('de'),
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -38,8 +38,8 @@ class Router extends StatelessWidget {
       routes: {
         // '/login': (context) => EditInfo(),
         // '/splash': (context) => SplashScreen(),
-        // '/login': (context) => CommentPage(),
-        '/login': (context) => Dashboard(),
+        '/login': (context) => CommentPage(),
+        // '/login': (context) => Dashboard(),
         // '/login': (context) => HomePage(),
         // '/login': (context) => Login(),
         // '/chooseMode': (context) => ChooseMode(),

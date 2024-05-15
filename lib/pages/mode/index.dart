@@ -1,10 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
-import 'package:flutter_nfc_kit_example/global/index.dart';
-import 'package:flutter_nfc_kit_example/pages/edit-info/index.dart';
-import 'package:flutter_nfc_kit_example/pages/home/index.dart';
-import 'package:flutter_nfc_kit_example/pages/login/index.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:schichtbuch_shift/global/index.dart';
+import 'package:schichtbuch_shift/pages/edit-info/index.dart';
+import 'package:schichtbuch_shift/pages/home/index.dart';
+import 'package:schichtbuch_shift/pages/login/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChooseMode extends StatefulWidget {
@@ -139,14 +139,11 @@ class _ChooseModeState extends State<ChooseMode> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Add",
+                              Text(S.of(context).newEntry,
                                   style: GoogleFonts.lexend(
                                     fontSize: 30,
                                     color: Color(0xff336699),
                                   )),
-                              SizedBox(width: 10),
-                              Icon(Icons.add,
-                                  color: Color(0xff336699), size: 30)
                             ],
                           ),
                         ),
@@ -173,14 +170,11 @@ class _ChooseModeState extends State<ChooseMode> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Edit",
+                                Text(S.of(context).changeEntry,
                                     style: GoogleFonts.lexend(
                                       fontSize: 30,
                                       color: Color(0xff336699),
                                     )),
-                                SizedBox(width: 10),
-                                Icon(Icons.edit,
-                                    color: Color(0xff336699), size: 30)
                               ],
                             )),
                       ),

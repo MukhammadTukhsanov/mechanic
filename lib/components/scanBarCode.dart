@@ -1,18 +1,17 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ScanBarCode extends StatefulWidget {
+  final String? labelText;
+  final String? code;
+  final Function(String)? setCode;
+
   ScanBarCode({Key? key, required this.labelText, this.code, this.setCode})
       : super(key: key);
   @override
   _ScanBarCodeState createState() => _ScanBarCodeState();
-  String? labelText;
-  String? code;
-  Function(String)? setCode;
 }
 
 class _ScanBarCodeState extends State<ScanBarCode> {

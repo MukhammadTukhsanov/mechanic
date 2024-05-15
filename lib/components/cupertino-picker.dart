@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ModalCupertinoPicker extends StatefulWidget {
@@ -12,6 +12,8 @@ class ModalCupertinoPicker extends StatefulWidget {
 
   bool? hours = false;
 
+  bool? error;
+
   Function(int)? onSelect;
   Function(TimeOfDay)? onSetHour;
   ModalCupertinoPicker(
@@ -20,7 +22,8 @@ class ModalCupertinoPicker extends StatefulWidget {
       this.labelFontSize,
       this.selectedDate = 0,
       this.onSelect,
-      this.onSetHour});
+      this.onSetHour,
+      this.error = false});
   @override
   State<ModalCupertinoPicker> createState() => _ModalCupertinoPickerState();
 }
@@ -55,7 +58,7 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
-              color: Color(0xff848484),
+              color: widget.error! ? Color(0xffcc0000) : Color(0xff848484),
               width: .5,
             ),
           ),

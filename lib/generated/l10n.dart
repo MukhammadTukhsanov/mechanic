@@ -739,6 +739,56 @@ class S {
       args: [],
     );
   }
+
+  /// `New Entry`
+  String get newEntry {
+    return Intl.message(
+      'New Entry',
+      name: 'newEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Entry`
+  String get changeEntry {
+    return Intl.message(
+      'Change Entry',
+      name: 'changeEntry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Machine`
+  String get machine {
+    return Intl.message(
+      'Machine',
+      name: 'machine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status`
+  String get status {
+    return Intl.message(
+      'Status',
+      name: 'status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product No`
+  String get ProductNo {
+    return Intl.message(
+      'Product No',
+      name: 'ProductNo',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -67,5 +67,10 @@
     "machineQRCode": "Machine QR Code",
     "noInternetConnection": "No internet connection",
     "retry": "Retry",
-    "today": "Today"
+    "today": "Today",
+    "newEntry": "New Entry",
+    "changeEntry": "Change Entry",
+    "machine": "Machine",
+    "status": "Status",
+    "ProductNo": "Product No"
 }

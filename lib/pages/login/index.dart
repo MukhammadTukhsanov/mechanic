@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_nfc_kit_example/generated/l10n.dart';
-import 'package:flutter_nfc_kit_example/global/index.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:schichtbuch_shift/global/index.dart';
 import 'dart:async';
-import 'package:flutter_nfc_kit_example/pages/mode/index.dart';
+import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_manager/nfc_manager.dart';
@@ -41,34 +41,34 @@ class _LoginState extends State<Login> {
         }
       });
     });
-    // NfcManager.instance.startSession(
-    //   onDiscovered: (NfcTag tag) async {
-    //     var ndef = Ndef.from(tag);
-    //     if (ndef != null && ndef.cachedMessage != null) {
-    //       String tempRecord = '';
-    //       for (var record in ndef.cachedMessage!.records) {
-    //         tempRecord =
-    //             '$tempRecord ${String.fromCharCodes(record.payload.sublist(record.payload[0] + 1))}';
-    //       }
-    //       setState(() {
-    //         _readFromNfcTag = tempRecord.replaceAll(
-    //           new RegExp(r'\s+\b|\b\s'),
-    //           '',
-    //         );
-    //         _tokenIdController.text = _readFromNfcTag;
-    //       });
-    //       setState(() {
-    //         loading = true;
-    //       });
-    //       loginRequest(_readFromNfcTag);
-    //     }
-    //   },
-    // );
+    NfcManager.instance.startSession(
+      onDiscovered: (NfcTag tag) async {
+        var ndef = Ndef.from(tag);
+        if (ndef != null && ndef.cachedMessage != null) {
+          String tempRecord = '';
+          for (var record in ndef.cachedMessage!.records) {
+            tempRecord =
+                '$tempRecord ${String.fromCharCodes(record.payload.sublist(record.payload[0] + 1))}';
+          }
+          setState(() {
+            _readFromNfcTag = tempRecord.replaceAll(
+              new RegExp(r'\s+\b|\b\s'),
+              '',
+            );
+            _tokenIdController.text = _readFromNfcTag;
+          });
+          setState(() {
+            loading = true;
+          });
+          loginRequest(_readFromNfcTag);
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
-    // NfcManager.instance.stopSession();
+    NfcManager.instance.stopSession();
     _tokenIdController.dispose();
     super.dispose();
   }
@@ -170,6 +170,7 @@ class _LoginState extends State<Login> {
                     blurRadius: 3,
                     offset: Offset(0, 3))
               ]))),
+          // body: Text('Hello World'),
           body: _connectivityResult == ConnectivityResult.none
               ? Center(
                   child: Column(
@@ -191,12 +192,12 @@ class _LoginState extends State<Login> {
                       decoration: const BoxDecoration(color: Colors.white),
                       child: Row(children: [
                         Container(
-                            width: MediaQuery.of(context).size.width / 3,
-                            child: const Image(
-                                width: 160,
-                                height: 160,
-                                image:
-                                    AssetImage('assets/images/Terminal.png'))),
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Image(
+                              width: 160,
+                              height: 160,
+                              image: AssetImage('assets/images/terminal.png')),
+                        ),
                         Expanded(
                             child: Center(
                                 child: SizedBox(
@@ -378,14 +379,6 @@ class _LoginState extends State<Login> {
                                                               : Text(S.of(context).login,
                                                                   style: GoogleFonts.lexend(textStyle: const TextStyle(color: Colors.white, fontSize: 14))),
                                                           onPressed: login))
-                                                  // onPressed: () {
-                                                  //   Navigator.push(
-                                                  //       context,
-                                                  //       MaterialPageRoute(
-                                                  //           builder:
-                                                  //               (context) =>
-                                                  //                   HomePage()));
-                                                  // }))
                                                 ])))))))
                       ])))),
     );

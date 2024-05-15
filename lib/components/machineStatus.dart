@@ -1,9 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/components/button.dart';
-import 'package:flutter_nfc_kit_example/global/index.dart';
+import 'package:schichtbuch_shift/components/button.dart';
+import 'package:schichtbuch_shift/global/index.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
@@ -13,8 +12,8 @@ import 'package:rxdart/rxdart.dart';
 class MachineStatus extends StatefulWidget {
   final BehaviorSubject<bool> valueChanges = BehaviorSubject<bool>();
 
-  late bool onStatus = true;
-  late String machine;
+  final bool onStatus;
+  final String machine;
 
   MachineStatus({required this.machine, required this.onStatus});
 
@@ -26,6 +25,7 @@ class _MachineStatusState extends State<MachineStatus> {
   String status = 'yellow';
 
   void initState() {
+    super.initState();
     getDevice();
   }
 

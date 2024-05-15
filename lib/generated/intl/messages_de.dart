@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "august": MessageLookupByLibrary.simpleMessage("August"),
         "cancel": MessageLookupByLibrary.simpleMessage("Stornieren"),
         "cavity": MessageLookupByLibrary.simpleMessage("Kavität"),
+        "changeEntry": MessageLookupByLibrary.simpleMessage("Eintrag ändern"),
         "comment": MessageLookupByLibrary.simpleMessage("Kommentar"),
         "cycleTime": MessageLookupByLibrary.simpleMessage("Zykluszeit"),
         "date": MessageLookupByLibrary.simpleMessage("Datum"),
@@ -47,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "july": MessageLookupByLibrary.simpleMessage("Juli"),
         "june": MessageLookupByLibrary.simpleMessage("Juni"),
         "login": MessageLookupByLibrary.simpleMessage("Anmeldung"),
+        "machine": MessageLookupByLibrary.simpleMessage("Maschine"),
         "machineID": MessageLookupByLibrary.simpleMessage("Maschinen ID"),
         "machineQRCode":
             MessageLookupByLibrary.simpleMessage("Maschinen QR-Code"),
@@ -59,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "modifyExistingEntries": MessageLookupByLibrary.simpleMessage(
             "Bestehende Einträge bearbeiten"),
         "monday": MessageLookupByLibrary.simpleMessage("Montag"),
+        "newEntry": MessageLookupByLibrary.simpleMessage("Eintrag neu"),
         "no": MessageLookupByLibrary.simpleMessage("Nein"),
         "noInternetConnection":
             MessageLookupByLibrary.simpleMessage("Keine Internetverbindung"),
@@ -95,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "september": MessageLookupByLibrary.simpleMessage("September"),
         "shift": MessageLookupByLibrary.simpleMessage("Schicht"),
         "shiftLog": MessageLookupByLibrary.simpleMessage("Schichtprotokoll"),
+        "status": MessageLookupByLibrary.simpleMessage("Status"),
         "succesfullySaved":
             MessageLookupByLibrary.simpleMessage("Erfolgreich gespeichert"),
         "sunday": MessageLookupByLibrary.simpleMessage("Sonntag"),

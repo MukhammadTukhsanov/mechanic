@@ -3,10 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Button extends StatelessWidget {
   final String? text;
-  final Function? onPressed;
-  String? type;
+  final VoidCallback? onPressed;
+  final bool? loading;
+  final String? type;
 
-  Button({this.text, this.onPressed, this.type});
+  Button({this.text, this.onPressed, this.type, this.loading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +21,20 @@ class Button extends StatelessWidget {
           ),
         ),
         child: TextButton(
-          onPressed: onPressed as void Function()?,
-          child: Text(
-            text!,
-            style: GoogleFonts.lexend(
-                textStyle: TextStyle(
-              color: type == "outline" ? Color(0xff848484) : Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-            )),
-          ),
+          onPressed: onPressed,
+          child: loading!
+              ? CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
+              : Text(
+                  text!,
+                  style: GoogleFonts.lexend(
+                      textStyle: TextStyle(
+                    color: type == "outline" ? Color(0xff848484) : Colors.white,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w400,
+                  )),
+                ),
           style: ButtonStyle(
             backgroundColor: type == "outline"
                 ? MaterialStateProperty.all<Color>(Colors.white)

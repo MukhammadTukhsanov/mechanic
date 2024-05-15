@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit_example/components/machineStatus.dart';
-import 'package:flutter_nfc_kit_example/global/index.dart';
+import 'package:schichtbuch_shift/components/machineStatus.dart';
+import 'package:schichtbuch_shift/global/index.dart';
 
 class MachineStatusList extends StatefulWidget {
   bool changeStatus;

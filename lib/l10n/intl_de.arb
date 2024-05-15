@@ -67,5 +67,10 @@
     "machineQRCode": "Maschinen QR-Code",
     "noInternetConnection": "Keine Internetverbindung",
     "retry": "Wiederholen",
-    "today": "Heute"
+    "today": "Heute",
+    "newEntry": "Eintrag neu",
+    "changeEntry": "Eintrag ändern",
+    "machine": "Maschine",
+    "status": "Status",
+    "productNo": "Produkt-Nr"
 }
