@@ -247,7 +247,8 @@ class _HomePageState extends State<HomePage> {
                     .padLeft(2, "0"), // double
       }),
     );
-    print(response.body);
+    print("response.body: ${response.body}");
+    print("response.body: ${response.statusCode}");
     if (response.statusCode == 400) {
       showSnackBarFun(context, S.of(context).errorSaving, "error");
       Navigator.push(
@@ -818,9 +819,11 @@ class _HomePageState extends State<HomePage> {
               hours: true,
               selectedDate: instRemainingProductionHours,
               onSetHour: (value) {
+                print(value);
                 setState(() {
-                  instRemainingProductionHours = value.hour;
-                  instRemainingProductionMinute = value.minute;
+                  print(value['hours']);
+                  instRemainingProductionHours = value['hours'];
+                  instRemainingProductionMinute = value['minutes'];
                 });
               },
             ),
@@ -835,8 +838,8 @@ class _HomePageState extends State<HomePage> {
                 selectedDate: 0,
                 onSetHour: (value) {
                   setState(() {
-                    instOperatingHours = value.hour.toString();
-                    instOperatingMinute = value.minute.toString();
+                    instOperatingHours = value['hours'].toString();
+                    instOperatingMinute = value['minutes'].toString();
                   });
                 },
               )

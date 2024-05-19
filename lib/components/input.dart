@@ -6,6 +6,7 @@ class Input extends StatelessWidget {
   const Input(
       {Key? key,
       this.label = '',
+      this.fontSize = 15.0,
       required this.controller,
       this.prefixIcon,
       this.labelText,
@@ -39,6 +40,7 @@ class Input extends StatelessWidget {
   final FocusNode? focusNode;
   final bool? validator;
   final int? maxLength;
+  final double? fontSize;
   final Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
 
@@ -62,6 +64,13 @@ class Input extends StatelessWidget {
         Container(
           color: disabled ? Color.fromARGB(30, 132, 132, 132) : Colors.white,
           child: TextFormField(
+            style: GoogleFonts.lexend(
+              textStyle: TextStyle(
+                color: Color(0xff000000),
+                fontSize: fontSize,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
             maxLength: maxLength,
             validator: validator == true
                 ? (value) {
@@ -85,6 +94,8 @@ class Input extends StatelessWidget {
             onChanged: onChanged,
             focusNode: focusNode,
             decoration: InputDecoration(
+              counterText: "",
+              counterStyle: TextStyle(fontSize: 0),
               errorStyle: TextStyle(fontSize: 0),
               contentPadding:
                   EdgeInsets.symmetric(vertical: 19, horizontal: 20),

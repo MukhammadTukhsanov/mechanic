@@ -1,6 +1,9 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:schichtbuch_shift/components/input.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,7 +18,7 @@ class ModalCupertinoPicker extends StatefulWidget {
   bool? error;
 
   Function(int)? onSelect;
-  Function(TimeOfDay)? onSetHour;
+  Function? onSetHour;
   ModalCupertinoPicker(
       {this.label,
       this.hours,
@@ -29,6 +32,8 @@ class ModalCupertinoPicker extends StatefulWidget {
 }
 
 class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
+  TextEditingController selectedHoursController = TextEditingController();
+  TextEditingController selectedMinutesController = TextEditingController();
   // int selectedDate = 1;
   String selectedHours =
       "00 ${S.current.hours[0]} - 00 ${S.current.minutes[0]}";
@@ -86,41 +91,136 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
                         },
                       );
                     }
-                  : () async {
-                      final TimeOfDay? picked = await showTimePicker(
-                        initialEntryMode: TimePickerEntryMode.inputOnly,
+                  : () => showDialog<String>(
                         context: context,
-                        orientation: Orientation.portrait,
-                        initialTime: selectedHours ==
-                                "00 ${S.of(context).hours[0]} - 00 ${S.of(context).minutes[0]}"
-                            ? TimeOfDay(hour: 0, minute: 0)
-                            : TimeOfDay(
-                                hour: int.parse(selectedHours.split(" ")[0]),
-                                minute: int.parse(selectedHours.split(" ")[3]),
+                        builder: (BuildContext context) => AlertDialog(
+                          backgroundColor: Color.fromRGBO(244, 254, 255, 1),
+                          title: Text(S.of(context).enterTime,
+                              style: TextStyle(
+                                  color: Color(0xff848484), fontSize: 22)),
+                          content: Container(
+                            height: 110,
+                            child: Column(children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: TextField(
+                                    controller: selectedHoursController,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 32),
+                                    decoration: InputDecoration(
+                                      counterText: "",
+                                      contentPadding: EdgeInsets.all(0.0),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xffffffff))),
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      hintText: '---',
+                                      hintStyle: TextStyle(
+                                        fontSize: 44,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    maxLength: 3,
+                                  )),
+                                  SizedBox(
+                                    width: 20,
+                                    height: 62,
+                                    child: Center(
+                                        child: Text(
+                                      ":",
+                                      style: TextStyle(fontSize: 32),
+                                    )),
+                                  ),
+                                  Expanded(
+                                      child: TextField(
+                                    controller: selectedMinutesController,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 32),
+                                    decoration: InputDecoration(
+                                      counterText: "",
+                                      contentPadding: EdgeInsets.all(0.0),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xffffffff))),
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      hintText: '--',
+                                      hintStyle: TextStyle(
+                                        fontSize: 44,
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    maxLength: 2,
+                                  )),
+                                ],
                               ),
-                        builder: (BuildContext context, Widget? child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: Color(0xff336699),
-                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(S.of(context).hour,
+                                        style: TextStyle(
+                                            color: Color(0xff848484),
+                                            fontSize: 16)),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Expanded(
+                                    child: Text(S.of(context).minute,
+                                        style: TextStyle(
+                                            color: Color(0xff848484),
+                                            fontSize: 16)),
+                                  ),
+                                ],
+                              )
+                            ]),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: Text(S.of(context).cancel,
+                                  style: TextStyle(
+                                      color: Color(0xff336699), fontSize: 18)),
                             ),
-                            child: MediaQuery(
-                              data: MediaQuery.of(context)
-                                  .copyWith(alwaysUse24HourFormat: true),
-                              child: child!,
-                            ),
-                          );
-                        },
-                      );
-                      if (picked != null) {
-                        widget.onSetHour!(picked);
-                        setState(() {
-                          selectedHours =
-                              "${picked.hour} ${S.of(context).hours[0]} - ${picked.minute} ${S.of(context).minutes[0]}";
-                        });
-                      }
-                    },
+                            TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selectedHours =
+                                        "${selectedHoursController.text.isEmpty ? selectedHoursController.text = "00" : selectedHoursController.text} ${S.of(context).hours[0]} - ${selectedMinutesController.text.isEmpty ? selectedMinutesController.text = "00" : selectedMinutesController.text} ${S.of(context).minutes[0]}";
+                                  });
+                                  widget.onSetHour!({
+                                    "hours": double.parse(
+                                            selectedHoursController.text)
+                                        .round(),
+                                    "minutes": double.parse(
+                                            selectedMinutesController.text)
+                                        .round()
+                                  });
+                                  Navigator.pop(context, 'OK');
+                                },
+                                child: Text('OK',
+                                    style: TextStyle(
+                                        color: Color(0xff336699),
+                                        fontSize: 18))),
+                          ],
+                        ),
+                      ),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

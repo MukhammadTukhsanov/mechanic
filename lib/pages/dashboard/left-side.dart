@@ -10,14 +10,15 @@ class DashboardLeftSide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(height: 52, child: header(context)),
-        Container(height: 50, child: status(context)),
+        header(context),
+        status(context),
       ],
     );
   }
 
   Widget status(context) {
     return Container(
+      height: 50,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -76,6 +77,7 @@ class DashboardLeftSide extends StatelessWidget {
 
   Widget header(context) {
     return Container(
+      height: 50,
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         // border bottom

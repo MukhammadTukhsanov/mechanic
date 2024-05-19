@@ -74,7 +74,7 @@ class _CommentState extends State<CommentPage> {
             },
             body: jsonEncode({
               "comment": "${commentController.text}",
-              "preparation_shift": prepearingShift ? "ok" : "no",
+              "preparation_shift": prepearingShift,
               "token": "${key}"
             }))
         .then((value) {

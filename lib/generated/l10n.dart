@@ -789,6 +789,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Enter Time`
+  String get enterTime {
+    return Intl.message(
+      'Enter Time',
+      name: 'enterTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hour`
+  String get hour {
+    return Intl.message(
+      'Hour',
+      name: 'hour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minute`
+  String get minute {
+    return Intl.message(
+      'Minute',
+      name: 'minute',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

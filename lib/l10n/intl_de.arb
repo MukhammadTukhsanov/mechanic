@@ -72,5 +72,8 @@
     "changeEntry": "Eintrag ändern",
     "machine": "Maschine",
     "status": "Status",
-    "productNo": "Produkt-Nr"
+    "productNo": "Produkt-Nr",
+    "enterTime": "Uhrzeit eingeben",
+    "hour": "Stunde",
+    "minute": "Minute"
 }

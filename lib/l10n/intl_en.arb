@@ -72,5 +72,8 @@
     "changeEntry": "Change Entry",
     "machine": "Machine",
     "status": "Status",
-    "ProductNo": "Product No"
+    "ProductNo": "Product No",
+    "enterTime": "Enter Time",
+    "hour": "Hour",
+    "minute": "Minute"
 }

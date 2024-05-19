@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
@@ -34,6 +35,7 @@ class _DashboardState extends State<Dashboard> {
   void dispose() {
     _scrollBodyController.removeListener(_onScrollListener);
     _scrollBodyController.dispose();
+    _hideTimer?.cancel(); // Cancel any existing timer
     super.dispose();
   }
 
@@ -51,6 +53,7 @@ class _DashboardState extends State<Dashboard> {
           },
         );
         var data = jsonDecode(response.body);
+        print("data: $data");
         Map<String, dynamic> info = {
           'machineName': machineName,
           'data': <dynamic>[],
@@ -64,9 +67,12 @@ class _DashboardState extends State<Dashboard> {
               width += 126;
             } else {
               info['data'].add({
-                'width': width,
+                'width': data[i]['remainingProductionTime'] / 60 * 15.75,
                 'height': 30,
                 'color': Color(0xff5cb85c),
+                'barcodeProductionNo': data[i]['barcodeProductionNo'],
+                'shift': data[i]['shift'],
+                'createdAt': data[i]['createdAt']
               });
               // devicesInformation.add({
               //   'width': width,
@@ -85,6 +91,9 @@ class _DashboardState extends State<Dashboard> {
                 'width': width,
                 'height': 30,
                 'color': Color(0xffcc0000),
+                'barcodeProductionNo': data[i]['barcodeProductionNo'],
+                'shift': data[i]['shift'],
+                'createdAt': data[i]['createdAt']
               });
             }
           } else if (data[i]['toolMounted'] == true &&
@@ -97,6 +106,10 @@ class _DashboardState extends State<Dashboard> {
               info['data'].add({
                 'width': width,
                 'height': 30,
+                'color': Color(0xffcc0000),
+                'barcodeProductionNo': data[i]['barcodeProductionNo'],
+                'shift': data[i]['shift'],
+                'createdAt': data[i]['createdAt']
               });
             }
           }
@@ -178,7 +191,7 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             children: [
               Container(
-                height: 102,
+                height: 100,
                 color: Color(0xfffff),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -220,39 +233,46 @@ class _DashboardState extends State<Dashboard> {
                             ],
                           ),
                           Expanded(
-                            child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                controller: _scrollBodyController,
-                                dragStartBehavior: DragStartBehavior.start,
-                                child: Stack(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        ...devicesInformation.map((e) =>
-                                            statusLineSquares(context, e)),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                        // statusLineSquares(context),
-                                      ],
-                                    )
-                                  ],
-                                )),
-                          )
+                              child: (globalDevices.length ==
+                                      [...devicesInformation].length)
+                                  ? SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      controller: _scrollBodyController,
+                                      dragStartBehavior:
+                                          DragStartBehavior.start,
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              ...devicesInformation.map((e) =>
+                                                  statusLineSquares(
+                                                      context, e)),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                              // statusLineSquares(context),
+                                            ],
+                                          )
+                                        ],
+                                      ))
+                                  : Align(
+                                      alignment: Alignment.topCenter,
+                                      child: CircularProgressIndicator(),
+                                    ))
                         ],
                       ),
                     ],
@@ -275,7 +295,7 @@ class _DashboardState extends State<Dashboard> {
             for (var i = 30; i > 0; i--)
               Container(
                 width: 63,
-                height: 50.5,
+                height: 50,
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -293,7 +313,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         ...e['data'].map((i) => statusLine(
               context,
-              "text",
+              "${i['barcodeProductionNo']}/${i['shift']}/${DateTime.parse(i['createdAt']).toIso8601String().split('T').first}",
               i['color'] == Color(0xff5cb85c)
                   ? "success"
                   : i['color'] == Color(0xffcc0000)
@@ -305,20 +325,124 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  OverlayEntry? _popupOverlayEntry;
+  Timer? _hideTimer;
+
+  void _showPopup(BuildContext context, Offset offset) {
+    _popupOverlayEntry = _createPopupOverlayEntry(context, offset);
+    Overlay.of(context).insert(_popupOverlayEntry!);
+
+    _hideTimer?.cancel(); // Cancel any existing timer
+    _hideTimer = Timer(Duration(seconds: 2), () {
+      _removePopup();
+    });
+  }
+
+  OverlayEntry _createPopupOverlayEntry(BuildContext context, Offset offset) {
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy,
+        child: Material(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Container(
+              padding: EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color.fromARGB(40, 5, 119, 190),
+                        spreadRadius: 4,
+                        blurRadius: 4)
+                  ]),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(S.of(context).partNumber + ": ",
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff336699))),
+                      Text("123456789",
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xff336699))),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(S.of(context).partName + ": ",
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff336699))),
+                      Text("Part Name",
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xff336699))),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(S.of(context).date + ": ",
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff336699))),
+                      Text("2021-09-01",
+                          style: GoogleFonts.lexend(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xff336699))),
+                    ],
+                  ),
+                ],
+              )),
+        ),
+      ),
+    );
+  }
+
+  void _removePopup() {
+    _popupOverlayEntry?.remove();
+    _popupOverlayEntry = null;
+  }
+
   Widget statusLine(context, text, String color, double width) {
-    return Container(
-      width: width,
-      height: 30,
-      color: color == 'success'
-          ? Color(0xff5CB85C)
-          : color == 'danger'
-              ? Color(0xffcc0000)
-              : Colors.transparent,
-      child: Center(
-        child: Text(
-          text,
-          style: GoogleFonts.lexend(
-              fontSize: 15, color: Colors.white, fontWeight: FontWeight.w300),
+    return GestureDetector(
+      onTapUp: (details) {
+        _removePopup(); // Remove any existing popup
+        final RenderBox renderBox = context.findRenderObject() as RenderBox;
+        final Offset localOffset =
+            renderBox.globalToLocal(details.globalPosition);
+        _showPopup(context, localOffset);
+      },
+      child: Container(
+        width: width,
+        height: 19,
+        color: color == 'success'
+            ? Color(0xff5CB85C)
+            : color == 'danger'
+                ? Color(0xffcc0000)
+                : Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 7),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.lexend(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
         ),
       ),
     );
@@ -328,25 +452,37 @@ class _DashboardState extends State<Dashboard> {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: Color(0xff848484),
-            width: .5,
-          ),
-          right: BorderSide(
-            color: Color(0xff848484),
-            width: .5,
-          ),
-        ),
+            // bottom: BorderSide(
+            //   color: Color(0xff848484),
+            //   width: .5,
+            // ),
+            // right: BorderSide(
+            //   color: Color(0xff848484),
+            //   width: .5,
+            // ),
+            ),
       ),
       child: Row(
         children: [
           Expanded(
               child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(
+                        color: Color(0xff848484),
+                        width: .5,
+                      ),
+                      bottom: BorderSide(
+                        color: Color(0xff848484),
+                        width: .5,
+                      ),
+                    ),
+                  ),
                   height: 50,
                   child: Center(
                       child: Text(device,
                           style: GoogleFonts.lexend(
-                              fontSize: 19,
+                              fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),
           Expanded(
@@ -355,11 +491,11 @@ class _DashboardState extends State<Dashboard> {
             decoration: BoxDecoration(
               color: Color(0xffe6cc00),
               border: Border(
-                left: BorderSide(
+                right: BorderSide(
                   color: Color(0xff848484),
                   width: .5,
                 ),
-                right: BorderSide(
+                bottom: BorderSide(
                   color: Color(0xff848484),
                   width: .5,
                 ),
@@ -368,11 +504,23 @@ class _DashboardState extends State<Dashboard> {
           )),
           Expanded(
               child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(
+                        color: Color(0xff848484),
+                        width: .5,
+                      ),
+                      bottom: BorderSide(
+                        color: Color(0xff848484),
+                        width: .5,
+                      ),
+                    ),
+                  ),
                   child: Center(
                       child: Text("12345699",
                           style: GoogleFonts.lexend(
-                              fontSize: 19,
+                              fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),
         ],

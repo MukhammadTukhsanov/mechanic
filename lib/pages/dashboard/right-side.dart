@@ -24,20 +24,18 @@ class DashboardRightSide extends StatelessWidget {
   }
 
   List<DateTime> getLastFiveDaysWithoutWeekend() {
-    List<DateTime> result = [];
-    DateTime today = DateTime.now();
-
-    // Start from yesterday
-    DateTime date = today.subtract(Duration(days: 1));
-
-    while (result.length < 5) {
-      if (date.weekday != DateTime.saturday &&
-          date.weekday != DateTime.sunday) {
-        result.add(date);
+    List<DateTime> businessDays = [];
+    int daysToAdd = 0;
+    while (businessDays.length < 5) {
+      DateTime currentDate = DateTime.now().add(Duration(days: daysToAdd));
+      if (currentDate.weekday != DateTime.saturday &&
+          currentDate.weekday != DateTime.sunday) {
+        businessDays.add(currentDate);
       }
-      date = date.subtract(Duration(days: 1));
+      daysToAdd++;
     }
-    return result;
+
+    return businessDays;
   }
 
   Widget hours(context) {
@@ -49,7 +47,7 @@ class DashboardRightSide extends StatelessWidget {
         ...hours.map(
           (e) => Container(
             width: 63,
-            height: 50.5,
+            height: 50,
             decoration: BoxDecoration(
               // border bottom
               border: Border(
@@ -88,7 +86,7 @@ class DashboardRightSide extends StatelessWidget {
             for (DateTime date in getLastFiveDaysWithoutWeekend())
               Container(
                 width: 378,
-                height: 51.5,
+                height: 50,
                 decoration: BoxDecoration(
                   // border bottom
                   border: Border(
@@ -101,7 +99,6 @@ class DashboardRightSide extends StatelessWidget {
                         width: .5,
                       )),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
                 child: Center(
                   child: Text(
                     date.day.toString().padLeft(2, '0') +

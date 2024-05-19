@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "december": MessageLookupByLibrary.simpleMessage("Dezember"),
         "editInfo":
             MessageLookupByLibrary.simpleMessage("Informationen bearbeiten"),
+        "enterTime": MessageLookupByLibrary.simpleMessage("Uhrzeit eingeben"),
         "entryAdded":
             MessageLookupByLibrary.simpleMessage("Eintrag hinzugefügt"),
         "errorSaving":
@@ -43,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fillAllFields": MessageLookupByLibrary.simpleMessage(
             "Bitte füllen Sie alle Felder aus"),
         "friday": MessageLookupByLibrary.simpleMessage("Freitag"),
+        "hour": MessageLookupByLibrary.simpleMessage("Stunde"),
         "hours": MessageLookupByLibrary.simpleMessage("stunden"),
         "january": MessageLookupByLibrary.simpleMessage("Januar"),
         "july": MessageLookupByLibrary.simpleMessage("Juli"),
@@ -56,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Maschine gestoppt"),
         "march": MessageLookupByLibrary.simpleMessage("März"),
         "may": MessageLookupByLibrary.simpleMessage("Mai"),
+        "minute": MessageLookupByLibrary.simpleMessage("Minute"),
         "minutes": MessageLookupByLibrary.simpleMessage("minuten"),
         "modeSelection": MessageLookupByLibrary.simpleMessage("Modusauswahl"),
         "modifyExistingEntries": MessageLookupByLibrary.simpleMessage(

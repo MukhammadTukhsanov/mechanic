@@ -35,12 +35,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "days": MessageLookupByLibrary.simpleMessage("days"),
         "december": MessageLookupByLibrary.simpleMessage("December"),
         "editInfo": MessageLookupByLibrary.simpleMessage("Edit Info"),
+        "enterTime": MessageLookupByLibrary.simpleMessage("Enter Time"),
         "entryAdded": MessageLookupByLibrary.simpleMessage("Entry added"),
         "errorSaving": MessageLookupByLibrary.simpleMessage("Error saving"),
         "february": MessageLookupByLibrary.simpleMessage("February"),
         "fillAllFields":
             MessageLookupByLibrary.simpleMessage("Please fill out all fields"),
         "friday": MessageLookupByLibrary.simpleMessage("Friday"),
+        "hour": MessageLookupByLibrary.simpleMessage("Hour"),
         "hours": MessageLookupByLibrary.simpleMessage("hours"),
         "january": MessageLookupByLibrary.simpleMessage("January"),
         "july": MessageLookupByLibrary.simpleMessage("July"),
@@ -54,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Machine Stopped"),
         "march": MessageLookupByLibrary.simpleMessage("March"),
         "may": MessageLookupByLibrary.simpleMessage("May"),
+        "minute": MessageLookupByLibrary.simpleMessage("Minute"),
         "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
         "modeSelection": MessageLookupByLibrary.simpleMessage("Mode Selection"),
         "modifyExistingEntries":
