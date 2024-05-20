@@ -22,6 +22,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "KTBUMaschinenDashboard":
+            MessageLookupByLibrary.simpleMessage("KTBU Maschinen Dashboard"),
         "addEntry": MessageLookupByLibrary.simpleMessage("Eintrag hinzufügen"),
         "april": MessageLookupByLibrary.simpleMessage("April"),
         "august": MessageLookupByLibrary.simpleMessage("August"),
@@ -30,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "changeEntry": MessageLookupByLibrary.simpleMessage("Eintrag ändern"),
         "comment": MessageLookupByLibrary.simpleMessage("Kommentar"),
         "cycleTime": MessageLookupByLibrary.simpleMessage("Zykluszeit"),
+        "dashboard": MessageLookupByLibrary.simpleMessage("Dashboard"),
         "date": MessageLookupByLibrary.simpleMessage("Datum"),
         "days": MessageLookupByLibrary.simpleMessage("tage"),
         "december": MessageLookupByLibrary.simpleMessage("Dezember"),

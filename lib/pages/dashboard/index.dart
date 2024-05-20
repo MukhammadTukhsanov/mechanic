@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/dashboard/left-side.dart';
@@ -22,11 +24,22 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List devicesInfo = [];
   List devicesInformation = [];
+  List machines = [];
   ScrollController _scrollBodyController = ScrollController();
   ScrollController _scrollHeaderController = ScrollController();
+
+  DateTime startDate = DateTime.now();
+  DateTime createdAt = DateTime.now();
+  DateTime startDatse = DateTime(2024, 5, 20); // example start date
+  DateTime endDate = DateTime(2024, 5, 21); // example end date
+
   @override
   void initState() {
+    calculateWeekdays(startDatse, endDate);
     super.initState();
+    setState(() {
+      machines = globalDevices;
+    });
     _scrollBodyController.addListener(_onScrollListener);
     getData();
   }
@@ -44,75 +57,41 @@ class _DashboardState extends State<Dashboard> {
   }
 
   getData() async {
+    List devices = [];
     for (var machineName in globalDevices) {
       try {
         var response = await http.get(
-          Uri.parse('http://$ipAdress/api/all_machines/${machineName}'),
+          Uri.parse('http://$ipAdress/api/machine/status/${machineName}'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
         );
         var data = jsonDecode(response.body);
-        print("data: $data");
-        Map<String, dynamic> info = {
+        var info = {
           'machineName': machineName,
-          'data': <dynamic>[],
+          'createdAt': data['status'] != "Invalid"
+              ? DateTime.parse(data['createdAt'])
+              : null,
+          'data': data,
         };
-        for (var i = 0, width = 126; i < data.length; i++) {
-          if (data[i]['toolMounted'] == false &&
-              data[i]['machineStopped'] == false) {
-            if (i + 1 < data.length &&
-                data[i + 1]['toolMounted'] == false &&
-                data[i + 1]['machineStopped'] == false) {
-              width += 126;
-            } else {
-              info['data'].add({
-                'width': data[i]['remainingProductionTime'] / 60 * 15.75,
-                'height': 30,
-                'color': Color(0xff5cb85c),
-                'barcodeProductionNo': data[i]['barcodeProductionNo'],
-                'shift': data[i]['shift'],
-                'createdAt': data[i]['createdAt']
-              });
-              // devicesInformation.add({
-              //   'width': width,
-              //   'height': 30,
-              //   'color': Color(0xff5cb85c),
-              // });
-            }
-          } else if (data[i]['toolMounted'] == false &&
-              data[i]['machineStopped'] == true) {
-            if (i + 1 < data.length &&
-                data[i + 1]['toolMounted'] == false &&
-                data[i + 1]['machineStopped'] == true) {
-              width += 126;
-            } else {
-              info['data'].add({
-                'width': width,
-                'height': 30,
-                'color': Color(0xffcc0000),
-                'barcodeProductionNo': data[i]['barcodeProductionNo'],
-                'shift': data[i]['shift'],
-                'createdAt': data[i]['createdAt']
-              });
-            }
-          } else if (data[i]['toolMounted'] == true &&
-              data[i]['machineStopped'] == false) {
-            if (i + 1 < data.length &&
-                data[i + 1]['toolMounted'] == true &&
-                data[i + 1]['machineStopped'] == false) {
-              width += 126;
-            } else {
-              info['data'].add({
-                'width': width,
-                'height': 30,
-                'color': Color(0xffcc0000),
-                'barcodeProductionNo': data[i]['barcodeProductionNo'],
-                'shift': data[i]['shift'],
-                'createdAt': data[i]['createdAt']
-              });
-            }
-          }
+        if (data['machineStopped'] == true) {
+          devices.add({
+            'machineName': machineName,
+            'status': "danger",
+            'barcodeProductionNo': data['barcodeProductionNo'],
+          });
+        } else if (data['toolMounted'] == false) {
+          devices.add({
+            'machineName': machineName,
+            'status': "success",
+            'barcodeProductionNo': data['barcodeProductionNo'],
+          });
+        } else {
+          devices.add({
+            'machineName': machineName,
+            'status': "transparent",
+            'barcodeProductionNo': data['barcodeProductionNo'],
+          });
         }
         setState(() {
           devicesInformation = [...devicesInformation, info];
@@ -121,14 +100,28 @@ class _DashboardState extends State<Dashboard> {
         print(e);
       }
     }
-    ;
+
+    setState(() {
+      machines = devices;
+      print("machines: $machines");
+    });
+  }
+
+  parsingStringDateTime(String dateTimeString) {
+    DateTime dateTime;
+    try {
+      dateTime = DateTime.parse(dateTimeString);
+    } catch (e) {
+      dateTime =
+          DateTime.now(); // fallback to current date-time if parsing fails
+    }
+    return dateTime.hour * 63 + dateTime.minute * 1.05;
   }
 
   final today = DateTime.now().day;
 
   @override
   Widget build(BuildContext context) {
-    print("devicesInformation: $devicesInformation");
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -224,10 +217,18 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           Column(
                             children: [
-                              ...globalDevices.map((device) {
+                              ...machines.map((device) {
+                                print("objectDevice: $device");
                                 return Container(
                                   width: 450,
-                                  child: status(context, device),
+                                  child: device is String
+                                      ? status(
+                                          context, device, 'transparent', '---')
+                                      : status(
+                                          context,
+                                          device['machineName'],
+                                          device['status'],
+                                          device['barcodeProductionNo']),
                                 );
                               }),
                             ],
@@ -241,12 +242,16 @@ class _DashboardState extends State<Dashboard> {
                                       dragStartBehavior:
                                           DragStartBehavior.start,
                                       child: Stack(
+                                        clipBehavior: Clip.hardEdge,
+                                        alignment: FractionalOffset.centerLeft,
                                         children: [
                                           Column(
                                             children: [
-                                              ...devicesInformation.map((e) =>
-                                                  statusLineSquares(
-                                                      context, e)),
+                                              ...devicesInformation.map((e) {
+                                                print("object: $e");
+                                                return statusLineSquares(
+                                                    context, e);
+                                              })
                                               // statusLineSquares(context),
                                               // statusLineSquares(context),
                                               // statusLineSquares(context),
@@ -286,6 +291,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget statusLineSquares(context, e) {
     return Stack(
+      clipBehavior: Clip.hardEdge,
       alignment: FractionalOffset.centerLeft,
       children: [
         Row(
@@ -311,16 +317,27 @@ class _DashboardState extends State<Dashboard> {
               ),
           ],
         ),
-        ...e['data'].map((i) => statusLine(
+        Positioned(
+          left: e["createdAt"] == null
+              ? 0
+              : !isToday(e["createdAt"])
+                  ? 0
+                  : (e["createdAt"].hour * 15.75).toDouble(),
+          child: statusLine(
               context,
-              "${i['barcodeProductionNo']}/${i['shift']}/${DateTime.parse(i['createdAt']).toIso8601String().split('T').first}",
-              i['color'] == Color(0xff5cb85c)
-                  ? "success"
-                  : i['color'] == Color(0xffcc0000)
-                      ? "danger"
-                      : "transparent",
-              i['width'].toDouble(),
-            ))
+              "${e['data']['partnumber']}/${e['data']['partname']}/${e['data']['createdAt'].toString().split('T')[0]}",
+              e['data']['machineStopped'] == false &&
+                      e['data']['toolMounted'] == false
+                  ? 'success'
+                  : e['data']['machineStopped'] == true &&
+                          e['data']['toolMounted'] == false
+                      ? 'danger'
+                      : 'transparent',
+              (e['data']['remainingProductionTime'] ?? 100).toDouble() /
+                  60 *
+                  15.75,
+              e["createdAt"] == null ? DateTime.now() : e["createdAt"]),
+        ),
       ],
     );
   }
@@ -413,7 +430,8 @@ class _DashboardState extends State<Dashboard> {
     _popupOverlayEntry = null;
   }
 
-  Widget statusLine(context, text, String color, double width) {
+  Widget statusLine(context, text, String color, double width, DateTime date) {
+    int calculateWeekday = calculateWeekdays(date, DateTime.now());
     return GestureDetector(
       onTapUp: (details) {
         _removePopup(); // Remove any existing popup
@@ -423,7 +441,11 @@ class _DashboardState extends State<Dashboard> {
         _showPopup(context, localOffset);
       },
       child: Container(
-        width: width,
+        width: color == 'danger'
+            ? 150
+            : (width - (calculateWeekday * 252)) < 0
+                ? 0
+                : (width - (calculateWeekday * 252)),
         height: 19,
         color: color == 'success'
             ? Color(0xff5CB85C)
@@ -448,7 +470,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget status(context, device) {
+  Widget status(context, device, statusColor, productionNo) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -489,7 +511,11 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
             height: 50,
             decoration: BoxDecoration(
-              color: Color(0xffe6cc00),
+              color: statusColor == 'success'
+                  ? Color(0xff5CB85C)
+                  : statusColor == 'danger'
+                      ? Color(0xffcc0000)
+                      : Colors.transparent,
               border: Border(
                 right: BorderSide(
                   color: Color(0xff848484),
@@ -518,7 +544,8 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   child: Center(
-                      child: Text("12345699",
+                      child: Text(
+                          productionNo == null ? '---' : "$productionNo",
                           style: GoogleFonts.lexend(
                               fontSize: 18,
                               color: Color(0xff336699),

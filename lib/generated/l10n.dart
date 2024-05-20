@@ -819,6 +819,26 @@ class S {
       args: [],
     );
   }
+
+  /// `KTBU Maschinen Dashboard`
+  String get KTBUMaschinenDashboard {
+    return Intl.message(
+      'KTBU Maschinen Dashboard',
+      name: 'KTBUMaschinenDashboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dashboard`
+  String get dashboard {
+    return Intl.message(
+      'Dashboard',
+      name: 'dashboard',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

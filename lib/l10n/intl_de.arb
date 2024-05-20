@@ -75,5 +75,7 @@
     "productNo": "Produkt-Nr",
     "enterTime": "Uhrzeit eingeben",
     "hour": "Stunde",
-    "minute": "Minute"
+    "minute": "Minute",
+    "KTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
+    "dashboard": "Dashboard"
 }

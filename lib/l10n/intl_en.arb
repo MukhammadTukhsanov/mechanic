@@ -75,5 +75,7 @@
     "ProductNo": "Product No",
     "enterTime": "Enter Time",
     "hour": "Hour",
-    "minute": "Minute"
+    "minute": "Minute",
+    "KTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
+    "dashboard": "Dashboard"
 }

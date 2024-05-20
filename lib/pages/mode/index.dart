@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
+import 'package:schichtbuch_shift/pages/dashboard/index.dart';
 import 'package:schichtbuch_shift/pages/edit-info/index.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/login/index.dart';
@@ -118,67 +119,99 @@ class _ChooseModeState extends State<ChooseMode> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Row(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return HomePage();
-                          }));
-                        },
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Color(0xff336699), width: 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(S.of(context).newEntry,
-                                  style: GoogleFonts.lexend(
-                                    fontSize: 30,
-                                    color: Color(0xff336699),
-                                  )),
-                            ],
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return HomePage();
+                              }));
+                            },
+                            child: Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0xff336699), width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(S.of(context).newEntry,
+                                      style: GoogleFonts.lexend(
+                                        fontSize: 30,
+                                        color: Color(0xff336699),
+                                      )),
+                                ],
+                              ),
+                            ),
                           ),
+                        ),
+                        SizedBox(width: 40),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return EditInfo();
+                              }));
+                            },
+                            child: Container(
+                                height: 200,
+                                width: MediaQuery.of(context).size.width / 2,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xff336699), width: 1),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(S.of(context).changeEntry,
+                                        style: GoogleFonts.lexend(
+                                          fontSize: 30,
+                                          color: Color(0xff336699),
+                                        )),
+                                  ],
+                                )),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 40),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Dashboard();
+                        }));
+                      },
+                      child: Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xff336699), width: 1),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(S.of(context).dashboard,
+                                style: GoogleFonts.lexend(
+                                  fontSize: 30,
+                                  color: Color(0xff336699),
+                                )),
+                          ],
                         ),
                       ),
                     ),
-                    SizedBox(width: 40),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return EditInfo();
-                          }));
-                        },
-                        child: Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width / 2,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Color(0xff336699), width: 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(S.of(context).changeEntry,
-                                    style: GoogleFonts.lexend(
-                                      fontSize: 30,
-                                      color: Color(0xff336699),
-                                    )),
-                              ],
-                            )),
-                      ),
-                    )
                   ],
                 ),
               ),

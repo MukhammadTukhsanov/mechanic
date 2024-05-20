@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   bool loadSaving = false;
   bool operatingHoursErr = false;
 
-  String radioValue = 'yes';
+  String radioValue = "yes";
   String errText = '';
   String shift = 'S1';
 
@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
         "partStatus": _partStatusOK, // true or false
         "pieceNumber": double.parse(pieceNumberController.text), // double
         "note": "${noteController.text}", // String
-        "toolCleaning": radioValue, // String
+        "toolCleaning": radioValue == 'yes' ? true : false, // bool
         "remainingProductionDays": days, // int
         "remainingProductionTime": instRemainingProductionHours * 60 +
             instRemainingProductionMinute, // int
@@ -781,6 +781,7 @@ class _HomePageState extends State<HomePage> {
                     groupValue: radioValue,
                     fillColor: MaterialStateProperty.all(Color(0xff336699)),
                     onChanged: (value) {
+                      print(value);
                       setState(() {
                         radioValue = value as String;
                       });
