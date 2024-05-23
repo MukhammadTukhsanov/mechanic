@@ -29,7 +29,7 @@ class Router extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
-      locale: Locale('en'),
+      locale: Locale('de'),
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

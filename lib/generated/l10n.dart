@@ -780,10 +780,10 @@ class S {
     );
   }
 
-  /// `Product No`
+  /// `Productionsnr`
   String get ProductNo {
     return Intl.message(
-      'Product No',
+      'Productionsnr',
       name: 'ProductNo',
       desc: '',
       args: [],

@@ -12,7 +12,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: type == "success" || type == "yellow" ? 45 : 63,
+        height: (type == "success" || type == "yellow") ? null : 63,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           border: Border.all(

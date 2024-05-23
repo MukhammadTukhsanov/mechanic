@@ -56,6 +56,7 @@ class _HomePageState extends State<HomePage> {
   final pieceNumberController = TextEditingController();
   final noteController = TextEditingController();
   final timeController = TextEditingController();
+  final operatingHoursController = TextEditingController();
 
   final FocusNode _machineQRFocus = FocusNode();
   final FocusNode _productionNoFocus = FocusNode();
@@ -67,6 +68,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getMachinesList();
     _timer();
     getTimePeriod();
     lastDay();
@@ -100,6 +102,24 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  getMachinesList() async {
+    var response = await http.get(Uri.parse('http://$ipAdress/api/machines'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      setState(() {
+        globalDevices = [];
+      });
+
+      data.map(
+        (e) {
+          setState(() {
+            globalDevices = [...globalDevices, e['machineQrCode']];
+          });
+        },
+      ).toList();
+    }
+  }
+
   DateTime getLastDayOfMonth(int year, int month) {
     DateTime lastDayOfMonth = DateTime(year, month + 1, 0);
 
@@ -124,8 +144,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       operatingHoursImportant = lastDay.day == today;
     });
-
-    print('Last day of the month: ${lastDay.day == today}');
   }
 
   Future<void> _checkConnectivity() async {
@@ -239,16 +257,16 @@ class _HomePageState extends State<HomePage> {
         "remainingProductionDays": days, // int
         "remainingProductionTime": instRemainingProductionHours * 60 +
             instRemainingProductionMinute, // int
-        "operatingHours":
-            "$instOperatingHours".replaceAll("-", "0").padLeft(2, "0") +
-                ":" +
-                "$instOperatingMinute"
-                    .replaceAll("-", "0")
-                    .padLeft(2, "0"), // double
+        "operatingHours": operatingHoursController.text == ""
+            ? "0"
+            : operatingHoursController.text, // double
+        //       "$instOperatingHours".replaceAll("-", "0").padLeft(2, "0") +
+        //           ":" +
+        //           "$instOperatingMinute"
+        //               .replaceAll("-", "0")
+        //               .padLeft(2, "0"), // double
       }),
     );
-    print("response.body: ${response.body}");
-    print("response.body: ${response.statusCode}");
     if (response.statusCode == 400) {
       showSnackBarFun(context, S.of(context).errorSaving, "error");
       Navigator.push(
@@ -286,11 +304,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   onChangedQrCode(String value) {
-    print("value: $value");
     globalDevices.forEach((element) {
       if (element == value) {
         _machineQRFocus.unfocus();
-        print("element: $element");
       }
     });
   }
@@ -598,10 +614,8 @@ class _HomePageState extends State<HomePage> {
                                                 loading: loadSaving,
                                                 text: S.of(context).save,
                                                 onPressed: () {
-                                                  validateOperating();
                                                   if (_formKey.currentState!
                                                           .validate() &&
-                                                      !operatingHoursErr &&
                                                       !loadSaving) {
                                                     addEntry();
                                                   }
@@ -696,7 +710,8 @@ class _HomePageState extends State<HomePage> {
             keyboardType: TextInputType.number,
             controller: cycleTimeController,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9-><,]'))
+              FilteringTextInputFormatter.allow(RegExp(r'^[\d<>]*\,?\d{0,1}')),
+              // FilteringTextInputFormatter.allow(RegExp(r'[0-9-><,]'))
             ]),
         SizedBox(height: 16.0),
         SwitchWithText(
@@ -781,7 +796,6 @@ class _HomePageState extends State<HomePage> {
                     groupValue: radioValue,
                     fillColor: MaterialStateProperty.all(Color(0xff336699)),
                     onChanged: (value) {
-                      print(value);
                       setState(() {
                         radioValue = value as String;
                       });
@@ -820,9 +834,7 @@ class _HomePageState extends State<HomePage> {
               hours: true,
               selectedDate: instRemainingProductionHours,
               onSetHour: (value) {
-                print(value);
                 setState(() {
-                  print(value['hours']);
                   instRemainingProductionHours = value['hours'];
                   instRemainingProductionMinute = value['minutes'];
                 });
@@ -832,37 +844,33 @@ class _HomePageState extends State<HomePage> {
         ]),
         SizedBox(height: 16.0),
         operatingHoursImportant
-            ? ModalCupertinoPicker(
-                error: _machineStopped ? false : operatingHoursErr,
-                label: S.of(context).operatingHours,
-                hours: true,
-                selectedDate: 0,
-                onSetHour: (value) {
-                  setState(() {
-                    instOperatingHours = value['hours'].toString();
-                    instOperatingMinute = value['minutes'].toString();
-                  });
-                },
+            ? Input(
+                controller: operatingHoursController,
+                labelText: S.of(context).operatingHours,
+                validator: _machineStopped ? false : operatingHoursErr,
+                numericOnly: true,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                ],
               )
+            // ? ModalCupertinoPicker(
+            //     error: _machineStopped ? false : operatingHoursErr,
+            //     label: S.of(context).operatingHours,
+            //     hours: true,
+            //     selectedDate: 0,
+            //     onSetHour: (value) {
+            //       setState(() {
+            //         instOperatingHours = value['hours'].toString();
+            //         instOperatingMinute = value['minutes'].toString();
+            //       });
+            //     },
+            //   )
             : SizedBox(height: 0.0),
         operatingHoursImportant
             ? SizedBox(height: 16.0)
             : SizedBox(height: 0.0),
       ],
     );
-  }
-
-  validateOperating() {
-    if ((instOperatingHours == "-" || instOperatingMinute == "-") &&
-        !_machineStopped &&
-        operatingHoursImportant) {
-      setState(() {
-        operatingHoursErr = true;
-      });
-    } else {
-      setState(() {
-        operatingHoursErr = false;
-      });
-    }
   }
 }

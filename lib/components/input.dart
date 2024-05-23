@@ -46,7 +46,6 @@ class Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("langugae is ${Localizations.localeOf(context).languageCode}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

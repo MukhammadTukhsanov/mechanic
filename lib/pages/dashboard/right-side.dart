@@ -16,7 +16,7 @@ class DashboardRightSide extends StatelessWidget {
         days(context),
         Row(
           children: [
-            for (int i = 0; i < 5; i++) hours(context),
+            for (int i = 0; i < 7; i++) hours(context),
           ],
         )
       ],
@@ -26,7 +26,7 @@ class DashboardRightSide extends StatelessWidget {
   List<DateTime> getLastFiveDaysWithoutWeekend() {
     List<DateTime> businessDays = [];
     int daysToAdd = 0;
-    while (businessDays.length < 5) {
+    while (businessDays.length < 7) {
       DateTime currentDate = DateTime.now().add(Duration(days: daysToAdd));
       if (currentDate.weekday != DateTime.saturday &&
           currentDate.weekday != DateTime.sunday) {
@@ -101,15 +101,15 @@ class DashboardRightSide extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    date.day.toString().padLeft(2, '0') +
+                    weekdays[date.weekday] +
                         " " +
-                        monthNames[date.month - 1] +
+                        date.day.toString().padLeft(2, '0') +
                         " " +
-                        date.year.toString(),
+                        monthNames[date.month - 1],
                     style: GoogleFonts.lexend(
                       fontSize: 22,
                       color: Color(0xff336699),
-                      fontWeight: FontWeight.w200,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),

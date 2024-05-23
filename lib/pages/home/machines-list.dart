@@ -5,7 +5,7 @@ import 'package:schichtbuch_shift/components/machineStatus.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 
 class MachineStatusList extends StatefulWidget {
-  bool changeStatus;
+  final bool changeStatus;
   MachineStatusList({Key? key, required this.changeStatus}) : super(key: key);
   @override
   State<MachineStatusList> createState() => _MachineStatusListState();

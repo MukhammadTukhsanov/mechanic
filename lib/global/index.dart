@@ -5,27 +5,7 @@ String key = '';
 String user = '';
 String ipAdress = '192.168.100.23:7878';
 // String ipAdress = '34.31.212.138';
-var globalDevices = [
-  "Emac50-1333",
-  "E 35-1",
-  "E45-1",
-  "E45-2",
-  "F 450iA-1",
-  "E50-2",
-  "E50-3",
-  "F 150iA-1",
-  "EM 50-1",
-  "EM 50-2",
-  "EM 50-3",
-  "KM 50-1",
-  "KM 80-1",
-  "KM 150-1",
-  "EM 55-1",
-  "KM 420-1",
-  "E 120-1",
-  "E 80-1",
-  "F 250iA-1",
-];
+var globalDevices = [];
 
 final monthNames = [
   S.current.january,
@@ -42,26 +22,15 @@ final monthNames = [
   S.current.december
 ];
 
-DateTime addMinutes(DateTime date, int minutes) {
-  const int millisecondsPerMinute = 60000;
-  int updatedTime =
-      date.millisecondsSinceEpoch + minutes * millisecondsPerMinute;
-  DateTime newDate = DateTime.fromMillisecondsSinceEpoch(updatedTime);
-
-  // Function to check if a date is on a weekend
-  bool isWeekend(DateTime d) {
-    int day = d.weekday;
-    return day == DateTime.saturday || day == DateTime.sunday;
-  }
-
-  // If the new date is on a weekend, move to the next Monday
-  while (isWeekend(newDate)) {
-    newDate = newDate.add(Duration(days: 1));
-    newDate = DateTime(newDate.year, newDate.month, newDate.day);
-  }
-
-  return newDate;
-}
+final weekdays = [
+  S.current.sunday,
+  S.current.monday,
+  S.current.tuesday,
+  S.current.wednesday,
+  S.current.thursday,
+  S.current.friday,
+  S.current.saturday,
+];
 
 bool isToday(DateTime date) {
   DateTime now = DateTime.now();
@@ -70,18 +39,69 @@ bool isToday(DateTime date) {
       now.year == date.year;
 }
 
-int calculateWeekdays(DateTime start, DateTime end) {
-  int weekdays = 0;
-  DateTime current = start;
+int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
+  print(start);
+  print(end);
 
-  while (current.isBefore(end) || current.isAtSameMomentAs(end)) {
-    if (current.weekday != DateTime.saturday &&
-        current.weekday != DateTime.sunday) {
-      weekdays++;
+  // Set the end date time to midnight
+  end = DateTime(end.year, end.month, end.day);
+
+  // Calculate total time difference in milliseconds
+  final totalMilliseconds = end.difference(start).inMilliseconds;
+
+  // Convert to hours and minutes
+  final totalMinutes = (totalMilliseconds / (1000 * 60)).floor();
+  final totalHours = (totalMinutes / 60).floor();
+  final remainingMinutes = totalMinutes % 60;
+
+  // Create a counter to keep track of weekend days (0 = Sunday, 6 = Saturday)
+  int weekendDays = 0;
+  DateTime currentDate = start;
+
+  // Loop through each day in the range
+  while (currentDate.isBefore(end)) {
+    final dayOfWeek = currentDate.weekday;
+    if (dayOfWeek == DateTime.saturday || dayOfWeek == DateTime.sunday) {
+      weekendDays++;
     }
-    current = current.add(Duration(days: 1));
+    currentDate = currentDate.add(Duration(days: 1));
   }
-  weekdays == 0 ? weekdays : weekdays - 1;
-  print("weekdays: $weekdays");
-  return weekdays;
+
+  // Calculate effective time excluding weekends
+  final effectiveTotalMinutes = totalMinutes - (weekendDays * 24 * 60);
+  final effectiveHours = (effectiveTotalMinutes / 60).floor();
+  final effectiveMinutes = effectiveTotalMinutes % 60;
+
+  print(
+      "Days: ${effectiveHours ~/ 24}, hours: ${effectiveHours % 24}, effectiveMinutes: $effectiveMinutes");
+
+  return effectiveHours;
+
+  // Uncomment the following if you want to return an object
+  // return {
+  //   'days': effectiveHours ~/ 24,
+  //   'hours': effectiveHours % 24,
+  //   'minutes': effectiveMinutes
+  // };
+}
+
+DateTime addTimeSkippingWeekends(
+    DateTime startDate, int daysToAdd, int minutesToAdd) {
+  int totalMinutes = daysToAdd * 24 * 60 + minutesToAdd;
+  int remainingMinutes = totalMinutes;
+  DateTime currentDate = startDate;
+
+  while (remainingMinutes > 0) {
+    currentDate = currentDate.add(Duration(minutes: 1));
+
+    // Skip weekends
+    if (currentDate.weekday == DateTime.saturday ||
+        currentDate.weekday == DateTime.sunday) {
+      continue;
+    }
+
+    remainingMinutes--;
+  }
+
+  return currentDate;
 }

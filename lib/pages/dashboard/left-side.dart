@@ -41,26 +41,26 @@ class DashboardLeftSide extends StatelessWidget {
                               fontSize: 19,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w500))))),
-          Expanded(
-              child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        color: Color(0xff848484),
-                        width: .5,
-                      ),
-                      right: BorderSide(
-                        color: Color(0xff848484),
-                        width: .5,
-                      ),
-                    ),
+          Container(
+              width: 100,
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(
+                    color: Color(0xff848484),
+                    width: .5,
                   ),
-                  child: Center(
-                      child: Text(S.of(context).status,
-                          style: GoogleFonts.lexend(
-                              fontSize: 19,
-                              color: Color(0xff336699),
-                              fontWeight: FontWeight.w500))))),
+                  right: BorderSide(
+                    color: Color(0xff848484),
+                    width: .5,
+                  ),
+                ),
+              ),
+              child: Center(
+                  child: Text(S.of(context).status,
+                      style: GoogleFonts.lexend(
+                          fontSize: 19,
+                          color: Color(0xff336699),
+                          fontWeight: FontWeight.w500)))),
           Expanded(
               child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10),

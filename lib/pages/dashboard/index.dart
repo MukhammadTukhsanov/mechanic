@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/dashboard/left-side.dart';
@@ -35,13 +33,13 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-    calculateWeekdays(startDatse, endDate);
     super.initState();
     setState(() {
       machines = globalDevices;
     });
     _scrollBodyController.addListener(_onScrollListener);
-    getData();
+    // getData();
+    getMachinesList();
   }
 
   @override
@@ -56,6 +54,26 @@ class _DashboardState extends State<Dashboard> {
     _scrollHeaderController.jumpTo(_scrollBodyController.offset);
   }
 
+  getMachinesList() async {
+    var response = await http.get(Uri.parse('http://$ipAdress/api/machines'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      setState(() {
+        globalDevices = [];
+      });
+
+      data.map(
+        (e) {
+          setState(() {
+            globalDevices = [...globalDevices, e['machineQrCode']];
+          });
+        },
+      ).toList();
+      print(data);
+    }
+    getData();
+  }
+
   getData() async {
     List devices = [];
     for (var machineName in globalDevices) {
@@ -67,6 +85,16 @@ class _DashboardState extends State<Dashboard> {
           },
         );
         var data = jsonDecode(response.body);
+        if (data['status'] == "Invalid") {
+          var reResponse = await http.get(
+            Uri.parse(
+                'http://$ipAdress/api/machine/status/${machineName.replaceAll(RegExp(r'\s+'), '')}'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+          );
+          data = jsonDecode(reResponse.body);
+        }
         var info = {
           'machineName': machineName,
           'createdAt': data['status'] != "Invalid"
@@ -103,7 +131,6 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() {
       machines = devices;
-      print("machines: $machines");
     });
   }
 
@@ -191,7 +218,7 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        width: 450,
+                        width: 400,
                         color: Colors.white,
                         child: DashboardLeftSide()),
                     Expanded(
@@ -218,9 +245,8 @@ class _DashboardState extends State<Dashboard> {
                           Column(
                             children: [
                               ...machines.map((device) {
-                                print("objectDevice: $device");
                                 return Container(
-                                  width: 450,
+                                  width: 400,
                                   child: device is String
                                       ? status(
                                           context, device, 'transparent', '---')
@@ -248,28 +274,9 @@ class _DashboardState extends State<Dashboard> {
                                           Column(
                                             children: [
                                               ...devicesInformation.map((e) {
-                                                print("object: $e");
                                                 return statusLineSquares(
                                                     context, e);
-                                              })
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
-                                              // statusLineSquares(context),
+                                              }),
                                             ],
                                           )
                                         ],
@@ -290,6 +297,18 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget statusLineSquares(context, e) {
+    // print(
+    //     "remainingProductionDays ${e['data']['remainingProductionDays'] is int}");
+    // print(
+    //     "remainingProductionTime ${e['data']['remainingProductionTime'] is int}");
+    String partName = e['data']['partname'].toString();
+    String partNumber = e['data']['partnumber'].toString();
+    DateTime finishingDate = e['data']['remainingProductionDays'] is int
+        ? addTimeSkippingWeekends(
+            e['createdAt'],
+            e['data']['remainingProductionDays'],
+            e['data']['remainingProductionTime'])
+        : DateTime.now();
     return Stack(
       clipBehavior: Clip.hardEdge,
       alignment: FractionalOffset.centerLeft,
@@ -298,7 +317,7 @@ class _DashboardState extends State<Dashboard> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (var i = 30; i > 0; i--)
+            for (var i = 42; i > 0; i--)
               Container(
                 width: 63,
                 height: 50,
@@ -325,7 +344,7 @@ class _DashboardState extends State<Dashboard> {
                   : (e["createdAt"].hour * 15.75).toDouble(),
           child: statusLine(
               context,
-              "${e['data']['partnumber']}/${e['data']['partname']}/${e['data']['createdAt'].toString().split('T')[0]}",
+              "$partNumber/$partName/${finishingDate.toString().substring(0, 16)}",
               e['data']['machineStopped'] == false &&
                       e['data']['toolMounted'] == false
                   ? 'success'
@@ -333,10 +352,12 @@ class _DashboardState extends State<Dashboard> {
                           e['data']['toolMounted'] == false
                       ? 'danger'
                       : 'transparent',
-              (e['data']['remainingProductionTime'] ?? 100).toDouble() /
-                  60 *
-                  15.75,
-              e["createdAt"] == null ? DateTime.now() : e["createdAt"]),
+              (e['data']['remainingProductionTime'] ?? 0).toDouble(),
+              e["createdAt"] == null ? DateTime.now() : e["createdAt"],
+              (e['data']['remainingProductionDays'] ?? 0).toDouble(),
+              partName.toString(),
+              partNumber.toString(),
+              "${finishingDate.toString().substring(0, 16)}"),
         ),
       ],
     );
@@ -345,8 +366,10 @@ class _DashboardState extends State<Dashboard> {
   OverlayEntry? _popupOverlayEntry;
   Timer? _hideTimer;
 
-  void _showPopup(BuildContext context, Offset offset) {
-    _popupOverlayEntry = _createPopupOverlayEntry(context, offset);
+  void _showPopup(BuildContext context, Offset offset, String partName,
+      String partNumber, String finishingDate) {
+    _popupOverlayEntry = _createPopupOverlayEntry(
+        context, offset, partName, partNumber, finishingDate);
     Overlay.of(context).insert(_popupOverlayEntry!);
 
     _hideTimer?.cancel(); // Cancel any existing timer
@@ -355,7 +378,8 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  OverlayEntry _createPopupOverlayEntry(BuildContext context, Offset offset) {
+  OverlayEntry _createPopupOverlayEntry(BuildContext context, Offset offset,
+      String partName, String partNumber, String finishingDate) {
     return OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
@@ -383,7 +407,7 @@ class _DashboardState extends State<Dashboard> {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text("123456789",
+                      Text(partNumber,
                           style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
@@ -397,7 +421,7 @@ class _DashboardState extends State<Dashboard> {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text("Part Name",
+                      Text(partName,
                           style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
@@ -411,7 +435,7 @@ class _DashboardState extends State<Dashboard> {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text("2021-09-01",
+                      Text(finishingDate,
                           style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
@@ -430,23 +454,32 @@ class _DashboardState extends State<Dashboard> {
     _popupOverlayEntry = null;
   }
 
-  Widget statusLine(context, text, String color, double width, DateTime date) {
-    int calculateWeekday = calculateWeekdays(date, DateTime.now());
+  Widget statusLine(
+      context,
+      text,
+      String color,
+      double remainingProductionTime,
+      createdAt,
+      remainingProductionDays,
+      String partName,
+      String partNumber,
+      String finishingDate) {
+    double lineWidth =
+        (remainingProductionTime / 60 + remainingProductionDays * 24) * 15.75 -
+            newCalculateDaysExcludingWeekends(createdAt, DateTime.now()) *
+                15.75;
+    lineWidth = lineWidth < 0 ? 0 : lineWidth;
     return GestureDetector(
       onTapUp: (details) {
         _removePopup(); // Remove any existing popup
         final RenderBox renderBox = context.findRenderObject() as RenderBox;
         final Offset localOffset =
             renderBox.globalToLocal(details.globalPosition);
-        _showPopup(context, localOffset);
+        _showPopup(context, localOffset, partName, partNumber, finishingDate);
       },
       child: Container(
-        width: color == 'danger'
-            ? 150
-            : (width - (calculateWeekday * 252)) < 0
-                ? 0
-                : (width - (calculateWeekday * 252)),
-        height: 19,
+        width: color == 'success' ? lineWidth : null,
+        height: 28,
         color: color == 'success'
             ? Color(0xff5CB85C)
             : color == 'danger'
@@ -460,9 +493,9 @@ class _DashboardState extends State<Dashboard> {
               text,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.lexend(
-                  fontSize: 14,
+                  fontSize: color == 'success' || color == 'danger' ? 18 : 0,
                   color: Colors.white,
-                  fontWeight: FontWeight.w400),
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ),
@@ -473,16 +506,7 @@ class _DashboardState extends State<Dashboard> {
   Widget status(context, device, statusColor, productionNo) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-            // bottom: BorderSide(
-            //   color: Color(0xff848484),
-            //   width: .5,
-            // ),
-            // right: BorderSide(
-            //   color: Color(0xff848484),
-            //   width: .5,
-            // ),
-            ),
+        border: Border(),
       ),
       child: Row(
         children: [
@@ -507,15 +531,10 @@ class _DashboardState extends State<Dashboard> {
                               fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),
-          Expanded(
-              child: Container(
+          Container(
+            width: 100,
             height: 50,
             decoration: BoxDecoration(
-              color: statusColor == 'success'
-                  ? Color(0xff5CB85C)
-                  : statusColor == 'danger'
-                      ? Color(0xffcc0000)
-                      : Colors.transparent,
               border: Border(
                 right: BorderSide(
                   color: Color(0xff848484),
@@ -527,7 +546,16 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-          )),
+            child: Container(
+              decoration: BoxDecoration(
+                color: statusColor == 'success'
+                    ? Color(0xff5CB85C)
+                    : statusColor == 'danger'
+                        ? Color(0xffcc0000)
+                        : Colors.transparent,
+              ),
+            ),
+          ),
           Expanded(
               child: Container(
                   height: 50,

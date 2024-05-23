@@ -84,7 +84,6 @@ class _CommentState extends State<CommentPage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => ChooseMode()));
       }
-      print(value.body);
     }).catchError((error) {
       showSnackBarFun(context, S.of(context).errorSaving, "error");
       print(error);

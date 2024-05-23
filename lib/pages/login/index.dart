@@ -90,7 +90,6 @@ class _LoginState extends State<Login> {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       if (data['token'] != 'Invalid') {
-        print(data);
         setState(() {
           user = data['name'];
           key = "${data['token']}";
@@ -100,7 +99,6 @@ class _LoginState extends State<Login> {
               MaterialPageRoute(builder: (context) => ChooseMode()),
               (route) => false);
         });
-        print("dataToke: ${data['token']}");
       } else {
         setState(() {
           loading = false;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
@@ -7,6 +9,8 @@ import 'package:schichtbuch_shift/pages/edit-info/index.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/login/index.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:http/http.dart' as http;
 
 class ChooseMode extends StatefulWidget {
   @override
@@ -19,6 +23,8 @@ class _ChooseModeState extends State<ChooseMode> {
   void initState() {
     super.initState();
     _checkConnectivity();
+    getMachinesList();
+
     Connectivity()
         .onConnectivityChanged
         .listen((List<ConnectivityResult> results) {
@@ -30,6 +36,25 @@ class _ChooseModeState extends State<ChooseMode> {
         }
       });
     });
+  }
+
+  getMachinesList() async {
+    var response = await http.get(Uri.parse('http://$ipAdress/api/machines'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      setState(() {
+        globalDevices = [];
+      });
+
+      data.map(
+        (e) {
+          setState(() {
+            globalDevices = [...globalDevices, e['machineQrCode']];
+          });
+        },
+      ).toList();
+      print(data);
+    }
   }
 
   Future<void> _checkConnectivity() async {
