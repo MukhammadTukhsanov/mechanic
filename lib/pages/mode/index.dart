@@ -22,6 +22,9 @@ class _ChooseModeState extends State<ChooseMode> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      count = 0;
+    });
     _checkConnectivity();
     getMachinesList();
 

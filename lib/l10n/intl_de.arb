@@ -77,5 +77,6 @@
     "hour": "Stunde",
     "minute": "Minute",
     "KTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "entriesAddedForАllМachines": "Einträge für alle Maschinen hinzugefügt"
 }

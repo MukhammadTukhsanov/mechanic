@@ -39,7 +39,11 @@ class _MachineStatusState extends State<MachineStatus> {
     response.then((value) {
       var data = jsonDecode(value.body);
       setState(() {
-        status = data['status'] == "ok" ? "success" : "yellow";
+        if (data['status'] == "ok") {
+          status = "success";
+        } else {
+          status = "yellow";
+        }
       });
     }).catchError((error) {
       print(error);

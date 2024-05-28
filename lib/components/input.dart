@@ -22,6 +22,7 @@ class Input extends StatelessWidget {
       this.validator = true,
       this.onChanged,
       this.inputFormatters,
+      this.hassError = false,
       this.maxLength})
       : super(key: key);
 
@@ -42,6 +43,7 @@ class Input extends StatelessWidget {
   final int? maxLength;
   final double? fontSize;
   final Function(String)? onChanged;
+  final bool? hassError;
   final List<TextInputFormatter>? inputFormatters;
 
   @override
@@ -71,7 +73,7 @@ class Input extends StatelessWidget {
               ),
             ),
             maxLength: maxLength,
-            validator: validator == true
+            validator: (validator == true)
                 ? (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter some text';
@@ -108,7 +110,9 @@ class Input extends StatelessWidget {
                 borderSide: BorderSide(color: Color(0xff336699), width: 1.5),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xff848484), width: .7),
+                borderSide: hassError!
+                    ? BorderSide(color: Color(0xffcc0000), width: 1.5)
+                    : BorderSide(color: Color(0xff848484), width: .7),
               ),
               border: OutlineInputBorder(),
             ),

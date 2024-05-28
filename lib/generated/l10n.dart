@@ -839,6 +839,8 @@ class S {
       args: [],
     );
   }
+
+  // skipped getter for the 'entriesAddedForАllМachines' key
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

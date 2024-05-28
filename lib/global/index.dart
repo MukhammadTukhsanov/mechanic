@@ -5,6 +5,8 @@ String key = '';
 String user = '';
 String ipAdress = '192.168.100.23:7878';
 // String ipAdress = '34.31.212.138';
+int count = 0;
+bool showAlert = false;
 var globalDevices = [];
 
 final monthNames = [
@@ -23,13 +25,13 @@ final monthNames = [
 ];
 
 final weekdays = [
-  S.current.sunday,
   S.current.monday,
   S.current.tuesday,
   S.current.wednesday,
   S.current.thursday,
   S.current.friday,
   S.current.saturday,
+  S.current.sunday,
 ];
 
 bool isToday(DateTime date) {
@@ -40,8 +42,8 @@ bool isToday(DateTime date) {
 }
 
 int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
-  print(start);
-  print(end);
+  print("start: $start");
+  print("end: $end");
 
   // Set the end date time to midnight
   end = DateTime(end.year, end.month, end.day);
@@ -60,10 +62,10 @@ int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
 
   // Loop through each day in the range
   while (currentDate.isBefore(end)) {
-    final dayOfWeek = currentDate.weekday;
-    if (dayOfWeek == DateTime.saturday || dayOfWeek == DateTime.sunday) {
-      weekendDays++;
-    }
+    // final dayOfWeek = currentDate.weekday;
+    // if (dayOfWeek == DateTime.saturday || dayOfWeek == DateTime.sunday) {
+    //   weekendDays++;
+    // }
     currentDate = currentDate.add(Duration(days: 1));
   }
 
@@ -72,9 +74,10 @@ int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
   final effectiveHours = (effectiveTotalMinutes / 60).floor();
   final effectiveMinutes = effectiveTotalMinutes % 60;
 
-  print(
-      "Days: ${effectiveHours ~/ 24}, hours: ${effectiveHours % 24}, effectiveMinutes: $effectiveMinutes");
+  // print(
+  //     "Days: ${effectiveHours ~/ 24}, hours: ${effectiveHours % 24}, effectiveMinutes: $effectiveMinutes");
 
+  print("effectiveHours: $effectiveHours");
   return effectiveHours;
 
   // Uncomment the following if you want to return an object
@@ -95,13 +98,14 @@ DateTime addTimeSkippingWeekends(
     currentDate = currentDate.add(Duration(minutes: 1));
 
     // Skip weekends
-    if (currentDate.weekday == DateTime.saturday ||
-        currentDate.weekday == DateTime.sunday) {
-      continue;
-    }
+    // if (currentDate.weekday == DateTime.saturday ||
+    //     currentDate.weekday == DateTime.sunday) {
+    //   continue;
+    // }
 
     remainingMinutes--;
   }
+  print("currentDate: $currentDate");
 
   return currentDate;
 }

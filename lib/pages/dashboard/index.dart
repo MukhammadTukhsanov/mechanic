@@ -304,10 +304,14 @@ class _DashboardState extends State<Dashboard> {
     String partName = e['data']['partname'].toString();
     String partNumber = e['data']['partnumber'].toString();
     DateTime finishingDate = e['data']['remainingProductionDays'] is int
-        ? addTimeSkippingWeekends(
-            e['createdAt'],
-            e['data']['remainingProductionDays'],
-            e['data']['remainingProductionTime'])
+        ? e['createdAt'].add(Duration(
+            days: e['data']['remainingProductionDays'],
+            minutes: e['data']['remainingProductionTime']))
+
+        // ? addTimeSkippingWeekends(
+        //     e['createdAt'],
+        //     e['data']['remainingProductionDays'],
+        //     e['data']['remainingProductionTime'])
         : DateTime.now();
     return Stack(
       clipBehavior: Clip.hardEdge,
@@ -348,8 +352,7 @@ class _DashboardState extends State<Dashboard> {
               e['data']['machineStopped'] == false &&
                       e['data']['toolMounted'] == false
                   ? 'success'
-                  : e['data']['machineStopped'] == true &&
-                          e['data']['toolMounted'] == false
+                  : e['data']['machineStopped'] == true
                       ? 'danger'
                       : 'transparent',
               (e['data']['remainingProductionTime'] ?? 0).toDouble(),
@@ -464,10 +467,23 @@ class _DashboardState extends State<Dashboard> {
       String partName,
       String partNumber,
       String finishingDate) {
+    print("remainingProductionDays $remainingProductionDays");
+    print("remainingProductionTime $remainingProductionTime");
     double lineWidth =
         (remainingProductionTime / 60 + remainingProductionDays * 24) * 15.75 -
-            newCalculateDaysExcludingWeekends(createdAt, DateTime.now()) *
-                15.75;
+            (DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                    ).difference(createdAt).inHours +
+                    1) *
+                15.75 -
+            (!isToday(createdAt) ? 0 : (createdAt.hour - 1) * 15.75);
+    // !isToday(e["createdAt"]
+    //               ? 0
+    //               : (e["createdAt"].hour * 15.75).toDouble());
+    // newCalculateDaysExcludingWeekends(createdAt, DateTime.now()) *
+    //     15.75;
     lineWidth = lineWidth < 0 ? 0 : lineWidth;
     return GestureDetector(
       onTapUp: (details) {

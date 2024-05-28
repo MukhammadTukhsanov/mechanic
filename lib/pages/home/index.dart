@@ -45,6 +45,8 @@ class _HomePageState extends State<HomePage> {
   String instOperatingHours = "-";
   String instOperatingMinute = "-";
 
+  String _state = '';
+
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController machineQRCodeController = TextEditingController();
@@ -109,7 +111,6 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         globalDevices = [];
       });
-
       data.map(
         (e) {
           setState(() {
@@ -175,22 +176,59 @@ class _HomePageState extends State<HomePage> {
   }
 
   getTimePeriod() {
-    DateTime now = DateTime.now();
+    final now = DateTime.now();
+    final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
 
-    int currentTime = now.hour * 60 + now.minute;
+    final time1Start = TimeOfDay(hour: 5, minute: 55);
+    final time1End = TimeOfDay(hour: 13, minute: 50);
+    final time2Start = TimeOfDay(hour: 13, minute: 55);
+    final time2End = TimeOfDay(hour: 21, minute: 50);
+    final time3Start = TimeOfDay(hour: 21, minute: 55);
+    final time3End = TimeOfDay(hour: 5, minute: 50);
 
-    if (currentTime >= 6 * 60 && currentTime <= 14 * 60 + 30) {
-      setState(() {
-        shift = "F1";
-      });
-    } else if (currentTime >= 14 * 60 && currentTime <= 22 * 60 + 30) {
-      setState(() {
-        shift = "S2";
-      });
+    setState(() {
+      if (_isTimeInRange(currentTime, time1Start, time1End)) {
+        _state = 'F1';
+      } else if (_isTimeInRange(currentTime, time2Start, time2End)) {
+        _state = 'S2';
+      } else if (_isTimeInRange(
+              currentTime, time3Start, TimeOfDay(hour: 23, minute: 59)) ||
+          _isTimeInRange(
+              currentTime, TimeOfDay(hour: 0, minute: 0), time3End)) {
+        _state = 'N3';
+      } else {
+        _state = 'Undefined State';
+      }
+    });
+    // DateTime now = DateTime.now();
+
+    // int currentTime = now.hour * 60 + now.minute;
+
+    // if (currentTime >= 6 * 60 && currentTime <= 14 * 60 + 30) {
+    //   setState(() {
+    //     shift = "F1";
+    //   });
+    // } else if (currentTime >= 14 * 60 && currentTime <= 22 * 60 + 30) {
+    //   setState(() {
+    //     shift = "S2";
+    //   });
+    // } else {
+    //   setState(() {
+    //     shift = "N3";
+    //   });
+    // }
+  }
+
+  bool _isTimeInRange(
+      TimeOfDay currentTime, TimeOfDay startTime, TimeOfDay endTime) {
+    final currentMinutes = currentTime.hour * 60 + currentTime.minute;
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+
+    if (startMinutes <= endMinutes) {
+      return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
     } else {
-      setState(() {
-        shift = "N3";
-      });
+      return currentMinutes >= startMinutes || currentMinutes <= endMinutes;
     }
   }
 
@@ -214,7 +252,7 @@ class _HomePageState extends State<HomePage> {
       });
       return;
     } else if (machineQRCodeController.text == '' &&
-        productionNumberController.text == '' &&
+        productionNumberController.text.length < 9 &&
         _machineStopped == false &&
         productionNumberController.text == '' &&
         cavityController.text == '' &&
@@ -507,7 +545,8 @@ class _HomePageState extends State<HomePage> {
                                                             ':' +
                                                             minute +
                                                             ' | ' +
-                                                            "${S.of(context).shift}  ${shift}",
+                                                            _state,
+                                                        // "${S.of(context).shift}  ${shift}",
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: GoogleFonts.lexend(
@@ -628,9 +667,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   setProductionNo() {
-    if (productionNumberController.text.length < 2) {
+    if (productionNumberController.text.length < 9) {
+      setState(() {
+        productionNumberError = true;
+      });
       return;
     }
+    setState(() {
+      productionNumberError = false;
+    });
     // http get request
     var response = http.get(
       Uri.parse(
@@ -664,10 +709,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  bool productionNumberError = false;
   Widget IsStoped() {
     return Column(
       children: [
         Input(
+            hassError: productionNumberError,
             validator: _machineStopped ? false : true,
             maxLength: 9,
             focusNode: _productionNoFocus,
