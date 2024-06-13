@@ -635,6 +635,48 @@ class _HomePageState extends State<HomePage> {
                                             _machineStopped
                                                 ? SizedBox(height: 0.0)
                                                 : IsStoped(),
+
+                                            Column(
+                                              children: [
+                                                operatingHoursImportant
+                                                    ? Input(
+                                                        controller:
+                                                            operatingHoursController,
+                                                        labelText: S
+                                                            .of(context)
+                                                            .operatingHours,
+                                                        validator: _machineStopped
+                                                            ? false
+                                                            : operatingHoursErr,
+                                                        numericOnly: true,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter
+                                                              .allow(RegExp(
+                                                                  r'[0-9]'))
+                                                        ],
+                                                      )
+                                                    // ? ModalCupertinoPicker(
+                                                    //     error: _machineStopped ? false : operatingHoursErr,
+                                                    //     label: S.of(context).operatingHours,
+                                                    //     hours: true,
+                                                    //     selectedDate: 0,
+                                                    //     onSetHour: (value) {
+                                                    //       setState(() {
+                                                    //         instOperatingHours = value['hours'].toString();
+                                                    //         instOperatingMinute = value['minutes'].toString();
+                                                    //       });
+                                                    //     },
+                                                    //   )
+                                                    : SizedBox(height: 0.0),
+                                                operatingHoursImportant
+                                                    ? SizedBox(height: 16.0)
+                                                    : SizedBox(height: 0.0),
+                                              ],
+                                            ),
+
                                             Row(children: [
                                               Expanded(
                                                   child: Button(
@@ -889,34 +931,7 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ]),
-        SizedBox(height: 16.0),
-        operatingHoursImportant
-            ? Input(
-                controller: operatingHoursController,
-                labelText: S.of(context).operatingHours,
-                validator: _machineStopped ? false : operatingHoursErr,
-                numericOnly: true,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                ],
-              )
-            // ? ModalCupertinoPicker(
-            //     error: _machineStopped ? false : operatingHoursErr,
-            //     label: S.of(context).operatingHours,
-            //     hours: true,
-            //     selectedDate: 0,
-            //     onSetHour: (value) {
-            //       setState(() {
-            //         instOperatingHours = value['hours'].toString();
-            //         instOperatingMinute = value['minutes'].toString();
-            //       });
-            //     },
-            //   )
-            : SizedBox(height: 0.0),
-        operatingHoursImportant
-            ? SizedBox(height: 16.0)
-            : SizedBox(height: 0.0),
+        SizedBox(height: 16.0)
       ],
     );
   }
