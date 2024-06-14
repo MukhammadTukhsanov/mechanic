@@ -28,11 +28,11 @@ class DashboardRightSide extends StatelessWidget {
     int daysToAdd = 0;
     while (businessDays.length < 7) {
       DateTime currentDate = DateTime.now().add(Duration(days: daysToAdd));
-      // if (currentDate.weekday != DateTime.saturday &&
-      //     currentDate.weekday != DateTime.sunday) {
-      //   businessDays.add(currentDate);
-      // }
-      businessDays.add(currentDate);
+      if (currentDate.weekday != DateTime.saturday &&
+          currentDate.weekday != DateTime.sunday) {
+        businessDays.add(currentDate);
+      }
+      // businessDays.add(currentDate);
       daysToAdd++;
     }
 

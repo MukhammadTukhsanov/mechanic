@@ -62,10 +62,10 @@ int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
 
   // Loop through each day in the range
   while (currentDate.isBefore(end)) {
-    // final dayOfWeek = currentDate.weekday;
-    // if (dayOfWeek == DateTime.saturday || dayOfWeek == DateTime.sunday) {
-    //   weekendDays++;
-    // }
+    final dayOfWeek = currentDate.weekday;
+    if (dayOfWeek == DateTime.saturday || dayOfWeek == DateTime.sunday) {
+      weekendDays++;
+    }
     currentDate = currentDate.add(Duration(days: 1));
   }
 

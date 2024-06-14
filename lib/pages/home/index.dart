@@ -38,6 +38,8 @@ class _HomePageState extends State<HomePage> {
   String errText = '';
   String shift = 'S1';
 
+  String mradioValue = "standard";
+
   int days = 0;
   int instRemainingProductionHours = 0;
   int instRemainingProductionMinute = 0;
@@ -286,10 +288,14 @@ class _HomePageState extends State<HomePage> {
         "machineStopped": _machineStopped, // true or false
         "barcodeProductionNo":
             double.parse(productionNumberController.text), // String
-        "cavity": double.parse(cavityController.text), // double
+        "cavity": cavityController.text == ""
+            ? "0"
+            : double.parse(cavityController.text), // double
         "cycleTime": "${cycleTimeController.text}", // String
         "partStatus": _partStatusOK, // true or false
-        "pieceNumber": double.parse(pieceNumberController.text), // double
+        "pieceNumber": pieceNumberController.text == ""
+            ? "0"
+            : double.parse(pieceNumberController.text), // double
         "note": "${noteController.text}", // String
         "toolCleaning": radioValue == 'yes' ? true : false, // bool
         "remainingProductionDays": days, // int
@@ -607,30 +613,163 @@ class _HomePageState extends State<HomePage> {
                                                     .of(context)
                                                     .scanMachineQRCode),
                                             SizedBox(height: 16.0),
-                                            Stack(children: [
-                                              SwitchWithText(
-                                                  value: _toolMounted,
-                                                  label:
-                                                      S.of(context).toolMounted,
-                                                  onChange:
-                                                      onChangeToolMounted),
-                                              Positioned(
-                                                  right: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      30,
-                                                  child: SwitchWithText(
-                                                    value: _machineStopped,
-                                                    label: S
-                                                        .of(context)
-                                                        .machineStopped,
-                                                    onChange: !_toolMounted
-                                                        ? onMachineStopped
-                                                        : null,
-                                                  ))
-                                            ]),
 
+                                            // Radio boxes
+                                            // Align(
+                                            //     alignment: Alignment.centerLeft,
+                                            //     child: Text(
+                                            //         S
+                                            //             .of(context)
+                                            //             .toolCleaningShiftF1Done,
+                                            //         textAlign: TextAlign.left,
+                                            //         style: GoogleFonts.lexend(
+                                            //             textStyle:
+                                            //                 const TextStyle(
+                                            //                     color: Color(
+                                            //                         0xff336699),
+                                            //                     fontSize: 22,
+                                            //                     fontWeight:
+                                            //                         FontWeight
+                                            //                             .w600)))),
+                                            // SizedBox(width: 20.0),
+                                            Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(children: [
+                                                    Transform.scale(
+                                                        scale: 1.5,
+                                                        child: Radio(
+                                                            value: "standard",
+                                                            groupValue:
+                                                                mradioValue,
+                                                            fillColor: MaterialStateProperty
+                                                                .all(const Color(
+                                                                    0xff336699)),
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _machineStopped =
+                                                                    false;
+                                                                _toolMounted =
+                                                                    false;
+                                                                mradioValue =
+                                                                    value
+                                                                        as String;
+                                                              });
+                                                              // }
+                                                              // setState(() {
+                                                              //   _toolMounted = !_toolMounted;
+                                                              // });
+                                                            })),
+                                                    Text('Standard',
+                                                        style: GoogleFonts.lexend(
+                                                            textStyle: const TextStyle(
+                                                                color: Color(
+                                                                    0xff336699),
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600)))
+                                                  ]),
+                                                  Row(children: [
+                                                    Transform.scale(
+                                                        scale: 1.5,
+                                                        child: Radio(
+                                                            value: "no",
+                                                            groupValue:
+                                                                mradioValue,
+                                                            fillColor: MaterialStateProperty
+                                                                .all(const Color(
+                                                                    0xff336699)),
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _machineStopped =
+                                                                    true;
+                                                                _toolMounted =
+                                                                    true;
+                                                                mradioValue =
+                                                                    value
+                                                                        as String;
+                                                              });
+                                                            })),
+                                                    Text(
+                                                        'Maschine läuft nicht und kein Werkzeug montiert',
+                                                        style: GoogleFonts.lexend(
+                                                            textStyle: const TextStyle(
+                                                                color: Color(
+                                                                    0xff336699),
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600)))
+                                                  ]),
+                                                  Row(children: [
+                                                    Transform.scale(
+                                                        scale: 1.5,
+                                                        child: Radio(
+                                                            value: "notNeeded",
+                                                            groupValue:
+                                                                mradioValue,
+                                                            fillColor:
+                                                                MaterialStateProperty
+                                                                    .all(Color(
+                                                                        0xff336699)),
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _machineStopped =
+                                                                    false;
+                                                                _toolMounted =
+                                                                    true;
+                                                                mradioValue =
+                                                                    value
+                                                                        as String;
+                                                              });
+                                                            })),
+                                                    Text(
+                                                        'Maschine läuft nicht und Werkzeug ist angeschlossen',
+                                                        style: GoogleFonts.lexend(
+                                                            textStyle: TextStyle(
+                                                                color: Color(
+                                                                    0xff336699),
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600))),
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            6),
+                                                  ])
+                                                ]),
                                             SizedBox(height: 16.0),
+
+                                            // Stack(children: [
+                                            //   SwitchWithText(
+                                            //       value: _toolMounted,
+                                            //       label:
+                                            //           S.of(context).toolMounted,
+                                            //       onChange:
+                                            //           onChangeToolMounted),
+                                            //   Positioned(
+                                            //       right: MediaQuery.of(context)
+                                            //               .size
+                                            //               .width /
+                                            //           30,
+                                            //       child: SwitchWithText(
+                                            //         value: _machineStopped,
+                                            //         label: S
+                                            //             .of(context)
+                                            //             .machineStopped,
+                                            //         onChange: !_toolMounted
+                                            //             ? onMachineStopped
+                                            //             : null,
+                                            //       ))
+                                            // ]),
+
+                                            // SizedBox(height: 16.0),
                                             ///////////////////////////////////////////////////////////////////////
                                             _machineStopped
                                                 ? SizedBox(height: 0.0)
@@ -783,154 +922,172 @@ class _HomePageState extends State<HomePage> {
                   labelText: S.of(context).partName,
                   disabled: true))
         ]),
-        SizedBox(height: 16.0),
-        Input(
-            labelText: S.of(context).cavity,
-            validator: _machineStopped ? false : true,
-            numericOnly: true,
-            keyboardType: TextInputType.number,
-            controller: cavityController,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
-        SizedBox(height: 16.0),
-        Input(
-            labelText: S.of(context).cycleTime,
-            validator: _machineStopped ? false : true,
-            numericOnly: true,
-            keyboardType: TextInputType.number,
-            controller: cycleTimeController,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^[\d<>]*\,?\d{0,1}')),
-              // FilteringTextInputFormatter.allow(RegExp(r'[0-9-><,]'))
-            ]),
-        SizedBox(height: 16.0),
-        SwitchWithText(
-            value: _partStatusOK,
-            label: S.of(context).partStatusOk,
-            onChange: () {
-              setState(() {
-                _partStatusOK = !_partStatusOK;
-              });
-            }),
-        SizedBox(height: 16.0),
-        Input(
-            labelText: S.of(context).pieceNumber,
-            validator: _machineStopped ? false : true,
-            numericOnly: true,
-            keyboardType: TextInputType.number,
-            controller: pieceNumberController,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : Input(
+                labelText: S.of(context).cavity,
+                validator: _machineStopped ? false : true,
+                numericOnly: true,
+                keyboardType: TextInputType.number,
+                controller: cavityController,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : Input(
+                labelText: S.of(context).cycleTime,
+                validator: _machineStopped ? false : true,
+                numericOnly: true,
+                keyboardType: TextInputType.number,
+                controller: cycleTimeController,
+                inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^[\d<>]*\,?\d{0,1}')),
+                    // FilteringTextInputFormatter.allow(RegExp(r'[0-9-><,]'))
+                  ]),
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : SwitchWithText(
+                value: _partStatusOK,
+                label: S.of(context).partStatusOk,
+                onChange: () {
+                  setState(() {
+                    _partStatusOK = !_partStatusOK;
+                  });
+                }),
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : Input(
+                labelText: S.of(context).pieceNumber,
+                validator: _machineStopped ? false : true,
+                numericOnly: true,
+                keyboardType: TextInputType.number,
+                controller: pieceNumberController,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
         SizedBox(height: 16.0),
         Input(
             validator: false,
             controller: noteController,
             maxLines: 4,
             labelText: S.of(context).note),
-        SizedBox(height: 16.0),
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Text(S.of(context).toolCleaningShiftF1Done,
-                textAlign: TextAlign.left,
-                style: GoogleFonts.lexend(
-                    textStyle: const TextStyle(
-                        color: Color(0xff336699),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600)))),
-        SizedBox(width: 20.0),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(children: [
-            Transform.scale(
-                scale: 1.5,
-                child: Radio(
-                    value: "yes",
-                    groupValue: radioValue,
-                    fillColor:
-                        MaterialStateProperty.all(const Color(0xff336699)),
-                    onChanged: (value) {
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : Align(
+                alignment: Alignment.centerLeft,
+                child: Text(S.of(context).toolCleaningShiftF1Done,
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.lexend(
+                        textStyle: const TextStyle(
+                            color: Color(0xff336699),
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600)))),
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(width: 20.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Row(children: [
+                  Transform.scale(
+                      scale: 1.5,
+                      child: Radio(
+                          value: "yes",
+                          groupValue: radioValue,
+                          fillColor: MaterialStateProperty.all(
+                              const Color(0xff336699)),
+                          onChanged: (value) {
+                            setState(() {
+                              radioValue = value as String;
+                            });
+                          })),
+                  Text(S.of(context).yes,
+                      style: GoogleFonts.lexend(
+                          textStyle: const TextStyle(
+                              color: Color(0xff336699),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600)))
+                ]),
+                Row(children: [
+                  Transform.scale(
+                      scale: 1.5,
+                      child: Radio(
+                          value: "no",
+                          groupValue: radioValue,
+                          fillColor: MaterialStateProperty.all(
+                              const Color(0xff336699)),
+                          onChanged: (value) {
+                            setState(() {
+                              radioValue = value as String;
+                            });
+                          })),
+                  Text(S.of(context).no,
+                      style: GoogleFonts.lexend(
+                          textStyle: const TextStyle(
+                              color: Color(0xff336699),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600)))
+                ]),
+                Row(children: [
+                  Transform.scale(
+                      scale: 1.5,
+                      child: Radio(
+                          value: "notNeeded",
+                          groupValue: radioValue,
+                          fillColor:
+                              MaterialStateProperty.all(Color(0xff336699)),
+                          onChanged: (value) {
+                            setState(() {
+                              radioValue = value as String;
+                            });
+                          })),
+                  Text(S.of(context).notNeeded,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                              color: Color(0xff336699),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600))),
+                  SizedBox(width: MediaQuery.of(context).size.width / 6),
+                ])
+              ]),
+        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        _toolMounted
+            ? SizedBox(height: 0.0)
+            : Row(children: [
+                Expanded(
+                    child: ModalCupertinoPicker(
+                  label: S.of(context).remainingProductionDays,
+                  labelFontSize:
+                      Localizations.localeOf(context).languageCode == 'de'
+                          ? 15
+                          : 22,
+                  selectedDate: days,
+                  onSelect: (index) {
+                    setState(() {
+                      days = index;
+                    });
+                  },
+                )),
+                SizedBox(width: 20.0),
+                Expanded(
+                  child: ModalCupertinoPicker(
+                    label: S.of(context).remainingProductionTime,
+                    labelFontSize:
+                        Localizations.localeOf(context).languageCode == 'de'
+                            ? 15
+                            : 22,
+                    hours: true,
+                    selectedDate: instRemainingProductionHours,
+                    onSetHour: (value) {
                       setState(() {
-                        radioValue = value as String;
+                        instRemainingProductionHours = value['hours'];
+                        instRemainingProductionMinute = value['minutes'];
                       });
-                    })),
-            Text(S.of(context).yes,
-                style: GoogleFonts.lexend(
-                    textStyle: const TextStyle(
-                        color: Color(0xff336699),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600)))
-          ]),
-          Row(children: [
-            Transform.scale(
-                scale: 1.5,
-                child: Radio(
-                    value: "no",
-                    groupValue: radioValue,
-                    fillColor:
-                        MaterialStateProperty.all(const Color(0xff336699)),
-                    onChanged: (value) {
-                      setState(() {
-                        radioValue = value as String;
-                      });
-                    })),
-            Text(S.of(context).no,
-                style: GoogleFonts.lexend(
-                    textStyle: const TextStyle(
-                        color: Color(0xff336699),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600)))
-          ]),
-          Row(children: [
-            Transform.scale(
-                scale: 1.5,
-                child: Radio(
-                    value: "notNeeded",
-                    groupValue: radioValue,
-                    fillColor: MaterialStateProperty.all(Color(0xff336699)),
-                    onChanged: (value) {
-                      setState(() {
-                        radioValue = value as String;
-                      });
-                    })),
-            Text(S.of(context).notNeeded,
-                style: GoogleFonts.lexend(
-                    textStyle: TextStyle(
-                        color: Color(0xff336699),
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600))),
-            SizedBox(width: MediaQuery.of(context).size.width / 6),
-          ])
-        ]),
-        SizedBox(height: 16.0),
-        Row(children: [
-          Expanded(
-              child: ModalCupertinoPicker(
-            label: S.of(context).remainingProductionDays,
-            labelFontSize:
-                Localizations.localeOf(context).languageCode == 'de' ? 15 : 22,
-            selectedDate: days,
-            onSelect: (index) {
-              setState(() {
-                days = index;
-              });
-            },
-          )),
-          SizedBox(width: 20.0),
-          Expanded(
-            child: ModalCupertinoPicker(
-              label: S.of(context).remainingProductionTime,
-              labelFontSize:
-                  Localizations.localeOf(context).languageCode == 'de'
-                      ? 15
-                      : 22,
-              hours: true,
-              selectedDate: instRemainingProductionHours,
-              onSetHour: (value) {
-                setState(() {
-                  instRemainingProductionHours = value['hours'];
-                  instRemainingProductionMinute = value['minutes'];
-                });
-              },
-            ),
-          )
-        ]),
+                    },
+                  ),
+                )
+              ]),
         SizedBox(height: 16.0)
       ],
     );
