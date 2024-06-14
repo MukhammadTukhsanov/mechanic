@@ -286,8 +286,9 @@ class _HomePageState extends State<HomePage> {
         "machineQrCode": "${machineQRCodeController.text}", // String
         "toolMounted": _toolMounted, // true or false
         "machineStopped": _machineStopped, // true or false
-        "barcodeProductionNo":
-            double.parse(productionNumberController.text), // String
+        "barcodeProductionNo": productionNumberController.text == ""
+            ? "0"
+            : double.parse(productionNumberController.text), // String
         "cavity": cavityController.text == ""
             ? "0"
             : double.parse(cavityController.text), // double
@@ -662,7 +663,7 @@ class _HomePageState extends State<HomePage> {
                                                               //   _toolMounted = !_toolMounted;
                                                               // });
                                                             })),
-                                                    Text('Standard',
+                                                    Text('Maschine läuft',
                                                         style: GoogleFonts.lexend(
                                                             textStyle: const TextStyle(
                                                                 color: Color(
@@ -694,7 +695,7 @@ class _HomePageState extends State<HomePage> {
                                                               });
                                                             })),
                                                     Text(
-                                                        'Maschine läuft nicht und kein Werkzeug montiert',
+                                                        'Maschine läuft nicht und kein Werkzeug gerüstet',
                                                         style: GoogleFonts.lexend(
                                                             textStyle: const TextStyle(
                                                                 color: Color(
@@ -727,7 +728,7 @@ class _HomePageState extends State<HomePage> {
                                                               });
                                                             })),
                                                     Text(
-                                                        'Maschine läuft nicht und Werkzeug ist angeschlossen',
+                                                        'Maschine läuft nichtaber Werkzeug ist gerüstet',
                                                         style: GoogleFonts.lexend(
                                                             textStyle: TextStyle(
                                                                 color: Color(
@@ -971,7 +972,7 @@ class _HomePageState extends State<HomePage> {
         Input(
             validator: false,
             controller: noteController,
-            maxLines: 4,
+            maxLines: 2,
             labelText: S.of(context).note),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
         _toolMounted
