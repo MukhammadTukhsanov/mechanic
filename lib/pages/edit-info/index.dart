@@ -7,6 +7,7 @@ import 'package:schichtbuch_shift/global/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:schichtbuch_shift/pages/edit-info/machineItem.dart';
 
 class EditInfo extends StatefulWidget {
   @override
@@ -136,27 +137,60 @@ class _EditInfoState extends State {
                 padding: EdgeInsets.all(16.0),
                 child: Column(children: [
                   ...editedDevices.map((e) {
-                    return machineItem(
-                        e['machineQrCode'].toString(),
-                        e['createdAt'].toString(),
-                        e['shift'].toString(),
-                        e['barcodeProductionNo'].toString(),
-                        e['cavity'].toString(),
-                        e['cycleTime'].toString(),
-                        e['partStatus'].toString(),
-                        e['note'].toString(),
-                        e['toolCleaning'].toString(),
-                        e['remainingProductionTime'].toString(),
-                        e['remainingProductionDays'].toString(),
-                        e['operatingHours'].toString(),
-                        e['partName'].toString(),
-                        e['partNumber'].toString());
+                    return new MachineItem(
+                      id: e['id'].toString(),
+                      pieceNumber: e['pieceNumber'],
+                      token: e['token'],
+                      toolMounted: e['toolMounted'],
+                      machineStopped: e['machineStopped'],
+                      machineQrCode: e['machineQrCode'].toString(),
+                      createdAt: e['createdAt'].toString(),
+                      shift: e['shift'].toString(),
+                      barcodeProductionNo: e['barcodeProductionNo'].toString(),
+                      partName: e['partName'].toString(),
+                      partNumber: e['partNumber'].toString(),
+                      cavity: e['cavity'].toString(),
+                      cycleTime: e['cycleTime'].toString(),
+                      partStatus: e['partStatus'],
+                      note: e['note'].toString(),
+                      toolCleaning: e['toolCleaning'].toString(),
+                      remainingProductionTime:
+                          e['remainingProductionTime'].toString(),
+                      remainingProductionDays:
+                          e['remainingProductionDays'].toString(),
+                      operatingHours: e['operatingHours'].toString(),
+                    );
+                    // return machineItem(
+                    //     e['id'].toString(),
+                    //     e['pieceNumber'],
+                    //     e['token'],
+                    //     e['toolMounted'],
+                    //     e['machineStopped'],
+                    //     e['machineQrCode'].toString(),
+                    //     e['createdAt'].toString(),
+                    //     e['shift'].toString(),
+                    //     e['barcodeProductionNo'].toString(),
+                    //     e['cavity'].toString(),
+                    //     e['cycleTime'].toString(),
+                    //     e['partStatus'].toString(),
+                    //     e['note'].toString(),
+                    //     e['toolCleaning'].toString(),
+                    //     e['remainingProductionTime'].toString(),
+                    //     e['remainingProductionDays'].toString(),
+                    //     e['operatingHours'].toString(),
+                    //     e['partName'].toString(),
+                    //     e['partNumber'].toString());
                   }).toList(),
                 ]),
               )));
   }
 
   Widget machineItem(
+      String id,
+      pieceNumber,
+      String token,
+      bool toolMounted,
+      bool machineStopped,
       String machineQrCode,
       String createdAt,
       String shift,
@@ -171,6 +205,54 @@ class _EditInfoState extends State {
       String remainingProductionTime,
       String remainingProductionDays,
       String operatingHours) {
+    void toggleExpand(int index) {
+      setState(() {
+        expanded[index] = !expanded[index];
+      });
+    }
+
+    void saveData(key, value) {
+      print(key + '___' + value);
+
+      var data = {
+        "token": token,
+        "pieceNumber": pieceNumber,
+        "toolMounted": toolMounted,
+        "machineStopped": machineStopped,
+        "machineQrCode": machineQrCode,
+        "createdAt": createdAt,
+        "shift": shift,
+        "barcodeProductionNo": barcodeProductionNo,
+        "cavity": int.tryParse(cavity) ?? 0,
+        "cycleTime": cycleTime,
+        "partStatus": partStatus,
+        "note": note,
+        "toolCleaning": toolCleaning,
+        "remainingProductionTime": int.tryParse(remainingProductionTime) ?? 0,
+        "remainingProductionDays": int.tryParse(remainingProductionDays) ?? 0,
+        "operatingHours": operatingHours,
+        "partName": partName,
+        "partNumber": partNumber
+      };
+
+      // data[key] = value;
+
+      var response = http.put(
+        Uri.parse('http://$ipAdress/api/machines/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
+      response.then((value) {
+        print("value $value");
+        // reload the page
+        getDevice();
+      }).catchError((error) {
+        print("error $error");
+      });
+    }
+
     return Column(
       children: [
         Theme(
@@ -216,35 +298,81 @@ class _EditInfoState extends State {
                           fontSize: 20,
                           color: Color(0xff336699),
                         )),
-                    // trailing: GestureDetector(
-                    //   onTap: () {
-                    //     Navigator.push(context,
-                    //         MaterialPageRoute(builder: (context) {
-                    //       return EditPage(
-                    //           machineQrCode: machineQrCode,
-                    //           createdAt: createdAt,
-                    //           shift: shift,
-                    //           barcodeProductionNo: barcodeProductionNo,
-                    //           cavity: cavity,
-                    //           cycleTime: cycleTime,
-                    //           partStatus: partStatus,
-                    //           note: note,
-                    //           toolCleaning: toolCleaning,
-                    //           remainingProductionTime: remainingProductionTime,
-                    //           remainingProductionDays: remainingProductionDays,
-                    //           operatingHours: operatingHours);
-                    //     }));
-                    //   },
-                    //   child: Container(
-                    //       decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(6.0),
-                    //           border: Border.all(
-                    //               color: Color(0xff336699), width: 1.0)),
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.all(10.0),
-                    //         child: Icon(Icons.edit, color: Color(0xff336699)),
-                    //       )),
-                    // ),
+                  ),
+                  Divider(),
+                  // machineStopped
+                  ListTile(
+                    title: Text(
+                      S.of(context).machineStopped,
+                      style: GoogleFonts.lexend(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff336699),
+                      ),
+                    ),
+                    subtitle: expanded[0]
+                        ? Row(children: [
+                            Transform.scale(
+                                scale: 1.5,
+                                child: Radio(
+                                    value: true,
+                                    groupValue: machineStopped,
+                                    onChanged: (value) {
+                                      print('value');
+                                      print(value);
+                                      setState(() {
+                                        machineStopped = value as bool;
+                                      });
+                                    })),
+                            Text('Yes',
+                                style: GoogleFonts.lexend(
+                                  fontSize: 20,
+                                  color: Color(0xff336699),
+                                )),
+                            SizedBox(width: 20),
+                            Transform.scale(
+                                scale: 1.5,
+                                child: Radio(
+                                    value: false,
+                                    groupValue: machineStopped,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        machineStopped = value as bool;
+                                      });
+                                    })),
+                            Text('No',
+                                style: GoogleFonts.lexend(
+                                  fontSize: 20,
+                                  color: Color(0xff336699),
+                                )),
+                          ])
+                        : Text('No',
+                            style: GoogleFonts.lexend(
+                              fontSize: 20,
+                              color: Color(0xff336699),
+                            )),
+                    trailing: GestureDetector(
+                      onTap: () {
+                        if (expanded[0]) {
+                          print('machineStopped');
+                          print(machineStopped);
+                          saveData('machineStopped', machineStopped);
+                        }
+
+                        toggleExpand(0);
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              border: Border.all(
+                                  color: Color(0xff336699), width: 1.0)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: expanded[0]
+                                ? Icon(Icons.save, color: Color(0xff336699))
+                                : Icon(Icons.edit, color: Color(0xff336699)),
+                          )),
+                    ),
                   ),
                   Divider(),
                   ListTile(
@@ -362,22 +490,6 @@ class _EditInfoState extends State {
                         )),
                   ),
                   Divider(),
-                  // ListTile(
-                  //   title: Text(
-                  //     'Number of Pieces Acumulated',
-                  //     style: GoogleFonts.lexend(
-                  //       fontSize: 18,
-                  //       fontWeight: FontWeight.bold,
-                  //       color: Color(0xff336699),
-                  //     ),
-                  //   ),
-                  //   subtitle: Text('2',
-                  //       style: GoogleFonts.lexend(
-                  //         fontSize: 20,
-                  //         color: Color(0xff336699),
-                  //       )),
-                  // ),
-                  // Divider(),
                   ListTile(
                     title: Text(
                       S.of(context).note,

@@ -440,6 +440,16 @@ class S {
     );
   }
 
+  // partStatusBad
+  String get partStatusBad {
+    return Intl.message(
+      'Part Status Bad',
+      name: 'partStatusBad',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Piece Number`
   String get pieceNumber {
     return Intl.message(

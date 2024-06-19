@@ -87,7 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "preparationOfShift":
             MessageLookupByLibrary.simpleMessage("Vorbereitung der Schicht OK"),
         "productionNumber":
-            MessageLookupByLibrary.simpleMessage("Produktionsnummer"),
+            MessageLookupByLibrary.simpleMessage("Produktions nummer"),
         "remainingProductionDays": MessageLookupByLibrary.simpleMessage(
             "Verbleibende Produktionszeit in Tagen"),
         "remainingProductionTime": MessageLookupByLibrary.simpleMessage(
@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saturday": MessageLookupByLibrary.simpleMessage("Samstag"),
         "save": MessageLookupByLibrary.simpleMessage("Speichern"),
         "scanBarcodeProductionNo": MessageLookupByLibrary.simpleMessage(
-            "Barcode Produktionsnummer scannen"),
+            "Barcode Produktions nummer scannen"),
         "scanMachineQRCode":
             MessageLookupByLibrary.simpleMessage("Maschinen QR-Code scannen"),
         "september": MessageLookupByLibrary.simpleMessage("September"),

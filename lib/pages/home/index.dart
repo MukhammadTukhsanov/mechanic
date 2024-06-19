@@ -728,7 +728,7 @@ class _HomePageState extends State<HomePage> {
                                                               });
                                                             })),
                                                     Text(
-                                                        'Maschine läuft nichtaber Werkzeug ist gerüstet',
+                                                        'Maschine läuft nicht aber Werkzeug ist gerüstet',
                                                         style: GoogleFonts.lexend(
                                                             textStyle: TextStyle(
                                                                 color: Color(

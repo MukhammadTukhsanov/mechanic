@@ -5,6 +5,7 @@ String key = '';
 String user = '';
 String ipAdress = '192.168.100.23:7878';
 // String ipAdress = '34.31.212.138';
+// String ipAdress = '127.0.0.1:5000';
 int count = 0;
 bool showAlert = false;
 var globalDevices = [];
