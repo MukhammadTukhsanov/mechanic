@@ -19,16 +19,16 @@ class MachineItem extends StatefulWidget {
   final String machineQrCode;
   final String createdAt;
   final String shift;
-  final String barcodeProductionNo;
-  final String partName;
-  final String partNumber;
-  final String cavity;
+  final int barcodeProductionNo;
+  final partName;
+  final partNumber;
+  final int cavity;
   final String cycleTime;
   final bool partStatus;
   final String note;
-  final String toolCleaning;
-  final String remainingProductionTime;
-  final String remainingProductionDays;
+  final bool toolCleaning;
+  final int remainingProductionTime;
+  final int remainingProductionDays;
   final String operatingHours;
 
   MachineItem({
@@ -76,9 +76,9 @@ class _MachineItemState extends State<MachineItem> {
     super.initState();
     _machineStopped = widget.machineStopped;
     _note = widget.note;
-    _remainingProductionTime = int.parse(widget.remainingProductionTime);
-    _remainingProductionDays = int.parse(widget.remainingProductionDays);
-    _cavity = int.parse(widget.cavity);
+    _remainingProductionTime = widget.remainingProductionTime;
+    _remainingProductionDays = widget.remainingProductionDays;
+    _cavity = widget.cavity;
     _cycleTime = widget.cycleTime;
     _partStatus = widget.partStatus;
     _pieceNumber = widget.pieceNumber;
@@ -202,7 +202,7 @@ class _MachineItemState extends State<MachineItem> {
                           height: 10,
                         ),
                         Input(
-                            labelText: S.of(context).pieceNumber,
+                            labelText: 'Produktionsauftragsnr.',
                             validator: _machineStopped ? false : true,
                             numericOnly: true,
                             keyboardType: TextInputType.number,
@@ -325,38 +325,26 @@ class _MachineItemState extends State<MachineItem> {
                         // machineStopped
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).machineStopped + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            // make 50% of the screen width
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).machineStopped + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            // Radio Button
-                            Text(
-                              _machineStopped
-                                  ? S.of(context).yes
-                                  : S.of(context).no,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).pieceNumber + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _pieceNumber.toString(),
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _machineStopped
+                                    ? S.of(context).yes
+                                    : S.of(context).no,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
@@ -364,51 +352,23 @@ class _MachineItemState extends State<MachineItem> {
 
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).shift + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).pieceNumber + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            Text(
-                              widget.shift,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).scanBarcodeProductionNo + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              widget.barcodeProductionNo,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).cavity + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _cavity.toString(),
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _pieceNumber.toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
@@ -416,17 +376,69 @@ class _MachineItemState extends State<MachineItem> {
 
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).cycleTime + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).shift + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            Text(
-                              _cycleTime,
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                widget.shift,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).scanBarcodeProductionNo + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                widget.barcodeProductionNo.toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).cavity + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _cavity.toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
@@ -434,37 +446,23 @@ class _MachineItemState extends State<MachineItem> {
 
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).partStatusOk + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).cycleTime + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            Text(
-                              widget.partStatus
-                                  ? S.of(context).partStatusOk
-                                  : S.of(context).partStatusBad,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).note + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _note,
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _cycleTime,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
@@ -472,68 +470,121 @@ class _MachineItemState extends State<MachineItem> {
 
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).toolCleaningShiftF1Done + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).partStatusOk + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            Text(
-                              widget.toolCleaning,
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                widget.partStatus
+                                    ? S.of(context).yes
+                                    : S.of(context).no,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).note + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _note,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).toolCleaningShiftF1Done + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                widget.toolCleaning
+                                    ? S.of(context).yes
+                                    : S.of(context).no,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
                         ),
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).remainingProductionTime + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).remainingProductionTime + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            Text(
-                              _remainingProductionTime.toString(),
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).remainingProductionDays + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              _remainingProductionDays.toString(),
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _remainingProductionTime.toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
                         ),
                         Row(
                           children: <Widget>[
-                            Text(
-                              S.of(context).operatingHours + ': ',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                S.of(context).remainingProductionDays + ': ',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            Text(
-                              widget.operatingHours,
-                              style: TextStyle(
-                                fontSize: 15,
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              child: Text(
+                                _remainingProductionDays.toString(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ],
