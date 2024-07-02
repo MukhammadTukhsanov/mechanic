@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:schichtbuch_shift/generated/l10n.dart';
 
@@ -143,7 +144,11 @@ class _MachineItemState extends State<MachineItem> {
         children: <Widget>[
           ListTile(
             title: Text(
-              widget.machineQrCode,
+              widget.partNumber.toString() == ""
+                  ? "PartNo und Partname sind leer"
+                  : widget.partNumber.toString() +
+                      ' | ' +
+                      widget.partName.toString(),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -202,7 +207,7 @@ class _MachineItemState extends State<MachineItem> {
                           height: 10,
                         ),
                         Input(
-                            labelText: 'Produktionsauftragsnr.',
+                            labelText: 'Stückzahl kumuliert',
                             validator: _machineStopped ? false : true,
                             numericOnly: true,
                             keyboardType: TextInputType.number,
@@ -251,18 +256,18 @@ class _MachineItemState extends State<MachineItem> {
                         SizedBox(
                           height: 10,
                         ),
-                        Column(
-                          children: <Widget>[
-                            SwitchWithText(
-                                label: S.of(context).partStatusOk,
-                                value: _partStatus,
-                                onChange: () {
-                                  setState(() {
-                                    _partStatus = !_partStatus;
-                                  });
-                                }),
-                          ],
-                        ),
+                        // Column(
+                        //   children: <Widget>[
+                        //     SwitchWithText(
+                        //         label: S.of(context).partStatusOk,
+                        //         value: _partStatus,
+                        //         onChange: () {
+                        //           setState(() {
+                        //             _partStatus = !_partStatus;
+                        //           });
+                        //         }),
+                        //   ],
+                        // ),
                         SizedBox(
                           height: 10,
                         ),
@@ -317,277 +322,406 @@ class _MachineItemState extends State<MachineItem> {
                       ],
                     ))
                 : Container(
-                    padding: EdgeInsets.all(10),
-                    // height: 200,
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        // machineStopped
-                        Row(
-                          children: <Widget>[
-                            // make 50% of the screen width
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).machineStopped + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _machineStopped
-                                    ? S.of(context).yes
-                                    : S.of(context).no,
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).machineStopped + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  _machineStopped
+                                      ? S.of(context).yes
+                                      : S.of(context).no,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).pieceNumber + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _pieceNumber.toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).pieceNumber + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  _pieceNumber.toString(),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).shift + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                widget.shift,
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).shift + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  widget.shift,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).scanBarcodeProductionNo + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                widget.barcodeProductionNo.toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).scanBarcodeProductionNo + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  widget.barcodeProductionNo.toString(),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).cavity + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _cavity.toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).cavity + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  _cavity.toString(),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).cycleTime + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _cycleTime,
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).cycleTime + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  widget.cycleTime,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).partStatusOk + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                widget.partStatus
-                                    ? S.of(context).yes
-                                    : S.of(context).no,
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).partStatusOk + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  _partStatus
+                                      ? S.of(context).yes
+                                      : S.of(context).no,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).note + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _note,
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).note + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  _note,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).toolCleaningShiftF1Done + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                widget.toolCleaning
-                                    ? S.of(context).yes
-                                    : S.of(context).no,
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).toolCleaningShiftF1Done + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  widget.toolCleaning
+                                      ? S.of(context).yes
+                                      : S.of(context).no,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).remainingProductionTime + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xff336699),
+                                width: 1,
                               ),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _remainingProductionTime.toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).remainingProductionTime + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                child: Text(
+                                  _remainingProductionTime.toString(),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                S.of(context).remainingProductionDays + ': ',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                        Container(
+                          padding: EdgeInsets.only(bottom: 4, top: 14),
+                          decoration: BoxDecoration(
+                            border: Border(),
+                          ),
+                          child: Row(
+                            // space between
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // make 50% of the screen width
+                              SizedBox(
+                                child: Text(
+                                  S.of(context).remainingProductionDays + ': ',
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                _remainingProductionDays.toString(),
-                                style: TextStyle(
-                                  fontSize: 15,
+                              SizedBox(
+                                child: Text(
+                                  _remainingProductionDays.toString(),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color(0xff336699)),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
