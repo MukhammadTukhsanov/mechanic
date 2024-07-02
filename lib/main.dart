@@ -28,8 +28,7 @@ class Router extends StatelessWidget {
       ),
       initialRoute: '/login',
       routes: {
-        '/login': (context) => HomePage(),
-        // '/login': (context) => Login(),
+        '/login': (context) => Login(),
       },
     );
   }

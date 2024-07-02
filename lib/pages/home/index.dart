@@ -109,6 +109,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   getMachinesList() async {
+    var getShiftStatus =
+        await http.get(Uri.parse('http://$ipAdress/api/machines/${key}'));
+
+    if (getShiftStatus.statusCode == 200) {
+      var data = jsonDecode(getShiftStatus.body);
+      setState(() {
+        // shiftText = "false";
+        // lastShift = "F1";
+        shiftText = "${data[0]['toolCleaning']}";
+        lastShift = "${data[0]['shift']}";
+      });
+    }
     var response = await http.get(Uri.parse('http://$ipAdress/api/machines'));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
@@ -1006,11 +1018,22 @@ class _HomePageState extends State<HomePage> {
             ? SizedBox(height: 0.0)
             : Align(
                 alignment: Alignment.centerLeft,
-                child: Text(S.of(context).toolCleaningShiftF1Done,
+                child: Text(
+                    // shiftText + lastShift
+                    (shiftText == "false" && lastShift == "F1") ||
+                            (shiftText == "false" && lastShift == "S2")
+                        ? "Achtung - Werkzeugreinigung in notwending!"
+                        : (shiftText == "true" && lastShift == "F1")
+                            ? "Ist erledigt"
+                            : "Werkzeugreinigung in Schicht Fsfdh1 erledigt?",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lexend(
-                        textStyle: const TextStyle(
-                            color: Color(0xff336699),
+                        textStyle: TextStyle(
+                            color: (shiftText == "false" &&
+                                        lastShift == "F1") ||
+                                    (shiftText == "false" && lastShift == "S2")
+                                ? Colors.red
+                                : Color(0xff336699),
                             fontSize: 22,
                             fontWeight: FontWeight.w600)))),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(width: 20.0),
