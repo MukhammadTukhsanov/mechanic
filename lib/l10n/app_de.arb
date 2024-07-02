@@ -87,5 +87,6 @@
     "wzDefective": "WZ defekt",
     "machineDefective": "Maschine defekt",
     "peripheralDefective": "Peripherie defekt",
-    "noteTextCombinations": "Kombinationeasdasdn von Notiztexten"
+    "noteTextCombinations": "Kombinationeasdasdn von Notiztexten",
+    "toolId": "Werkzeugummer"
 }

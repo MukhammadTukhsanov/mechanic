@@ -35,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   bool operatingHoursImportant = false;
   bool loadSaving = false;
   bool operatingHoursErr = false;
+  bool toolIdIsDisabled = false;
+  bool barcodeIsDisabled = false;
 
   String radioValue = "yes";
   String errText = '';
@@ -63,6 +65,7 @@ class _HomePageState extends State<HomePage> {
   final noteController = TextEditingController();
   final timeController = TextEditingController();
   final operatingHoursController = TextEditingController();
+  final toolNumberController = TextEditingController();
 
   final FocusNode _machineQRFocus = FocusNode();
   final FocusNode _productionNoFocus = FocusNode();
@@ -927,17 +930,58 @@ class _HomePageState extends State<HomePage> {
   Widget IsStoped() {
     return Column(
       children: [
-        Input(
-            hassError: productionNumberError,
-            validator: _machineStopped ? false : true,
-            maxLength: 9,
-            focusNode: _productionNoFocus,
-            keyboardType: TextInputType.number,
-            numericOnly: true,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            controller: productionNumberController,
-            prefixIcon: Icons.qr_code,
-            labelText: S.of(context).scanBarcodeProductionNo),
+        Row(
+          children: [
+            Expanded(
+              child: Input(
+                  onChanged: (value) {
+                    if (value.length > 0) {
+                      setState(() {
+                        toolIdIsDisabled = true;
+                      });
+                    } else {
+                      setState(() {
+                        toolIdIsDisabled = false;
+                      });
+                    }
+                  },
+                  disabled: barcodeIsDisabled,
+                  hassError: productionNumberError,
+                  validator:
+                      _machineStopped || barcodeIsDisabled ? false : true,
+                  maxLength: 9,
+                  focusNode: _productionNoFocus,
+                  keyboardType: TextInputType.number,
+                  numericOnly: true,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  controller: productionNumberController,
+                  prefixIcon: Icons.qr_code,
+                  labelText: S.of(context).scanBarcodeProductionNo),
+            ),
+            _toolMounted ? SizedBox(width: 20.0) : SizedBox(height: 0.0),
+            _toolMounted
+                ? Expanded(
+                    child: Input(
+                      onChanged: (value) {
+                        if (value.length > 0) {
+                          setState(() {
+                            barcodeIsDisabled = true;
+                          });
+                        } else {
+                          setState(() {
+                            barcodeIsDisabled = false;
+                          });
+                        }
+                      },
+                      validator: toolIdIsDisabled,
+                      controller: toolNumberController,
+                      labelText: S.of(context).toolId,
+                      disabled: toolIdIsDisabled,
+                    ),
+                  )
+                : SizedBox(height: 0.0),
+          ],
+        ),
         SizedBox(height: 16.0),
         Row(children: [
           Expanded(
@@ -1025,7 +1069,7 @@ class _HomePageState extends State<HomePage> {
                         ? "Achtung - Werkzeugreinigung in notwending!"
                         : (shiftText == "true" && lastShift == "F1")
                             ? "Ist erledigt"
-                            : "Werkzeugreinigung in Schicht Fsfdh1 erledigt?",
+                            : "Werkzeugreinigung in Schicht F1 erledigt?",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lexend(
                         textStyle: TextStyle(

@@ -121,5 +121,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "yes": MessageLookupByLibrary.simpleMessage("Yes"),
         "noteTextCombinations":
             MessageLookupByLibrary.simpleMessage("Note text combinations"),
+        "toolId": MessageLookupByLibrary.simpleMessage("Tool ID")
       };
 }

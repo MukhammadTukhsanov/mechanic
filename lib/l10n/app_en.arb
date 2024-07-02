@@ -87,5 +87,6 @@
     "wzDefective": "WZ defective",
     "machineDefective": "Machine defective",
     "peripheralDefective": "Peripheral defective",
-    "noteTextCombinations": "Note text combinations"
+    "noteTextCombinations": "Note text combinations",
+    "toolId": "Tool ID"
 }

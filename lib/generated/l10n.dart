@@ -939,6 +939,16 @@ class S {
       args: [],
     );
   }
+
+  /// 'toolId'
+  String get toolId {
+    return Intl.message(
+      'Tool ID',
+      name: 'toolId',
+      desc: '',
+      args: [],
+    );
+  }
   // skipped getter for the 'entriesAddedForАllМachines' key
 }
 
