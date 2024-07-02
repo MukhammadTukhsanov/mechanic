@@ -54,8 +54,6 @@ int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
 
   // Convert to hours and minutes
   final totalMinutes = (totalMilliseconds / (1000 * 60)).floor();
-  final totalHours = (totalMinutes / 60).floor();
-  final remainingMinutes = totalMinutes % 60;
 
   // Create a counter to keep track of weekend days (0 = Sunday, 6 = Saturday)
   int weekendDays = 0;
@@ -73,7 +71,6 @@ int newCalculateDaysExcludingWeekends(DateTime start, DateTime end) {
   // Calculate effective time excluding weekends
   final effectiveTotalMinutes = totalMinutes - (weekendDays * 24 * 60);
   final effectiveHours = (effectiveTotalMinutes / 60).floor();
-  final effectiveMinutes = effectiveTotalMinutes % 60;
 
   // print(
   //     "Days: ${effectiveHours ~/ 24}, hours: ${effectiveHours % 24}, effectiveMinutes: $effectiveMinutes");

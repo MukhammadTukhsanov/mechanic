@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -171,7 +173,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
     response.then((value) {
-      var data = jsonDecode(value.body);
+      // var data = jsonDecode(value.body);
     }).catchError((error) {
       print(error);
     });
@@ -411,6 +413,24 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _machineStopped = !_machineStopped;
     });
+  }
+
+  FocusNode _noteFocus = FocusNode();
+  bool _showDialog = true;
+
+  _showNoteDialog() async {
+    if (_showDialog) {
+      _showDialog =
+          false; // Prevent subsequent taps from showing the dialog again
+      await _showNoteTextCombinations(context);
+      _noteFocus
+          .requestFocus(); // Focus the TextField after the dialog is dismissed
+      _showDialog =
+          true; // Allow the dialog to be shown again on the next touch
+    } else {
+      _noteFocus
+          .requestFocus(); // Focus the TextField directly if the dialog has already been shown
+    }
   }
 
   @override
@@ -929,6 +949,7 @@ class _HomePageState extends State<HomePage> {
             : Input(
                 labelText: S.of(context).cavity,
                 validator: _machineStopped ? false : true,
+                maxLength: 2,
                 numericOnly: true,
                 keyboardType: TextInputType.number,
                 controller: cavityController,
@@ -969,11 +990,17 @@ class _HomePageState extends State<HomePage> {
                 controller: pieceNumberController,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
         SizedBox(height: 16.0),
-        Input(
-            validator: false,
-            controller: noteController,
-            maxLines: 2,
-            labelText: S.of(context).note),
+        GestureDetector(
+          onTap: _showNoteDialog,
+          child: AbsorbPointer(
+            child: Input(
+                focusNode: _noteFocus,
+                validator: false,
+                controller: noteController,
+                maxLines: 2,
+                labelText: S.of(context).note),
+          ),
+        ),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
         _toolMounted
             ? SizedBox(height: 0.0)
@@ -1091,6 +1118,235 @@ class _HomePageState extends State<HomePage> {
               ]),
         SizedBox(height: 16.0)
       ],
+    );
+  }
+
+  Future<void> _showNoteTextCombinations(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible:
+          false, // Prevent dialog from being dismissed by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text(S.of(context).noteTextCombinations,
+              style: GoogleFonts.lexend(
+                  textStyle: const TextStyle(
+                      color: Color(0xff336699),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600))),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  S.of(context).note,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).waitingForMaterial;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).waitingForMaterial,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).noMaterial;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).noMaterial,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).noStaff;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).noStaff,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).materialNotDry;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).materialNotDry,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).startInTheNextShift;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).startInTheNextShift,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).wzDefective;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).wzDefective,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).machineDefective;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).machineDefective,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    noteController.text = S.of(context).peripheralDefective;
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      S.of(context).peripheralDefective,
+                      style: GoogleFonts.lexend(
+                          textStyle: TextStyle(
+                        color: Color(0xff848484),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w400,
+                      )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // not needed button
+            TextButton(
+              child: Text(S.of(context).notNeeded,
+                  style: GoogleFonts.lexend(
+                      textStyle: const TextStyle(
+                          color: Color(0xff336699),
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600))),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

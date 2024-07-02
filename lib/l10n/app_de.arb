@@ -40,7 +40,7 @@
     "partStatusOk": "Teilstatus OK",
     "pieceNumber": "Stückzahl kumuliert",
     "note": "Notiz",
-    "toolCleaningShiftF1Done": "Werkzeugreinigung Schicht F1 erledigt",
+    "toolCleaningShiftF1Done": "Werkzeugreinigung in Schicht F1 erledigt?",
     "notNeeded": "Nicht benötigt",
     "days": "tage",
     "hours": "stunden",
@@ -76,7 +76,16 @@
     "enterTime": "Uhrzeit eingeben",
     "hour": "Stunde",
     "minute": "Minute",
-    "KTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
+    "kTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
     "dashboard": "Dashboard",
-    "entriesAddedForАllМachines": "Einträge für alle Maschinen hinzugefügt"
+    "entriesAddedForAllMachines": "Einträge für alle Maschinen hinzugefügt",
+    "waitingForMaterial": "Warten auf QS Material",
+    "noMaterial": "Kein Material",
+    "noStaff": "Kein Personal",
+    "materialNotDry":  "Material nicht trocken",
+    "startInTheNextShift": "In der nächsten Schicht starten",
+    "wzDefective": "WZ defekt",
+    "machineDefective": "Maschine defekt",
+    "peripheralDefective": "Peripherie defekt",
+    "noteTextCombinations": "Kombinationeasdasdn von Notiztexten"
 }

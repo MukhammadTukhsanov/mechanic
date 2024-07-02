@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:schichtbuch_shift/components/machineStatus.dart';
 import 'package:schichtbuch_shift/global/index.dart';

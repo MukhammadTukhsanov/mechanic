@@ -118,6 +118,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "user": MessageLookupByLibrary.simpleMessage("User"),
         "version": MessageLookupByLibrary.simpleMessage("Version"),
         "wednesday": MessageLookupByLibrary.simpleMessage("Wednesday"),
-        "yes": MessageLookupByLibrary.simpleMessage("Yes")
+        "yes": MessageLookupByLibrary.simpleMessage("Yes"),
+        "noteTextCombinations":
+            MessageLookupByLibrary.simpleMessage("Note text combinations"),
       };
 }

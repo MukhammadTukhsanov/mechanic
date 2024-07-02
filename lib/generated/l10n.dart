@@ -850,6 +850,95 @@ class S {
     );
   }
 
+  /// 'waitingForMaterial'
+  String get waitingForMaterial {
+    return Intl.message(
+      'Waiting for material',
+      name: 'waitingForMaterial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'noMaterial'
+  String get noMaterial {
+    return Intl.message(
+      'No material',
+      name: 'noMaterial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'noStaff'
+  String get noStaff {
+    return Intl.message(
+      'No staff',
+      name: 'noStaff',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'materialNotDry'
+  String get materialNotDry {
+    return Intl.message(
+      'Material not dry',
+      name: 'materialNotDry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'startInTheNextShift'
+  String get startInTheNextShift {
+    return Intl.message(
+      'Start in the next shift',
+      name: 'startInTheNextShift',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'wzDefective'
+  String get wzDefective {
+    return Intl.message(
+      'WZ defective',
+      name: 'wzDefective',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'machineDefective'
+  String get machineDefective {
+    return Intl.message(
+      'Machine defective',
+      name: 'machineDefective',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'peripheralDefective'
+  String get peripheralDefective {
+    return Intl.message(
+      'Peripheral defective',
+      name: 'peripheralDefective',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// 'noteTextCombinations'
+  String get noteTextCombinations {
+    return Intl.message(
+      'Note text combinations',
+      name: 'noteTextCombinations',
+      desc: '',
+      args: [],
+    );
+  }
   // skipped getter for the 'entriesAddedForАllМachines' key
 }
 

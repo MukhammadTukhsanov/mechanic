@@ -72,11 +72,20 @@
     "changeEntry": "Change Entry",
     "machine": "Machine",
     "status": "Status",
-    "ProductNo": "Productionsnr",
+    "productNo": "Productionsnr",
     "enterTime": "Enter Time",
     "hour": "Hour",
     "minute": "Minute",
-    "KTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
+    "kTBUMaschinenDashboard": "KTBU Maschinen Dashboard",
     "dashboard": "Dashboard",
-    "entriesAddedForАllМachines": "Entries added for all machines"
+    "entriesAddedForAllMachines": "Entries added for all machines",
+    "waitingForMaterial": "Waiting for material",
+    "noMaterial": "No material",
+    "noStaff": "No staff",
+    "materialNotDry": "Material not dry",
+    "startInTheNextShift": "Start in the next shift",
+    "wzDefective": "WZ defective",
+    "machineDefective": "Machine defective",
+    "peripheralDefective": "Peripheral defective",
+    "noteTextCombinations": "Note text combinations"
 }

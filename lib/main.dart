@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/login/index.dart';
 
 import 'generated/l10n.dart';
@@ -27,7 +28,8 @@ class Router extends StatelessWidget {
       ),
       initialRoute: '/login',
       routes: {
-        '/login': (context) => Login(),
+        '/login': (context) => HomePage(),
+        // '/login': (context) => Login(),
       },
     );
   }

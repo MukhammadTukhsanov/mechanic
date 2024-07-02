@@ -122,6 +122,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "user": MessageLookupByLibrary.simpleMessage("Benutzer"),
         "version": MessageLookupByLibrary.simpleMessage("Ausführung"),
         "wednesday": MessageLookupByLibrary.simpleMessage("Mittwoch"),
-        "yes": MessageLookupByLibrary.simpleMessage("Ja")
+        "yes": MessageLookupByLibrary.simpleMessage("Ja"),
+        "kTBUMaschinenDashboard":
+            MessageLookupByLibrary.simpleMessage("KTBU Maschinen Dashboard"),
+        "dashboar": MessageLookupByLibrary.simpleMessage("Dashboard"),
+        "entriesAddedForAllMachines": MessageLookupByLibrary.simpleMessage(
+            "Einträge für alle Maschinen hinzugefügt"),
+        "waitingForMaterial":
+            MessageLookupByLibrary.simpleMessage("Warten auf Material"),
+        "noMaterial": MessageLookupByLibrary.simpleMessage("Kein Material"),
+        "noStaff": MessageLookupByLibrary.simpleMessage("Kein Personal"),
+        "materialNotDry":
+            MessageLookupByLibrary.simpleMessage("Material nicht trocken"),
+        "startInTheNextShift": MessageLookupByLibrary.simpleMessage(
+            "In der nächsten Schicht starten"),
+        "wzDefective": MessageLookupByLibrary.simpleMessage("WZ defekt"),
+        "machineDefective":
+            MessageLookupByLibrary.simpleMessage("Maschine defekt"),
+        "peripheralDefective":
+            MessageLookupByLibrary.simpleMessage("Peripherie defekt"),
+        "noteTextCombinations": MessageLookupByLibrary.simpleMessage(
+            "Kombinationeasdasdn von Notiztexten"),
       };
 }
