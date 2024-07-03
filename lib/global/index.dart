@@ -4,8 +4,8 @@ String key = '';
 // String key = '';
 // 04711227280
 String user = '';
-// String ipAdress = '192.168.100.23:7878';
-String ipAdress = '104.198.75.202';
+String ipAdress = '192.168.100.23:7878';
+// String ipAdress = '104.198.75.202';
 // String ipAdress = '127.0.0.1:5000';
 int count = 0;
 bool showAlert = false;
