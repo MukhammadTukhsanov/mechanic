@@ -41,21 +41,17 @@ class _HomePageState extends State<HomePage> {
   String radioValue = "yes";
   String errText = '';
   String shift = 'S1';
-
   String mradioValue = "standard";
+  String instOperatingHours = "-";
+  String instOperatingMinute = "-";
+  String _state = '';
 
   int days = 0;
   int instRemainingProductionHours = 0;
   int instRemainingProductionMinute = 0;
 
-  String instOperatingHours = "-";
-  String instOperatingMinute = "-";
-
-  String _state = '';
-
   final _formKey = GlobalKey<FormState>();
-
-  TextEditingController machineQRCodeController = TextEditingController();
+  final machineQRCodeController = TextEditingController();
   final productionNumberController = TextEditingController();
   final partNumberController = TextEditingController();
   final partNameController = TextEditingController();
@@ -66,12 +62,10 @@ class _HomePageState extends State<HomePage> {
   final timeController = TextEditingController();
   final operatingHoursController = TextEditingController();
   final toolNumberController = TextEditingController();
-
-  final FocusNode _machineQRFocus = FocusNode();
-  final FocusNode _productionNoFocus = FocusNode();
+  final _machineQRFocus = FocusNode();
+  final _productionNoFocus = FocusNode();
 
   late DateTime lastWeekdayOfMonth;
-
   ConnectivityResult _connectivityResult = ConnectivityResult.none;
 
   @override
@@ -84,15 +78,10 @@ class _HomePageState extends State<HomePage> {
     _machineQRFocus.addListener(_onFocusChange);
     _productionNoFocus.addListener(setProductionNo);
     _checkConnectivity();
-    Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
+    Connectivity().onConnectivityChanged.listen((results) {
       setState(() {
-        if (results.isNotEmpty) {
-          _connectivityResult = results.last;
-        } else {
-          _connectivityResult = ConnectivityResult.none;
-        }
+        _connectivityResult =
+            results.isNotEmpty ? results.last : ConnectivityResult.none;
       });
     });
   }
@@ -100,6 +89,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     machineQRCodeController.dispose();
+    productionNumberController.dispose();
     partNumberController.dispose();
     partNameController.dispose();
     cavityController.dispose();
@@ -111,66 +101,48 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  getMachinesList() async {
-    var getShiftStatus =
-        await http.get(Uri.parse('http://$ipAdress/api/machines/${key}'));
-
-    if (getShiftStatus.statusCode == 200) {
-      var data = jsonDecode(getShiftStatus.body);
+  Future<void> getMachinesList() async {
+    var shiftStatusResponse =
+        await http.get(Uri.parse('http://$ipAdress/api/machines/$key'));
+    if (shiftStatusResponse.statusCode == 200) {
+      var data = jsonDecode(shiftStatusResponse.body);
       setState(() {
-        // shiftText = "false";
-        // lastShift = "F1";
         shiftText = "${data[0]['toolCleaning']}";
         lastShift = "${data[0]['shift']}";
       });
     }
-    var response = await http.get(Uri.parse('http://$ipAdress/api/machines'));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
+
+    var machinesResponse =
+        await http.get(Uri.parse('http://$ipAdress/api/machines'));
+    if (machinesResponse.statusCode == 200) {
+      var data = jsonDecode(machinesResponse.body);
       setState(() {
-        globalDevices = [];
+        globalDevices = data.map((e) => e['machineQrCode']).toList();
       });
-      data.map(
-        (e) {
-          setState(() {
-            globalDevices = [...globalDevices, e['machineQrCode']];
-          });
-        },
-      ).toList();
     }
   }
 
   DateTime getLastDayOfMonth(int year, int month) {
-    DateTime lastDayOfMonth = DateTime(year, month + 1, 0);
-
-    // Check if the last day is Saturday or Sunday
-    if (lastDayOfMonth.weekday == DateTime.saturday ||
-        lastDayOfMonth.weekday == DateTime.sunday) {
-      // If it's Saturday or Sunday, find the last Friday
-      while (lastDayOfMonth.weekday != DateTime.friday) {
-        lastDayOfMonth = lastDayOfMonth.subtract(Duration(days: 1));
-      }
+    DateTime lastDay = DateTime(year, month + 1, 0);
+    while (lastDay.weekday == DateTime.saturday ||
+        lastDay.weekday == DateTime.sunday) {
+      lastDay = lastDay.subtract(Duration(days: 1));
     }
-
-    return lastDayOfMonth;
+    return lastDay;
   }
 
   void lastDay() {
-    // Example usage:
-    int today = DateTime.now().day;
-    int year = DateTime.now().year;
-    int month = DateTime.now().month;
-    DateTime lastDay = getLastDayOfMonth(year, month);
+    DateTime lastDay =
+        getLastDayOfMonth(DateTime.now().year, DateTime.now().month);
     setState(() {
-      operatingHoursImportant = lastDay.day == today;
+      operatingHoursImportant = lastDay.day == DateTime.now().day;
     });
   }
 
   Future<void> _checkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     setState(() {
-      _connectivityResult = connectivityResult[
-          0]; // Extract the first ConnectivityResult from the list
+      _connectivityResult = connectivityResult[0];
     });
   }
 
@@ -181,16 +153,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _timer() {
-    var response = http.get(
-      Uri.parse('http://${ipAdress}/api/machines/${key}/start'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    response.then((value) {
-      // var data = jsonDecode(value.body);
-    }).catchError((error) {
-      print(error);
+    http.get(Uri.parse('http://$ipAdress/api/machines/$key/start'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
     });
   }
 
@@ -219,23 +183,6 @@ class _HomePageState extends State<HomePage> {
         _state = 'Undefined State';
       }
     });
-    // DateTime now = DateTime.now();
-
-    // int currentTime = now.hour * 60 + now.minute;
-
-    // if (currentTime >= 6 * 60 && currentTime <= 14 * 60 + 30) {
-    //   setState(() {
-    //     shift = "F1";
-    //   });
-    // } else if (currentTime >= 14 * 60 && currentTime <= 22 * 60 + 30) {
-    //   setState(() {
-    //     shift = "S2";
-    //   });
-    // } else {
-    //   setState(() {
-    //     shift = "N3";
-    //   });
-    // }
   }
 
   bool _isTimeInRange(
@@ -244,39 +191,23 @@ class _HomePageState extends State<HomePage> {
     final startMinutes = startTime.hour * 60 + startTime.minute;
     final endMinutes = endTime.hour * 60 + endTime.minute;
 
-    if (startMinutes <= endMinutes) {
-      return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
-    } else {
-      return currentMinutes >= startMinutes || currentMinutes <= endMinutes;
-    }
+    return startMinutes <= endMinutes
+        ? currentMinutes >= startMinutes && currentMinutes <= endMinutes
+        : currentMinutes >= startMinutes || currentMinutes <= endMinutes;
   }
 
-  final hour = DateTime.now().hour < 10
-      ? '0${DateTime.now().hour}'
-      : DateTime.now().hour.toString();
-  final minute = DateTime.now().minute < 10
-      ? '0${DateTime.now().minute}'
-      : DateTime.now().minute.toString();
+  final hour = DateTime.now().hour.toString().padLeft(2, '0');
+  final minute = DateTime.now().minute.toString().padLeft(2, '0');
 
-  addEntry() async {
-    if (machineQRCodeController.text == '' && _machineStopped == true) {
-      setState(() {
-        errText = S.of(context).fillAllFields;
-        err = true;
-      });
-      Timer(Duration(seconds: 3), () {
-        setState(() {
-          err = false;
-        });
-      });
-      return;
-    } else if (machineQRCodeController.text == '' &&
-        productionNumberController.text.length < 9 &&
-        _machineStopped == false &&
-        productionNumberController.text == '' &&
-        cavityController.text == '' &&
-        cycleTimeController.text == '' &&
-        pieceNumberController.text == '') {
+  Future<void> addEntry() async {
+    if (machineQRCodeController.text.isEmpty && _machineStopped ||
+        machineQRCodeController.text.isEmpty &&
+            productionNumberController.text.length < 9 &&
+            !_machineStopped ||
+        productionNumberController.text.isEmpty &&
+            cavityController.text.isEmpty &&
+            cycleTimeController.text.isEmpty &&
+            pieceNumberController.text.isEmpty) {
       setState(() {
         errText = S.of(context).fillAllFields;
         err = true;
@@ -288,144 +219,106 @@ class _HomePageState extends State<HomePage> {
       });
       return;
     }
+
     setState(() {
       loadSaving = true;
     });
+
     var response = await http.post(
-      Uri.parse('http://${ipAdress}/api/machines'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      Uri.parse('http://$ipAdress/api/machines'),
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({
-        "createdAt": "${DateTime.now()}", // String
-        "token": "$key", // String
-        "shift": "$shift", // String
-        "machineQrCode": "${machineQRCodeController.text}", // String
-        "toolMounted": _toolMounted, // true or false
-        "machineStopped": _machineStopped, // true or false
-        "barcodeProductionNo": productionNumberController.text == ""
+        "createdAt": DateTime.now().toString(),
+        "token": key,
+        "shift": shift,
+        "machineQrCode": machineQRCodeController.text,
+        "toolMounted": _toolMounted,
+        "machineStopped": _machineStopped,
+        "barcodeProductionNo": productionNumberController.text.isEmpty
             ? "0"
-            : double.parse(productionNumberController.text), // String
-        "cavity": cavityController.text == ""
+            : double.parse(productionNumberController.text),
+        "cavity": cavityController.text.isEmpty
             ? "0"
-            : double.parse(cavityController.text), // double
-        "cycleTime": "${cycleTimeController.text}", // String
-        "partStatus": _partStatusOK, // true or false
-        "pieceNumber": pieceNumberController.text == ""
+            : double.parse(cavityController.text),
+        "cycleTime": cycleTimeController.text,
+        "partStatus": _partStatusOK,
+        "pieceNumber": pieceNumberController.text.isEmpty
             ? "0"
-            : double.parse(pieceNumberController.text), // double
-        "note": "${noteController.text}", // String
-        "toolCleaning": radioValue == 'yes' ? true : false, // bool
-        "remainingProductionDays": days, // int
-        "remainingProductionTime": instRemainingProductionHours * 60 +
-            instRemainingProductionMinute, // int
-        "operatingHours": operatingHoursController.text == ""
+            : double.parse(pieceNumberController.text),
+        "note": noteController.text,
+        "toolCleaning": radioValue == 'yes',
+        "remainingProductionDays": days,
+        "remainingProductionTime":
+            instRemainingProductionHours * 60 + instRemainingProductionMinute,
+        "operatingHours": operatingHoursController.text.isEmpty
             ? "0"
-            : operatingHoursController.text, // double
-        //       "$instOperatingHours".replaceAll("-", "0").padLeft(2, "0") +
-        //           ":" +
-        //           "$instOperatingMinute"
-        //               .replaceAll("-", "0")
-        //               .padLeft(2, "0"), // double
+            : operatingHoursController.text,
       }),
     );
-    if (response.statusCode == 400) {
-      showSnackBarFun(context, S.of(context).errorSaving, "error");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
-      Timer(Duration(seconds: 3), () {
-        setState(() {
-          err = false;
-        });
-      });
-    }
-    if (response.statusCode == 422) {
-      showSnackBarFun(context, S.of(context).errorSaving, "error");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
-      Timer(Duration(seconds: 3), () {
-        setState(() {
-          err = false;
-        });
-      });
-    }
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       showSnackBarFun(context, S.of(context).entryAdded, "success");
-      if (data['total'] == globalDevices.length) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => CommentPage()));
-      } else {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => data['total'] == globalDevices.length
+                  ? CommentPage()
+                  : HomePage()));
+    } else {
+      showSnackBarFun(context, S.of(context).errorSaving, "error");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     }
+
     setState(() {
       loadSaving = false;
     });
   }
 
-  onChangedQrCode(String value) {
-    globalDevices.forEach((element) {
-      if (element == value) {
-        _machineQRFocus.unfocus();
-      }
-    });
+  void onChangedQrCode(String value) {
+    if (globalDevices.contains(value)) {
+      _machineQRFocus.unfocus();
+    }
   }
 
-  onChangeToolMounted() {
-    if (_toolMounted) {
-      onMachineStopped();
-      setState(() {
-        _machineStopped = false;
-      });
-    } else {
-      onMachineStopped();
-      setState(() {
-        _machineStopped = true;
-      });
-    }
+  void onChangeToolMounted() {
+    onMachineStopped();
     setState(() {
+      _machineStopped = !_toolMounted;
       _toolMounted = !_toolMounted;
     });
   }
 
-  showSnackBarFun(context, String text, String status) {
-    SnackBar snackBar = SnackBar(
+  void showSnackBarFun(BuildContext context, String text, String status) {
+    final snackBar = SnackBar(
       content: Text(text, style: TextStyle(fontSize: 20, color: Colors.white)),
       backgroundColor: status == "success" ? Colors.green : Colors.red,
-      dismissDirection: DismissDirection.up,
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).size.height - 150,
-          left: 10,
-          right: 10),
+        bottom: MediaQuery.of(context).size.height - 150,
+        left: 10,
+        right: 10,
+      ),
     );
-
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  onMachineStopped() {
-    if (!_machineStopped) {
-      setState(() {
+  void onMachineStopped() {
+    setState(() {
+      if (_machineStopped) {
         cavityController.text = '0';
         pieceNumberController.text = '0';
         productionNumberController.text = '0';
-      });
-    } else {
-      setState(() {
-        cavityController.text = '';
-        pieceNumberController.text = '';
-
-        productionNumberController.text = '';
-        partNumberController.text = '';
-        partNameController.text = '';
-        cycleTimeController.text = '';
-        noteController.text = '';
-      });
-    }
-    ;
-    setState(() {
+      } else {
+        cavityController.clear();
+        pieceNumberController.clear();
+        productionNumberController.clear();
+        partNumberController.clear();
+        partNameController.clear();
+        cycleTimeController.clear();
+        noteController.clear();
+      }
       _machineStopped = !_machineStopped;
     });
   }
@@ -433,7 +326,7 @@ class _HomePageState extends State<HomePage> {
   FocusNode _noteFocus = FocusNode();
   bool _showDialog = true;
 
-  _showNoteDialog() async {
+  Future<void> _showNoteDialog() async {
     if (_showDialog) {
       _showDialog =
           false; // Prevent subsequent taps from showing the dialog again
@@ -781,77 +674,32 @@ class _HomePageState extends State<HomePage> {
                                                   ])
                                                 ]),
                                             SizedBox(height: 16.0),
-
-                                            // Stack(children: [
-                                            //   SwitchWithText(
-                                            //       value: _toolMounted,
-                                            //       label:
-                                            //           S.of(context).toolMounted,
-                                            //       onChange:
-                                            //           onChangeToolMounted),
-                                            //   Positioned(
-                                            //       right: MediaQuery.of(context)
-                                            //               .size
-                                            //               .width /
-                                            //           30,
-                                            //       child: SwitchWithText(
-                                            //         value: _machineStopped,
-                                            //         label: S
-                                            //             .of(context)
-                                            //             .machineStopped,
-                                            //         onChange: !_toolMounted
-                                            //             ? onMachineStopped
-                                            //             : null,
-                                            //       ))
-                                            // ]),
-
-                                            // SizedBox(height: 16.0),
-                                            ///////////////////////////////////////////////////////////////////////
                                             _machineStopped
                                                 ? SizedBox(height: 0.0)
                                                 : IsStoped(),
 
                                             Column(
                                               children: [
-                                                operatingHoursImportant
-                                                    ? Input(
-                                                        controller:
-                                                            operatingHoursController,
-                                                        labelText: S
-                                                            .of(context)
-                                                            .operatingHours,
-                                                        validator: _machineStopped
-                                                            ? false
-                                                            : operatingHoursErr,
-                                                        numericOnly: true,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                        inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .allow(RegExp(
-                                                                  r'[0-9]'))
-                                                        ],
-                                                      )
-                                                    // ? ModalCupertinoPicker(
-                                                    //     error: _machineStopped ? false : operatingHoursErr,
-                                                    //     label: S.of(context).operatingHours,
-                                                    //     hours: true,
-                                                    //     selectedDate: 0,
-                                                    //     onSetHour: (value) {
-                                                    //       setState(() {
-                                                    //         instOperatingHours = value['hours'].toString();
-                                                    //         instOperatingMinute = value['minutes'].toString();
-                                                    //       });
-                                                    //     },
-                                                    //   )
-                                                    : SizedBox(height: 0.0),
-                                                operatingHoursImportant
-                                                    ? SizedBox(height: 16.0)
-                                                    : SizedBox(height: 0.0),
+                                                if (operatingHoursImportant)
+                                                  Input(
+                                                    controller:
+                                                        operatingHoursController,
+                                                    labelText: S
+                                                        .of(context)
+                                                        .operatingHours,
+                                                    validator: !_machineStopped,
+                                                    numericOnly: true,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .allow(
+                                                              RegExp(r'[0-9]'))
+                                                    ],
+                                                  )
                                               ],
                                             ),
-
+                                            SizedBox(height: 16.0),
                                             Row(children: [
                                               Expanded(
                                                   child: Button(
