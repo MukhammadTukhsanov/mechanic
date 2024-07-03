@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:schichtbuch_shift/components/button.dart';
 import 'package:schichtbuch_shift/components/switch.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
@@ -13,14 +14,15 @@ import 'package:schichtbuch_shift/pages/item-quality/machine-item.dart';
 import 'package:schichtbuch_shift/pages/mode/index.dart';
 
 class ItemQuality extends StatefulWidget {
-  const ItemQuality({Key? key}) : super(key: key);
+  ItemQuality({Key? key}) : super(key: key);
+  bool _allPartStatusOK = false;
+  bool _saveDate = false;
 
   @override
   State<ItemQuality> createState() => _ItemQualityState();
 }
 
 class _ItemQualityState extends State<ItemQuality> {
-  bool _allPartStatusOK = false;
   ConnectivityResult _connectivityResult = ConnectivityResult.none;
   List machinesList = [];
   @override
@@ -72,6 +74,12 @@ class _ItemQualityState extends State<ItemQuality> {
     });
   }
 
+  void _handleChildStateChange(bool newState) {
+    // setState(() {
+    //   // if(bool)
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -86,10 +94,10 @@ class _ItemQualityState extends State<ItemQuality> {
                         fontWeight: FontWeight.bold)),
                 leading: Builder(builder: (BuildContext context) {
                   return IconButton(
-                      icon:
-                          Icon(Icons.menu, color: Color(0xff336699), size: 30),
+                      icon: Icon(Icons.arrow_back,
+                          color: Color(0xff336699), size: 30),
                       onPressed: () {
-                        Scaffold.of(context).openDrawer();
+                        Navigator.pop(context);
                       },
                       tooltip: MaterialLocalizations.of(context)
                           .openAppDrawerTooltip);
@@ -189,15 +197,16 @@ class _ItemQualityState extends State<ItemQuality> {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      allOk = !allOk;
-                                      // widget.allPartStatusOK = allOk;
+                                      // widget._allPartStatusOK = !widget._allPartStatusOK;
+                                      widget._allPartStatusOK =
+                                          !widget._allPartStatusOK;
                                     });
                                   },
                                   child: Container(
                                     width: 55,
                                     height: 25,
                                     decoration: BoxDecoration(
-                                      color: allOk
+                                      color: widget._allPartStatusOK
                                           ? Color(0xff336699)
                                           : Color(0xff848484),
                                       borderRadius: BorderRadius.circular(40),
@@ -220,7 +229,8 @@ class _ItemQualityState extends State<ItemQuality> {
                                                 Text(S.of(context).yes,
                                                     style: GoogleFonts.lexend(
                                                       textStyle: TextStyle(
-                                                          color: allOk
+                                                          color: widget
+                                                                  ._allPartStatusOK
                                                               ? Colors.white
                                                               : Colors
                                                                   .transparent,
@@ -231,7 +241,8 @@ class _ItemQualityState extends State<ItemQuality> {
                                                 Text(S.of(context).no,
                                                     style: GoogleFonts.lexend(
                                                         textStyle: TextStyle(
-                                                            color: allOk
+                                                            color: widget
+                                                                    ._allPartStatusOK
                                                                 ? Colors
                                                                     .transparent
                                                                 : Colors.white,
@@ -244,9 +255,10 @@ class _ItemQualityState extends State<ItemQuality> {
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment: allOk
-                                              ? MainAxisAlignment.end
-                                              : MainAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              widget._allPartStatusOK
+                                                  ? MainAxisAlignment.end
+                                                  : MainAxisAlignment.start,
                                           children: [
                                             Container(
                                               width: 21.5,
@@ -383,13 +395,54 @@ class _ItemQualityState extends State<ItemQuality> {
                                     color: Color(0xff336699).withOpacity(.3)))),
                         child: Column(
                             children: machinesList.map((e) {
-                          return machineQualityItem(
-                              machineQrCode: e["machineQrCode"],
-                              partnumber: e["partnumber"],
-                              partname: e["partname"],
-                              allPartStatusOK: allOk);
+                          return MachineQualityItem(
+                              id: e["id"].toString(),
+                              token: e["token"].toString(),
+                              pieceNumber: e["pieceNumber"].toString(),
+                              toolMounted: e["toolMounted"].toString(),
+                              machineStopped: e["machineStopped"].toString(),
+                              machineQrCode: e["machineQrCode"].toString(),
+                              createdAt: e["createdAt"].toString(),
+                              shift: e["shift"].toString(),
+                              barcodeProductionNo:
+                                  e["barcodeProductionNo"].toString(),
+                              cavity: e["cavity"].toString(),
+                              cycleTime: e["cycleTime"].toString(),
+                              partStatus: e["partStatus"].toString(),
+                              note: e["note"].toString(),
+                              toolCleaning: e["toolCleaning"].toString(),
+                              remainingProductionTime:
+                                  e["remainingProductionTime"].toString(),
+                              remainingProductionDays:
+                                  e["remainingProductionDays"].toString(),
+                              operatingHours: e["operatingHours"].toString(),
+                              partName: e["partName"].toString(),
+                              partNumber: e["partNumber"].toString(),
+                              // partnumber: e["partnumber"].toString(),
+                              // partname: e["partname"].toString(),
+                              onSaveDate: widget._saveDate,
+                              onStateChange: _handleChildStateChange,
+                              allPartStatusOK: widget._allPartStatusOK);
                         }).toList()),
                       ),
+                    ),
+                    // Save button
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(children: [
+                        Expanded(child: SizedBox()),
+                        SizedBox(width: 20.0),
+                        Expanded(
+                            child: Button(
+                          // loading: loadSaving,
+                          text: S.of(context).save,
+                          onPressed: () {
+                            setState(() {
+                              widget._saveDate = !widget._saveDate;
+                            });
+                          },
+                        ))
+                      ]),
                     )
                   ]))));
   }
