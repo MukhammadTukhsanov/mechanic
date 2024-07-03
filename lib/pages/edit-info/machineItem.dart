@@ -144,16 +144,12 @@ class _MachineItemState extends State<MachineItem> {
         children: <Widget>[
           ListTile(
             title: Text(
-              widget.partNumber.toString() == ""
-                  ? "PartNo und Partname sind leer"
-                  : widget.partNumber.toString() +
-                      ' | ' +
-                      widget.partName.toString(),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+                widget.partNumber.toString() == ""
+                    ? "PartNo und Partname sind leer"
+                    : widget.partNumber.toString() +
+                        ' | ' +
+                        widget.partName.toString(),
+                style: GoogleFonts.lexend(color: Color(0xff336699))),
             subtitle: Text(
               widget.shift,
               style: TextStyle(

@@ -7,6 +7,7 @@ import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/dashboard/index.dart';
 import 'package:schichtbuch_shift/pages/edit-info/index.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
+import 'package:schichtbuch_shift/pages/item-quality/index.dart';
 import 'package:schichtbuch_shift/pages/login/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -74,7 +75,8 @@ class _ChooseModeState extends State<ChooseMode> {
         child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: Text(S.of(context).modeSelection,
+          // title: Text(S.of(context).modeSelection,
+          title: Text("Hauptmenü",
               style: TextStyle(
                   color: Color(0xff336699),
                   fontSize: 25,
@@ -213,33 +215,96 @@ class _ChooseModeState extends State<ChooseMode> {
                       ],
                     ),
                     SizedBox(height: 40),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return Dashboard();
-                        }));
-                      },
-                      child: Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Color(0xff336699), width: 1),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(S.of(context).dashboard,
-                                style: GoogleFonts.lexend(
-                                  fontSize: 30,
-                                  color: Color(0xff336699),
-                                )),
-                          ],
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ItemQuality();
+                              }));
+                            },
+                            child: Container(
+                              height: 200,
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0xff336699), width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Center(
+                                child: Text("Artikelqualität eintragen",
+                                    // text align center
+                                    textAlign: TextAlign.center,
+                                    softWrap: true,
+                                    style: GoogleFonts.lexend(
+                                      fontSize: 30,
+                                      color: Color(0xff336699),
+                                    )),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 40),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return Dashboard();
+                              }));
+                            },
+                            child: Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0xff336699), width: 1),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(S.of(context).dashboard,
+                                      style: GoogleFonts.lexend(
+                                        fontSize: 30,
+                                        color: Color(0xff336699),
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     Navigator.push(context,
+                    //         MaterialPageRoute(builder: (context) {
+                    //       return Dashboard();
+                    //     }));
+                    //   },
+                    //   child: Container(
+                    //     height: 200,
+                    //     decoration: BoxDecoration(
+                    //         border:
+                    //             Border.all(color: Color(0xff336699), width: 1),
+                    //         borderRadius:
+                    //             BorderRadius.all(Radius.circular(20))),
+                    //     child: Row(
+                    //       crossAxisAlignment: CrossAxisAlignment.center,
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Text(S.of(context).dashboard,
+                    //             style: GoogleFonts.lexend(
+                    //               fontSize: 30,
+                    //               color: Color(0xff336699),
+                    //             )),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
