@@ -200,14 +200,16 @@ class _HomePageState extends State<HomePage> {
   final minute = DateTime.now().minute.toString().padLeft(2, '0');
 
   Future<void> addEntry() async {
-    if (machineQRCodeController.text.isEmpty && _machineStopped ||
-        machineQRCodeController.text.isEmpty &&
-            productionNumberController.text.length < 9 &&
-            !_machineStopped ||
-        productionNumberController.text.isEmpty &&
-            cavityController.text.isEmpty &&
-            cycleTimeController.text.isEmpty &&
-            pieceNumberController.text.isEmpty) {
+    if (machineQRCodeController.text.isEmpty && _machineStopped)
+    // ||
+    // machineQRCodeController.text.isEmpty &&
+    //     productionNumberController.text.length < 9 &&
+    //     !_machineStopped ||
+    // productionNumberController.text.isEmpty &&
+    //     cavityController.text.isEmpty &&
+    //     cycleTimeController.text.isEmpty &&
+    //     pieceNumberController.text.isEmpty)
+    {
       setState(() {
         errText = S.of(context).fillAllFields;
         err = true;
@@ -237,6 +239,8 @@ class _HomePageState extends State<HomePage> {
         "barcodeProductionNo": productionNumberController.text.isEmpty
             ? "0"
             : double.parse(productionNumberController.text),
+        "toolNo":
+            toolNumberController.text.isEmpty ? "0" : toolNumberController.text,
         "cavity": cavityController.text.isEmpty
             ? "0"
             : double.parse(cavityController.text),
@@ -578,6 +582,8 @@ class _HomePageState extends State<HomePage> {
                                                                     0xff336699)),
                                                             onChanged: (value) {
                                                               setState(() {
+                                                                barcodeIsDisabled =
+                                                                    false;
                                                                 _machineStopped =
                                                                     false;
                                                                 _toolMounted =
@@ -613,6 +619,29 @@ class _HomePageState extends State<HomePage> {
                                                                     0xff336699)),
                                                             onChanged: (value) {
                                                               setState(() {
+                                                                productionNumberController
+                                                                    .text = "";
+                                                                toolNumberController
+                                                                    .text = "";
+                                                                partNameController
+                                                                    .text = "";
+                                                                partNumberController
+                                                                    .text = "";
+                                                                cavityController
+                                                                    .text = "";
+                                                                cycleTimeController
+                                                                    .text = "";
+                                                                pieceNumberController
+                                                                    .text = "";
+                                                                noteController
+                                                                    .text = "";
+                                                                barcodeIsDisabled =
+                                                                    false;
+                                                                instRemainingProductionHours =
+                                                                    0;
+                                                                instRemainingProductionMinute =
+                                                                    0;
+                                                                days = 0;
                                                                 _machineStopped =
                                                                     true;
                                                                 _toolMounted =
@@ -646,6 +675,21 @@ class _HomePageState extends State<HomePage> {
                                                                         0xff336699)),
                                                             onChanged: (value) {
                                                               setState(() {
+                                                                barcodeIsDisabled =
+                                                                    false;
+                                                                toolIdIsDisabled =
+                                                                    false;
+                                                                cavityController
+                                                                    .text = "";
+                                                                cycleTimeController
+                                                                    .text = "";
+                                                                pieceNumberController
+                                                                    .text = "";
+                                                                instRemainingProductionHours =
+                                                                    0;
+                                                                instRemainingProductionMinute =
+                                                                    0;
+                                                                days = 0;
                                                                 _machineStopped =
                                                                     false;
                                                                 _toolMounted =
@@ -789,12 +833,13 @@ class _HomePageState extends State<HomePage> {
                       });
                     } else {
                       setState(() {
+                        barcodeIsDisabled = true;
                         toolIdIsDisabled = false;
                       });
                     }
                   },
-                  disabled: barcodeIsDisabled,
-                  hassError: productionNumberError,
+                  // disabled: barcodeIsDisabled,
+                  hassError: false,
                   validator:
                       _machineStopped || barcodeIsDisabled ? false : true,
                   maxLength: 9,
@@ -821,10 +866,10 @@ class _HomePageState extends State<HomePage> {
                           });
                         }
                       },
-                      validator: toolIdIsDisabled,
+                      validator: toolIdIsDisabled ? false : true,
                       controller: toolNumberController,
                       labelText: S.of(context).toolId,
-                      disabled: toolIdIsDisabled,
+                      // disabled: toolIdIsDisabled,
                     ),
                   )
                 : SizedBox(height: 0.0),
@@ -873,17 +918,17 @@ class _HomePageState extends State<HomePage> {
                     // FilteringTextInputFormatter.allow(RegExp(r'[0-9-><,]'))
                   ]),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
-        _toolMounted
-            ? SizedBox(height: 0.0)
-            : SwitchWithText(
-                value: _partStatusOK,
-                label: S.of(context).partStatusOk,
-                onChange: () {
-                  setState(() {
-                    _partStatusOK = !_partStatusOK;
-                  });
-                }),
-        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        // _toolMounted
+        //     ? SizedBox(height: 0.0)
+        //     : SwitchWithText(
+        //         value: _partStatusOK,
+        //         label: S.of(context).partStatusOk,
+        //         onChange: () {
+        //           setState(() {
+        //             _partStatusOK = !_partStatusOK;
+        //           });
+        //         }),
+        // _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
         _toolMounted
             ? SizedBox(height: 0.0)
             : Input(
