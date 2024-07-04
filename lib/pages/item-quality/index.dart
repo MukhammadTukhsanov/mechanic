@@ -16,6 +16,7 @@ import 'package:schichtbuch_shift/pages/mode/index.dart';
 class ItemQuality extends StatefulWidget {
   ItemQuality({Key? key}) : super(key: key);
   bool _allPartStatusOK = false;
+  bool changeAll = false;
   bool _saveDate = false;
 
   @override
@@ -47,18 +48,21 @@ class _ItemQualityState extends State<ItemQuality> {
     });
   }
 
+  List changes = [];
+  List machisnesList = [];
+
   getMachinesList() async {
     var response =
         await http.get(Uri.parse('http://$ipAdress/api/machines/$key'));
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      // data.map(
-      //   (e) {
-      //     setState(() {
-      //       globalDevices = [...globalDevices, e['machineQrCode']];
-      //     });
-      //   },
-      // ).toList();
+      data.map(
+        (e) {
+          setState(() {
+            machisnesList = [...machisnesList, e['machineQrCode']];
+          });
+        },
+      ).toList();
       setState(() {
         machinesList = data;
       });
@@ -74,10 +78,25 @@ class _ItemQualityState extends State<ItemQuality> {
     });
   }
 
-  void _handleChildStateChange(bool newState) {
-    // setState(() {
-    //   // if(bool)
-    // });
+  void _handleChildStateChange(bool newState, String machine) {
+    print(newState);
+    print(machine);
+    if (!newState) {
+      setState(() {
+        changes = [...changes, machine];
+      });
+    } else
+      (changes.removeWhere((item) => item == machine));
+    if (changes.length == machinesList.length) {
+      setState(() {
+        widget._allPartStatusOK = true;
+      });
+    } else {
+      setState(() {
+        widget._allPartStatusOK = false;
+      });
+    }
+    print(changes);
   }
 
   @override
@@ -196,8 +215,26 @@ class _ItemQualityState extends State<ItemQuality> {
                               child: Center(
                                 child: GestureDetector(
                                   onTap: () {
+                                    print("length: ${changes.length}");
                                     setState(() {
-                                      // widget._allPartStatusOK = !widget._allPartStatusOK;
+                                      if (changes.length == 0 ||
+                                          (changes.length > 0 &&
+                                              !widget._allPartStatusOK)) {
+                                        setState(() {
+                                          changes = machinesList;
+                                          widget.changeAll =
+                                              !widget._allPartStatusOK;
+                                        });
+                                      } else if (changes.length ==
+                                              machisnesList.length ||
+                                          (changes.length > 0 &&
+                                              widget._allPartStatusOK)) {
+                                        setState(() {
+                                          changes = [];
+                                          widget.changeAll =
+                                              !widget._allPartStatusOK;
+                                        });
+                                      }
                                       widget._allPartStatusOK =
                                           !widget._allPartStatusOK;
                                     });
@@ -420,7 +457,7 @@ class _ItemQualityState extends State<ItemQuality> {
                               partNumber: e["partNumber"].toString(),
                               onSaveDate: widget._saveDate,
                               onStateChange: _handleChildStateChange,
-                              allPartStatusOK: widget._allPartStatusOK);
+                              allPartStatusOK: widget.changeAll);
                         }).toList()),
                       ),
                     ),

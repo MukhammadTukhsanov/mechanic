@@ -363,10 +363,13 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold)),
                 leading: Builder(builder: (BuildContext context) {
                   return IconButton(
-                      icon:
-                          Icon(Icons.menu, color: Color(0xff336699), size: 30),
+                      icon: Icon(Icons.arrow_back,
+                          color: Color(0xff336699), size: 30),
                       onPressed: () {
-                        Scaffold.of(context).openDrawer();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ChooseMode();
+                        }));
                       },
                       tooltip: MaterialLocalizations.of(context)
                           .openAppDrawerTooltip);

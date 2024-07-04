@@ -29,7 +29,7 @@ class MachineQualityItem extends StatefulWidget {
   final String operatingHours;
   bool allPartStatusOK = false;
   bool onSaveDate;
-  Function(bool) onStateChange;
+  Function(bool, String) onStateChange;
 
   MachineQualityItem(
       {required this.id,
@@ -76,15 +76,16 @@ class _machineQualityItemState extends State<MachineQualityItem> {
   }
 
   void changeFunction() {
+    print("status: ${widget.allPartStatusOK}");
     setState(() {
       _partStatusOK = widget.allPartStatusOK;
-      widget.onStateChange(_partStatusOK);
     });
   }
 
   void toggleState() {
     setState(() {
       _partStatusOK = !_partStatusOK;
+      widget.onStateChange(_partStatusOK, widget.machineQrCode);
     });
   }
 
@@ -101,7 +102,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
       "barcodeProductionNo": widget.barcodeProductionNo,
       "cavity": widget.cavity,
       "cycleTime": widget.cycleTime,
-      "partStatus": widget.partStatus,
+      "partStatus": _partStatusOK.toString(),
       "note": widget.note,
       "toolCleaning": widget.toolCleaning,
       "remainingProductionTime": widget.remainingProductionTime,

@@ -159,9 +159,10 @@ class _DashboardState extends State<Dashboard> {
                     fontWeight: FontWeight.bold)),
             leading: Builder(builder: (BuildContext context) {
               return IconButton(
-                  icon: Icon(Icons.menu, color: Color(0xff336699), size: 30),
+                  icon: Icon(Icons.arrow_back,
+                      color: Color(0xff336699), size: 30),
                   onPressed: () {
-                    Scaffold.of(context).openDrawer();
+                    Navigator.pop(context);
                   },
                   tooltip:
                       MaterialLocalizations.of(context).openAppDrawerTooltip);
