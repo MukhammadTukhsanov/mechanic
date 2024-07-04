@@ -396,6 +396,42 @@ class _MachineItemState extends State<MachineItem> {
                             ],
                           ),
                         ),
+                        // Container(
+                        //   padding: EdgeInsets.only(bottom: 4, top: 14),
+                        //   decoration: BoxDecoration(
+                        //     border: Border(
+                        //       bottom: BorderSide(
+                        //         color: Color(0xff336699),
+                        //         width: 1,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   child: Row(
+                        //     // space between
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: <Widget>[
+                        //       // make 50% of the screen width
+                        //       SizedBox(
+                        //         child: Text(
+                        //           S.of(context).shift + ': ',
+                        //           style: GoogleFonts.roboto(
+                        //               fontSize: 24,
+                        //               fontWeight: FontWeight.normal,
+                        //               color: Color(0xff336699)),
+                        //         ),
+                        //       ),
+                        //       SizedBox(
+                        //         child: Text(
+                        //           widget.shift,
+                        //           style: GoogleFonts.roboto(
+                        //               fontSize: 24,
+                        //               fontWeight: FontWeight.normal,
+                        //               color: Color(0xff336699)),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Container(
                           padding: EdgeInsets.only(bottom: 4, top: 14),
                           decoration: BoxDecoration(
@@ -413,43 +449,7 @@ class _MachineItemState extends State<MachineItem> {
                               // make 50% of the screen width
                               SizedBox(
                                 child: Text(
-                                  S.of(context).shift + ': ',
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color(0xff336699)),
-                                ),
-                              ),
-                              SizedBox(
-                                child: Text(
-                                  widget.shift,
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color(0xff336699)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(bottom: 4, top: 14),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: Color(0xff336699),
-                                width: 1,
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            // space between
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              // make 50% of the screen width
-                              SizedBox(
-                                child: Text(
-                                  S.of(context).scanBarcodeProductionNo + ': ',
+                                  'Produktios nummer: ',
                                   style: GoogleFonts.roboto(
                                       fontSize: 24,
                                       fontWeight: FontWeight.normal,
@@ -540,44 +540,44 @@ class _MachineItemState extends State<MachineItem> {
                             ],
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.only(bottom: 4, top: 14),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: Color(0xff336699),
-                                width: 1,
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            // space between
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              // make 50% of the screen width
-                              SizedBox(
-                                child: Text(
-                                  S.of(context).partStatusOk + ': ',
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color(0xff336699)),
-                                ),
-                              ),
-                              SizedBox(
-                                child: Text(
-                                  _partStatus
-                                      ? S.of(context).yes
-                                      : S.of(context).no,
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color(0xff336699)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   padding: EdgeInsets.only(bottom: 4, top: 14),
+                        //   decoration: BoxDecoration(
+                        //     border: Border(
+                        //       bottom: BorderSide(
+                        //         color: Color(0xff336699),
+                        //         width: 1,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   child: Row(
+                        //     // space between
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: <Widget>[
+                        //       // make 50% of the screen width
+                        //       SizedBox(
+                        //         child: Text(
+                        //           S.of(context).partStatusOk + ': ',
+                        //           style: GoogleFonts.roboto(
+                        //               fontSize: 24,
+                        //               fontWeight: FontWeight.normal,
+                        //               color: Color(0xff336699)),
+                        //         ),
+                        //       ),
+                        //       SizedBox(
+                        //         child: Text(
+                        //           _partStatus
+                        //               ? S.of(context).yes
+                        //               : S.of(context).no,
+                        //           style: GoogleFonts.roboto(
+                        //               fontSize: 24,
+                        //               fontWeight: FontWeight.normal,
+                        //               color: Color(0xff336699)),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Container(
                           padding: EdgeInsets.only(bottom: 4, top: 14),
                           decoration: BoxDecoration(
