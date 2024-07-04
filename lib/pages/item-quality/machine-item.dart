@@ -89,55 +89,54 @@ class _machineQualityItemState extends State<MachineQualityItem> {
   }
 
   void saveAdds() {
-    void save() {
-      var data = {
-        "token": widget.token,
-        "pieceNumber": widget.pieceNumber,
-        "toolMounted": widget.toolMounted,
-        "machineStopped": widget.machineStopped,
-        "machineQrCode": widget.machineQrCode,
-        "createdAt": widget.createdAt,
-        "shift": widget.shift,
-        "barcodeProductionNo": widget.barcodeProductionNo,
-        "cavity": widget.cavity,
-        "cycleTime": widget.cycleTime,
-        "partStatus": widget.partStatus,
-        "note": widget.note,
-        "toolCleaning": widget.toolCleaning,
-        "remainingProductionTime": widget.remainingProductionTime,
-        "remainingProductionDays": widget.remainingProductionDays,
-        "operatingHours": widget.operatingHours,
-        // "partName": widget.partName,
-        // "partNumber": widget.partNumber
-      };
-      print(jsonEncode(data));
-      // data[key] = value;
+    var data = {
+      "id": widget.id,
+      "pieceNumber": widget.pieceNumber,
+      "token": widget.token,
+      "toolMounted": widget.toolMounted,
+      "machineStopped": widget.machineStopped,
+      "machineQrCode": widget.machineQrCode,
+      "createdAt": widget.createdAt,
+      "shift": widget.shift,
+      "barcodeProductionNo": widget.barcodeProductionNo,
+      "cavity": widget.cavity,
+      "cycleTime": widget.cycleTime,
+      "partStatus": widget.partStatus,
+      "note": widget.note,
+      "toolCleaning": widget.toolCleaning,
+      "remainingProductionTime": widget.remainingProductionTime,
+      "remainingProductionDays": widget.remainingProductionDays,
+      "operatingHours": widget.operatingHours,
+      "partName": widget.partName,
+      "partNumber": widget.partNumber
+    };
+    // print(jsonEncode(data));
+    // data[key] = value;
 
-      // var response = http.put(
-      //   Uri.parse('http://$ipAdress/api/machines/${widget.id}'),
-      //   headers: {
-      //     'Content-Type': 'application/json; charset=UTF-8',
-      //   },
-      //   body: jsonEncode(data),
-      // );
-      //   response.then((value) {
-      //     SnackBar snackBar = SnackBar(
-      //       content: Text('Saved',
-      //           style: TextStyle(fontSize: 20, color: Colors.white)),
-      //       backgroundColor: Colors.green,
-      //       dismissDirection: DismissDirection.up,
-      //       behavior: SnackBarBehavior.floating,
-      //       margin: EdgeInsets.only(
-      //           bottom: MediaQuery.of(context).size.height - 150,
-      //           left: 10,
-      //           right: 10),
-      //     );
+    var response = http.put(
+      Uri.parse('http://$ipAdress/api/machines/${widget.id}'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+    response.then((value) {
+      SnackBar snackBar = SnackBar(
+        content:
+            Text('Saved', style: TextStyle(fontSize: 20, color: Colors.white)),
+        backgroundColor: Colors.green,
+        dismissDirection: DismissDirection.up,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 150,
+            left: 10,
+            right: 10),
+      );
 
-      //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //   }).catchError((error) {
-      //     print("error $error");
-      //   });
-    }
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }).catchError((error) {
+      print("error $error");
+    });
   }
 
   @override

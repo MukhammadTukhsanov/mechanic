@@ -418,8 +418,6 @@ class _ItemQualityState extends State<ItemQuality> {
                               operatingHours: e["operatingHours"].toString(),
                               partName: e["partName"].toString(),
                               partNumber: e["partNumber"].toString(),
-                              // partnumber: e["partnumber"].toString(),
-                              // partname: e["partname"].toString(),
                               onSaveDate: widget._saveDate,
                               onStateChange: _handleChildStateChange,
                               allPartStatusOK: widget._allPartStatusOK);
