@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/login/index.dart';
+import 'package:schichtbuch_shift/pages/mode/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'generated/l10n.dart';
 
-void main() {
-  runApp(Router());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final String? token = prefs.getString('auth_token');
+  runApp(Router(token: token));
 }
 
 class Router extends StatelessWidget {
+  final String? token;
+  Router({required this.token});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,9 +33,10 @@ class Router extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/login',
+      initialRoute: token == null ? '/login' : '/choose-mode',
       routes: {
         '/login': (context) => Login(),
+        '/choose-mode': (context) => ChooseMode()
       },
     );
   }

@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -81,6 +82,11 @@ class _LoginState extends State<Login> {
     });
   }
 
+  Future<void> storeToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+  }
+
   loginRequest(token) async {
     var response = await http.put(Uri.parse('http://${ipAdress}/api/token/'),
         headers: <String, String>{
@@ -94,6 +100,8 @@ class _LoginState extends State<Login> {
           user = data['name'];
           key = "${data['token']}";
           loading = false;
+          print("token: ${data['token']}");
+          storeToken(data['token']);
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => ChooseMode()),
