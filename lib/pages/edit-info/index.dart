@@ -41,7 +41,7 @@ class _EditInfoState extends State {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-            title: Text(S.of(context).editInfo,
+            title: Text("Einträge bearbeiten",
                 style: TextStyle(
                     color: Color(0xff336699),
                     fontSize: 25,
