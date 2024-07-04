@@ -9,24 +9,25 @@ import 'package:http/http.dart' as http;
 
 class MachineQualityItem extends StatefulWidget {
   final String id;
-  final String pieceNumber;
-  final String token;
-  final String toolMounted;
-  final String machineStopped;
-  final String machineQrCode;
-  final String createdAt;
-  final String shift;
-  final String barcodeProductionNo;
+  final pieceNumber;
+  final token;
+  final toolMounted;
+  final toolNo;
+  final machineStopped;
+  final machineQrCode;
+  final createdAt;
+  final shift;
+  final barcodeProductionNo;
   final partName;
   final partNumber;
-  final String cavity;
-  final String cycleTime;
-  final String partStatus;
-  final String note;
-  final String toolCleaning;
-  final String remainingProductionTime;
-  final String remainingProductionDays;
-  final String operatingHours;
+  final cavity;
+  final cycleTime;
+  final partStatus;
+  final note;
+  final toolCleaning;
+  final remainingProductionTime;
+  final remainingProductionDays;
+  final operatingHours;
   bool allPartStatusOK = false;
   bool onSaveDate;
   Function(bool, String) onStateChange;
@@ -42,6 +43,7 @@ class MachineQualityItem extends StatefulWidget {
       required this.token,
       required this.pieceNumber,
       required this.toolMounted,
+      required this.toolNo,
       required this.machineStopped,
       required this.createdAt,
       required this.shift,
@@ -95,6 +97,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
       "pieceNumber": widget.pieceNumber,
       "token": widget.token,
       "toolMounted": widget.toolMounted,
+      "toolNo": widget.toolNo,
       "machineStopped": widget.machineStopped,
       "machineQrCode": widget.machineQrCode,
       "createdAt": widget.createdAt,
