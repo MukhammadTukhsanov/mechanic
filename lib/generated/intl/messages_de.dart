@@ -141,8 +141,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Maschine defekt"),
         "peripheralDefective":
             MessageLookupByLibrary.simpleMessage("Peripherie defekt"),
-        "noteTextCombinations": MessageLookupByLibrary.simpleMessage(
-            "Kombinationeasdasdn von Notiztexten"),
+        "noteTextCombinations":
+            MessageLookupByLibrary.simpleMessage("Notiz - Vortagen"),
         "toolId": MessageLookupByLibrary.simpleMessage("Werkzeugnummer"),
       };
 }

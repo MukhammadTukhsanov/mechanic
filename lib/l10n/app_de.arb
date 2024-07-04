@@ -85,8 +85,7 @@
     "materialNotDry":  "Material nicht trocken",
     "startInTheNextShift": "In der nächsten Schicht starten",
     "wzDefective": "WZ defekt",
-    "machineDefective": "Maschine defekt",
     "peripheralDefective": "Peripherie defekt",
-    "noteTextCombinations": "Kombinationeasdasdn von Notiztexten",
+    "noteTextCombinations": "Notiz - Vortagen",
     "toolId": "Werkzeugummer"
 }

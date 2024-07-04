@@ -76,7 +76,7 @@ class _ChooseModeState extends State<ChooseMode> {
       backgroundColor: Colors.white,
       appBar: AppBar(
           // title: Text(S.of(context).modeSelection,
-          title: Text("Hauptmenü",
+          title: Text("Schichtprotokoll - Hauptmenü",
               style: TextStyle(
                   color: Color(0xff336699),
                   fontSize: 25,

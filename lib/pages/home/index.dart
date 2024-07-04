@@ -1099,10 +1099,11 @@ class _HomePageState extends State<HomePage> {
             child: ListBody(
               children: <Widget>[
                 Text(
-                  S.of(context).note,
-                  style: TextStyle(
-                    fontSize: 20,
+                  "Template",
+                  style: GoogleFonts.lexend(
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: Color(0xff336699),
                   ),
                 ),
                 GestureDetector(
