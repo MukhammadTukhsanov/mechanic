@@ -82,9 +82,10 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Future<void> storeToken(String token) async {
+  Future<void> storeToken(String token, String userName) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
+    await prefs.setString('user_name', userName);
   }
 
   loginRequest(token) async {
@@ -100,8 +101,7 @@ class _LoginState extends State<Login> {
           user = data['name'];
           key = "${data['token']}";
           loading = false;
-          print("token: ${data['token']}");
-          storeToken(data['token']);
+          storeToken(data['token'], data['name']);
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => ChooseMode()),

@@ -1,4 +1,5 @@
 import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String key = '';
 // String key = '';
@@ -114,4 +115,10 @@ DateTime addTimeSkippingWeekends(
   print("currentDate: $currentDate");
 
   return currentDate;
+}
+
+Future<void> removeToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('auth_token');
+  await prefs.remove('user_name');
 }

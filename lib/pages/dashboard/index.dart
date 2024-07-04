@@ -147,10 +147,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   final today = DateTime.now().day;
-  Future<void> removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-  }
 
   @override
   Widget build(BuildContext context) {

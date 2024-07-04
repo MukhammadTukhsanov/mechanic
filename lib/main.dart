@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/login/index.dart';
 import 'package:schichtbuch_shift/pages/mode/index.dart';
@@ -11,12 +12,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final String? token = prefs.getString('auth_token');
-  runApp(Router(token: token));
+  final String? userName = prefs.getString('user_name');
+  runApp(Router(token: token, userName: userName));
 }
 
 class Router extends StatelessWidget {
   final String? token;
-  Router({required this.token});
+  final String? userName;
+  Router({required this.token, required this.userName});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

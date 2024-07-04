@@ -100,11 +100,6 @@ class _ItemQualityState extends State<ItemQuality> {
     print(changes);
   }
 
-  Future<void> removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(

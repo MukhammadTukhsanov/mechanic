@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/dashboard/index.dart';
@@ -24,6 +25,12 @@ class _ChooseModeState extends State<ChooseMode> {
   @override
   void initState() {
     super.initState();
+    getFromStrore();
+    // WidgetsFlutterBinding.ensureInitialized();
+    // final prefs = await SharedPreferences.getInstance();
+    // print("token: ${prefs.getString('user_name')}");
+    // print("token: ${widget.token}");
+    // print("user-name: ${widget.userName}");
     setState(() {
       count = 0;
     });
@@ -40,6 +47,15 @@ class _ChooseModeState extends State<ChooseMode> {
           _connectivityResult = ConnectivityResult.none;
         }
       });
+    });
+  }
+
+  Future<void> getFromStrore() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      user = prefs.getString('user_name')!;
+      key = prefs.getString('auth_token')!;
+      print(prefs.getString('user_name')!);
     });
   }
 
@@ -70,137 +86,107 @@ class _ChooseModeState extends State<ChooseMode> {
     });
   }
 
-  Future<void> removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Material(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-          // title: Text(S.of(context).modeSelection,
-          title: Text("Schichtprotokoll - Hauptmenü",
-              style: TextStyle(
-                  color: Color(0xff336699),
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold)),
-          leading: Builder(builder: (BuildContext context) {
-            return IconButton(
-                icon: Icon(Icons.menu, color: Color(0xff336699), size: 30),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip:
-                    MaterialLocalizations.of(context).openAppDrawerTooltip);
-          }),
-          actions: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6.0),
-                  border: Border.all(color: Color(0xff336699), width: 1.0)),
-              child: Row(
-                children: [
-                  Icon(Icons.person_outline,
-                      color: Color(0xff336699), size: 30.0),
-                  SizedBox(width: 10.0),
-                  Text(user,
-                      style: GoogleFonts.lexend(
-                        fontSize: 20,
-                        color: Color(0xff336699),
-                      )),
-                ],
-              ),
-            ),
-            SizedBox(width: 40.0),
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: IconButton(
-                    onPressed: () {
-                      removeToken();
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Login();
-                      }));
-                    },
-                    icon: Icon(Icons.logout, color: Colors.red, size: 30.0)))
-          ],
-          centerTitle: true,
-          flexibleSpace: Container(
-              decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(30, 5, 119, 190),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3))
-          ]))),
-      body: _connectivityResult == ConnectivityResult.none
-          ? Center(
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
-                SizedBox(height: 20),
-                Text(S.of(context).noInternetConnection,
-                    style: GoogleFonts.lexend(
-                        textStyle: const TextStyle(
-                            color: Color(0xff848484),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600)))
-              ],
-            ))
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return false;
+      },
+      child: Material(
+          child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+            // title: Text(S.of(context).modeSelection,
+            title: Text("Schichtprotokoll - Hauptmenü",
+                style: TextStyle(
+                    color: Color(0xff336699),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold)),
+            leading: Builder(builder: (BuildContext context) {
+              return IconButton(
+                  icon: Icon(Icons.menu, color: Color(0xff336699), size: 30),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip);
+            }),
+            actions: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6.0),
+                    border: Border.all(color: Color(0xff336699), width: 1.0)),
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return HomePage();
-                              }));
-                            },
-                            child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xff336699), width: 1),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(S.of(context).newEntry,
-                                      style: GoogleFonts.lexend(
-                                        fontSize: 30,
-                                        color: Color(0xff336699),
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 40),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return EditInfo();
-                              }));
-                            },
-                            child: Container(
+                    Icon(Icons.person_outline,
+                        color: Color(0xff336699), size: 30.0),
+                    SizedBox(width: 10.0),
+                    Text(user,
+                        style: GoogleFonts.lexend(
+                          fontSize: 20,
+                          color: Color(0xff336699),
+                        )),
+                  ],
+                ),
+              ),
+              SizedBox(width: 40.0),
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: IconButton(
+                      onPressed: () {
+                        removeToken();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Login();
+                        }));
+                      },
+                      icon: Icon(Icons.logout, color: Colors.red, size: 30.0)))
+            ],
+            centerTitle: true,
+            flexibleSpace: Container(
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(
+                  color: Color.fromARGB(30, 5, 119, 190),
+                  spreadRadius: 0,
+                  blurRadius: 3,
+                  offset: Offset(0, 3))
+            ]))),
+        body: _connectivityResult == ConnectivityResult.none
+            ? Center(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
+                  SizedBox(height: 20),
+                  Text(S.of(context).noInternetConnection,
+                      style: GoogleFonts.lexend(
+                          textStyle: const TextStyle(
+                              color: Color(0xff848484),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)))
+                ],
+              ))
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return HomePage();
+                                }));
+                              },
+                              child: Container(
                                 height: 200,
-                                width: MediaQuery.of(context).size.width / 2,
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Color(0xff336699), width: 1),
@@ -210,112 +196,118 @@ class _ChooseModeState extends State<ChooseMode> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(S.of(context).changeEntry,
+                                    Text(S.of(context).newEntry,
                                         style: GoogleFonts.lexend(
                                           fontSize: 30,
                                           color: Color(0xff336699),
                                         )),
                                   ],
-                                )),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 40),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ItemQuality();
-                              }));
-                            },
-                            child: Container(
-                              height: 200,
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xff336699), width: 1),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: Center(
-                                child: Text("Artikelqualität eintragen",
-                                    // text align center
-                                    textAlign: TextAlign.center,
-                                    softWrap: true,
-                                    style: GoogleFonts.lexend(
-                                      fontSize: 30,
-                                      color: Color(0xff336699),
-                                    )),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 40),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return Dashboard();
-                              }));
-                            },
-                            child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xff336699), width: 1),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(S.of(context).dashboard,
+                          SizedBox(width: 40),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return EditInfo();
+                                }));
+                              },
+                              child: Container(
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Color(0xff336699), width: 1),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(S.of(context).changeEntry,
+                                          style: GoogleFonts.lexend(
+                                            fontSize: 30,
+                                            color: Color(0xff336699),
+                                          )),
+                                    ],
+                                  )),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 40),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ItemQuality();
+                                }));
+                              },
+                              child: Container(
+                                height: 200,
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xff336699), width: 1),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Center(
+                                  child: Text("Artikelqualität eintragen",
+                                      // text align center
+                                      textAlign: TextAlign.center,
+                                      softWrap: true,
                                       style: GoogleFonts.lexend(
                                         fontSize: 30,
                                         color: Color(0xff336699),
                                       )),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     Navigator.push(context,
-                    //         MaterialPageRoute(builder: (context) {
-                    //       return Dashboard();
-                    //     }));
-                    //   },
-                    //   child: Container(
-                    //     height: 200,
-                    //     decoration: BoxDecoration(
-                    //         border:
-                    //             Border.all(color: Color(0xff336699), width: 1),
-                    //         borderRadius:
-                    //             BorderRadius.all(Radius.circular(20))),
-                    //     child: Row(
-                    //       crossAxisAlignment: CrossAxisAlignment.center,
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Text(S.of(context).dashboard,
-                    //             style: GoogleFonts.lexend(
-                    //               fontSize: 30,
-                    //               color: Color(0xff336699),
-                    //             )),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                          SizedBox(width: 40),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return Dashboard();
+                                }));
+                              },
+                              child: Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xff336699), width: 1),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(S.of(context).dashboard,
+                                        style: GoogleFonts.lexend(
+                                          fontSize: 30,
+                                          color: Color(0xff336699),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-    ));
+      )),
+    );
   }
 }

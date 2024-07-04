@@ -328,11 +328,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> removeToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-  }
-
   FocusNode _noteFocus = FocusNode();
   bool _showDialog = true;
 
