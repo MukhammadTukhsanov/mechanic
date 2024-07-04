@@ -18,6 +18,7 @@ import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -327,6 +328,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+  }
+
   FocusNode _noteFocus = FocusNode();
   bool _showDialog = true;
 
@@ -404,6 +410,7 @@ class _HomePageState extends State<HomePage> {
                             setState(() {
                               stopTimer = true;
                             });
+                            removeToken();
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return ChooseMode();

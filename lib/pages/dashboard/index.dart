@@ -11,6 +11,7 @@ import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -146,6 +147,10 @@ class _DashboardState extends State<Dashboard> {
   }
 
   final today = DateTime.now().day;
+  Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +197,7 @@ class _DashboardState extends State<Dashboard> {
                   padding: EdgeInsets.only(right: 20.0),
                   child: IconButton(
                       onPressed: () {
+                        removeToken();
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return ChooseMode();

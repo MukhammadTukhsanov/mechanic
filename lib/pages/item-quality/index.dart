@@ -12,6 +12,7 @@ import 'package:schichtbuch_shift/global/index.dart';
 import 'package:http/http.dart' as http;
 import 'package:schichtbuch_shift/pages/item-quality/machine-item.dart';
 import 'package:schichtbuch_shift/pages/mode/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemQuality extends StatefulWidget {
   ItemQuality({Key? key}) : super(key: key);
@@ -99,6 +100,11 @@ class _ItemQualityState extends State<ItemQuality> {
     print(changes);
   }
 
+  Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -148,6 +154,7 @@ class _ItemQualityState extends State<ItemQuality> {
                       padding: EdgeInsets.only(right: 20.0),
                       child: IconButton(
                           onPressed: () {
+                            removeToken();
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return ChooseMode();

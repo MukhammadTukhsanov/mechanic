@@ -11,6 +11,7 @@ import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CommentPage extends StatefulWidget {
   @override
@@ -109,6 +110,11 @@ class _CommentState extends State<CommentPage> {
 
   TextEditingController commentController = TextEditingController();
 
+  Future<void> removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -153,6 +159,7 @@ class _CommentState extends State<CommentPage> {
                       padding: EdgeInsets.only(right: 20.0),
                       child: IconButton(
                           onPressed: () {
+                            removeToken();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
