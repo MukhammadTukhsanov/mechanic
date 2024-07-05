@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
@@ -16,8 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemQuality extends StatefulWidget {
   ItemQuality({Key? key}) : super(key: key);
-  bool _allPartStatusOK = false;
-  bool changeAll = false;
+  bool _allPartStatusOK = true;
+  bool changeAll = true;
   bool _saveDate = false;
 
   @override
@@ -50,7 +51,7 @@ class _ItemQualityState extends State<ItemQuality> {
   }
 
   List changes = [];
-  List machisnesList = [];
+  List machinesNameList = [];
 
   getMachinesList() async {
     var response =
@@ -60,11 +61,12 @@ class _ItemQualityState extends State<ItemQuality> {
       data.map(
         (e) {
           setState(() {
-            machisnesList = [...machisnesList, e['machineQrCode']];
+            machinesNameList = [...machinesNameList, e['machineQrCode']];
           });
         },
       ).toList();
       setState(() {
+        changes = machinesNameList;
         machinesList = data;
       });
       print("machinesList: $machinesList");
@@ -74,21 +76,54 @@ class _ItemQualityState extends State<ItemQuality> {
   Future<void> _checkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     setState(() {
-      _connectivityResult = connectivityResult[
-          0]; // Extract the first ConnectivityResult from the list
+      _connectivityResult = connectivityResult[0];
     });
   }
 
+  void onChangeAll() {
+    print(widget._allPartStatusOK);
+    if (widget._allPartStatusOK) {
+      setState(() {
+        widget.changeAll = true;
+        changes = [];
+      });
+      setState(() {
+        widget.changeAll = false;
+        changes = [];
+      });
+    }
+    if (!widget._allPartStatusOK) {
+      setState(() {
+        widget.changeAll = false;
+      });
+      setState(() {
+        widget.changeAll = true;
+        changes = machinesNameList;
+      });
+    }
+    setState(() {
+      widget._allPartStatusOK = !widget._allPartStatusOK;
+    });
+    print(changes);
+  }
+
   void _handleChildStateChange(bool newState, String machine) {
-    print(newState);
-    print(machine);
-    if (!newState) {
+    print("$newState $machine");
+    if (newState) {
       setState(() {
         changes = [...changes, machine];
       });
-    } else
-      (changes.removeWhere((item) => item == machine));
-    if (changes.length == machinesList.length) {
+    } else {
+      List newList = List.from(changes);
+      String itemToDelete = machine;
+
+      newList.remove(itemToDelete);
+      setState(() {
+        changes = newList;
+      });
+    }
+    if (changes.length == machinesNameList.length ||
+        changes.length > machinesNameList.length) {
       setState(() {
         widget._allPartStatusOK = true;
       });
@@ -216,31 +251,7 @@ class _ItemQualityState extends State<ItemQuality> {
                             Expanded(
                               child: Center(
                                 child: GestureDetector(
-                                  onTap: () {
-                                    print("length: ${changes.length}");
-                                    setState(() {
-                                      if (changes.length == 0 ||
-                                          (changes.length > 0 &&
-                                              !widget._allPartStatusOK)) {
-                                        setState(() {
-                                          changes = machinesList;
-                                          widget.changeAll =
-                                              !widget._allPartStatusOK;
-                                        });
-                                      } else if (changes.length ==
-                                              machisnesList.length ||
-                                          (changes.length > 0 &&
-                                              widget._allPartStatusOK)) {
-                                        setState(() {
-                                          changes = [];
-                                          widget.changeAll =
-                                              !widget._allPartStatusOK;
-                                        });
-                                      }
-                                      widget._allPartStatusOK =
-                                          !widget._allPartStatusOK;
-                                    });
-                                  },
+                                  onTap: onChangeAll,
                                   child: Container(
                                     width: 55,
                                     height: 25,

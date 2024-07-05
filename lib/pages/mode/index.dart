@@ -26,11 +26,6 @@ class _ChooseModeState extends State<ChooseMode> {
   void initState() {
     super.initState();
     getFromStrore();
-    // WidgetsFlutterBinding.ensureInitialized();
-    // final prefs = await SharedPreferences.getInstance();
-    // print("token: ${prefs.getString('user_name')}");
-    // print("token: ${widget.token}");
-    // print("user-name: ${widget.userName}");
     setState(() {
       count = 0;
     });

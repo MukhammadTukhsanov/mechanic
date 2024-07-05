@@ -64,7 +64,7 @@ class MachineQualityItem extends StatefulWidget {
 }
 
 class _machineQualityItemState extends State<MachineQualityItem> {
-  bool _partStatusOK = false;
+  bool _partStatusOK = true;
 
   @override
   void didUpdateWidget(covariant MachineQualityItem oldWidget) {
