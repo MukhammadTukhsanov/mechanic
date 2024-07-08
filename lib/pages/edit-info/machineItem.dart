@@ -144,9 +144,7 @@ class _MachineItemState extends State<MachineItem> {
             title: Text(
                 widget.partNumber.toString() == ""
                     ? "PartNo und Partname sind leer"
-                    : widget.partNumber.toString() +
-                        ' | ' +
-                        widget.partName.toString(),
+                    : widget.partNumber + ' | ' + widget.partName,
                 style: GoogleFonts.lexend(color: Color(0xff336699))),
             subtitle: Text(
               widget.shift,

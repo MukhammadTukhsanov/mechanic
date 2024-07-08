@@ -458,8 +458,8 @@ class _ItemQualityState extends State<ItemQuality> {
                               remainingProductionDays:
                                   e["remainingProductionDays"],
                               operatingHours: e["operatingHours"],
-                              partName: e["partName"].toString(),
-                              partNumber: e["partNumber"].toString(),
+                              partName: e["partname"],
+                              partNumber: e["partnumber"],
                               onSaveDate: widget._saveDate,
                               toolNo: e["toolNo"],
                               onStateChange: _handleChildStateChange,
