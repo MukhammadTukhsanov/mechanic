@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:schichtbuch_shift/pages/login/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String key = '';
@@ -6,7 +8,8 @@ String key = '';
 // 04711227280
 String user = '';
 // String ipAdress = '192.168.100.23:7878';
-String ipAdress = '104.198.75.202';
+// String ipAdress = '104.198.75.202';
+String ipAdress = '35.184.23.4';
 // String ipAdress = '127.0.0.1:8000';
 int count = 0;
 bool showAlert = false;
@@ -117,8 +120,21 @@ DateTime addTimeSkippingWeekends(
   return currentDate;
 }
 
-Future<void> removeToken() async {
+Future removeToken(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('auth_token');
   await prefs.remove('user_name');
+
+  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+    return Login();
+  }));
+}
+
+DateTime getLastDayOfMonth(int year, int month) {
+  DateTime lastDay = DateTime(year, month + 1, 0);
+  while (lastDay.weekday == DateTime.saturday ||
+      lastDay.weekday == DateTime.sunday) {
+    lastDay = lastDay.subtract(Duration(days: 1));
+  }
+  return lastDay;
 }

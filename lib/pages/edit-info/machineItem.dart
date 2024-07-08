@@ -66,7 +66,6 @@ class _MachineItemState extends State<MachineItem> {
   int _remainingProductionDays = 0;
   int _cavity = 0;
   String _cycleTime = '';
-  bool _partStatus = false;
   int _pieceNumber = 0;
 
   bool isEdit = false;
@@ -81,7 +80,6 @@ class _MachineItemState extends State<MachineItem> {
     _remainingProductionDays = widget.remainingProductionDays;
     _cavity = widget.cavity;
     _cycleTime = widget.cycleTime;
-    _partStatus = widget.partStatus;
     _pieceNumber = widget.pieceNumber;
   }
 

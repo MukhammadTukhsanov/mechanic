@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 
 import 'package:http/http.dart' as http;

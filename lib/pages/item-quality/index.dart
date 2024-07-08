@@ -1,20 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:schichtbuch_shift/components/button.dart';
-import 'package:schichtbuch_shift/components/switch.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:schichtbuch_shift/pages/item-quality/machine-item.dart';
-import 'package:schichtbuch_shift/pages/mode/index.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class ItemQuality extends StatefulWidget {
   ItemQuality({Key? key}) : super(key: key);
   bool _allPartStatusOK = true;
@@ -184,11 +181,7 @@ class _ItemQualityState extends State<ItemQuality> {
                       padding: EdgeInsets.only(right: 20.0),
                       child: IconButton(
                           onPressed: () {
-                            removeToken();
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ChooseMode();
-                            }));
+                            removeToken(context);
                           },
                           icon: Icon(Icons.logout,
                               color: Colors.red, size: 30.0)))

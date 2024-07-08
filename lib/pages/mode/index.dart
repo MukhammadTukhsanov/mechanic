@@ -9,13 +9,16 @@ import 'package:schichtbuch_shift/pages/dashboard/index.dart';
 import 'package:schichtbuch_shift/pages/edit-info/index.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/item-quality/index.dart';
-import 'package:schichtbuch_shift/pages/login/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class ChooseMode extends StatefulWidget {
+  String? user = '';
+  String? keyToken = '';
+
+  ChooseMode({this.user, this.keyToken});
   @override
   State<ChooseMode> createState() => _ChooseModeState();
 }
@@ -25,7 +28,8 @@ class _ChooseModeState extends State<ChooseMode> {
   @override
   void initState() {
     super.initState();
-    getFromStrore();
+    print(DateTime.now().toString());
+    getFromStore();
     setState(() {
       count = 0;
     });
@@ -45,13 +49,15 @@ class _ChooseModeState extends State<ChooseMode> {
     });
   }
 
-  Future<void> getFromStrore() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      user = prefs.getString('user_name')!;
-      key = prefs.getString('auth_token')!;
-      print(prefs.getString('user_name')!);
-    });
+  Future<void> getFromStore() async {
+    if (widget.user != null && widget.keyToken != null) {
+      setState(() {
+        user = widget.user!;
+        key = widget.keyToken!;
+      });
+      print("user: ${widget.user!}");
+      print("key: ${widget.keyToken!}");
+    }
   }
 
   getMachinesList() async {
@@ -133,11 +139,7 @@ class _ChooseModeState extends State<ChooseMode> {
                   padding: EdgeInsets.only(right: 20.0),
                   child: IconButton(
                       onPressed: () {
-                        removeToken();
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return Login();
-                        }));
+                        removeToken(context);
                       },
                       icon: Icon(Icons.logout, color: Colors.red, size: 30.0)))
             ],

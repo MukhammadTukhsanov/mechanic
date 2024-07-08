@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:schichtbuch_shift/components/switch.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class MachineQualityItem extends StatefulWidget {
   final String id;
   final pieceNumber;

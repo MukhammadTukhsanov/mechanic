@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:schichtbuch_shift/components/button.dart';
 import 'package:schichtbuch_shift/components/cupertino-picker.dart';
 import 'package:schichtbuch_shift/components/input.dart';
-import 'package:schichtbuch_shift/components/switch.dart';
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/comment/index.dart';
@@ -18,7 +17,6 @@ import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -123,15 +121,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  DateTime getLastDayOfMonth(int year, int month) {
-    DateTime lastDay = DateTime(year, month + 1, 0);
-    while (lastDay.weekday == DateTime.saturday ||
-        lastDay.weekday == DateTime.sunday) {
-      lastDay = lastDay.subtract(Duration(days: 1));
-    }
-    return lastDay;
-  }
-
   void lastDay() {
     DateTime lastDay =
         getLastDayOfMonth(DateTime.now().year, DateTime.now().month);
@@ -201,16 +190,7 @@ class _HomePageState extends State<HomePage> {
   final minute = DateTime.now().minute.toString().padLeft(2, '0');
 
   Future<void> addEntry() async {
-    if (machineQRCodeController.text.isEmpty && _machineStopped)
-    // ||
-    // machineQRCodeController.text.isEmpty &&
-    //     productionNumberController.text.length < 9 &&
-    //     !_machineStopped ||
-    // productionNumberController.text.isEmpty &&
-    //     cavityController.text.isEmpty &&
-    //     cycleTimeController.text.isEmpty &&
-    //     pieceNumberController.text.isEmpty)
-    {
+    if (machineQRCodeController.text.isEmpty && _machineStopped) {
       setState(() {
         errText = S.of(context).fillAllFields;
         err = true;
@@ -227,58 +207,75 @@ class _HomePageState extends State<HomePage> {
       loadSaving = true;
     });
 
-    var response = await http.post(
-      Uri.parse('http://$ipAdress/api/machines'),
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      body: jsonEncode({
-        "createdAt": DateTime.now().toString(),
-        "token": key,
-        "shift": shift,
-        "machineQrCode": machineQRCodeController.text,
-        "toolMounted": _toolMounted,
-        "machineStopped": _machineStopped,
-        "barcodeProductionNo": productionNumberController.text.isEmpty
-            ? "0"
-            : double.parse(productionNumberController.text),
-        "toolNo":
-            toolNumberController.text.isEmpty ? "0" : toolNumberController.text,
-        "cavity": cavityController.text.isEmpty
-            ? "0"
-            : double.parse(cavityController.text),
-        "cycleTime": cycleTimeController.text,
-        "partStatus": _partStatusOK,
-        "pieceNumber": pieceNumberController.text.isEmpty
-            ? "0"
-            : double.parse(pieceNumberController.text),
-        "note": noteController.text,
-        "toolCleaning": radioValue == 'yes',
-        "remainingProductionDays": days,
-        "remainingProductionTime":
-            instRemainingProductionHours * 60 + instRemainingProductionMinute,
-        "operatingHours": operatingHoursController.text.isEmpty
-            ? "0"
-            : operatingHoursController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
+    try {
+      print("key: $key");
+      var response = await http.post(
+        Uri.parse('http://$ipAdress/api/machines'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({
+          "shift": shift,
+          "token": key.toString(),
+          "createdAt": DateTime.now().toString(),
+          "machineQrCode": machineQRCodeController.text,
+          "toolMounted": _toolMounted,
+          "machineStopped": _machineStopped,
+          "barcodeProductionNo": productionNumberController.text.isEmpty
+              ? 0
+              : double.parse(productionNumberController.text),
+          "toolNo": toolNumberController.text.isEmpty
+              ? 0
+              : double.parse(toolNumberController.text),
+          "cavity": cavityController.text.isEmpty
+              ? 0
+              : double.parse(cavityController.text),
+          "cycleTime": cycleTimeController.text,
+          "partStatus": _partStatusOK,
+          "pieceNumber": pieceNumberController.text.isEmpty
+              ? 0
+              : double.parse(pieceNumberController.text),
+          "note": noteController.text,
+          "toolCleaning": (radioValue == 'yes' ? true : false),
+          // "toolCleaning": true,
+          "remainingProductionDays": days,
+          "remainingProductionTime":
+              instRemainingProductionHours * 60 + instRemainingProductionMinute,
+          "operatingHours": operatingHoursController.text.isEmpty
+              ? "0"
+              : operatingHoursController.text,
+        }),
+      );
       var data = jsonDecode(response.body);
-      showSnackBarFun(context, S.of(context).entryAdded, "success");
-      Navigator.push(
+      print("data $data");
+
+      if (response.statusCode == 200) {
+        showSnackBarFun(context, S.of(context).entryAdded, "success");
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => data['total'] == globalDevices.length
-                  ? CommentPage()
-                  : HomePage()));
-    } else {
+            builder: (context) => data['total'] == globalDevices.length
+                ? CommentPage()
+                : HomePage(),
+          ),
+        );
+      } else {
+        showSnackBarFun(context, S.of(context).errorSaving, "error");
+        var errorData = jsonDecode(response.body);
+        print("Error 400: ${errorData['message']}");
+        print("Error: ${errorData}");
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      }
+    } catch (e) {
+      // Handle any errors that occur during the HTTP request
+      print("Error during HTTP request: $e");
       showSnackBarFun(context, S.of(context).errorSaving, "error");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage()));
+    } finally {
+      setState(() {
+        loadSaving = false;
+      });
     }
-
-    setState(() {
-      loadSaving = false;
-    });
   }
 
   void onChangedQrCode(String value) {
@@ -405,11 +402,7 @@ class _HomePageState extends State<HomePage> {
                             setState(() {
                               stopTimer = true;
                             });
-                            removeToken();
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ChooseMode();
-                            }));
+                            removeToken(context);
                           },
                           icon: Icon(Icons.logout,
                               color: Colors.red, size: 30.0)))
@@ -706,6 +699,8 @@ class _HomePageState extends State<HomePage> {
                                                             })),
                                                     Text(
                                                         'Maschine läuft nicht aber Werkzeug ist gerüstet',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: GoogleFonts.lexend(
                                                             textStyle: TextStyle(
                                                                 color: Color(
