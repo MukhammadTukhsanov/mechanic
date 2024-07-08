@@ -42,34 +42,34 @@ class _LoginState extends State<Login> {
         }
       });
     });
-    // NfcManager.instance.startSession(
-    //   onDiscovered: (NfcTag tag) async {
-    //     var ndef = Ndef.from(tag);
-    //     if (ndef != null && ndef.cachedMessage != null) {
-    //       String tempRecord = '';
-    //       for (var record in ndef.cachedMessage!.records) {
-    //         tempRecord =
-    //             '$tempRecord ${String.fromCharCodes(record.payload.sublist(record.payload[0] + 1))}';
-    //       }
-    //       setState(() {
-    //         _readFromNfcTag = tempRecord.replaceAll(
-    //           new RegExp(r'\s+\b|\b\s'),
-    //           '',
-    //         );
-    //         _tokenIdController.text = _readFromNfcTag;
-    //       });
-    //       setState(() {
-    //         loading = true;
-    //       });
-    //       loginRequest(_readFromNfcTag);
-    //     }
-    //   },
-    // );
+    NfcManager.instance.startSession(
+      onDiscovered: (NfcTag tag) async {
+        var ndef = Ndef.from(tag);
+        if (ndef != null && ndef.cachedMessage != null) {
+          String tempRecord = '';
+          for (var record in ndef.cachedMessage!.records) {
+            tempRecord =
+                '$tempRecord ${String.fromCharCodes(record.payload.sublist(record.payload[0] + 1))}';
+          }
+          setState(() {
+            _readFromNfcTag = tempRecord.replaceAll(
+              new RegExp(r'\s+\b|\b\s'),
+              '',
+            );
+            _tokenIdController.text = _readFromNfcTag;
+          });
+          setState(() {
+            loading = true;
+          });
+          loginRequest(_readFromNfcTag);
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
-    // NfcManager.instance.stopSession();
+    NfcManager.instance.stopSession();
     _tokenIdController.dispose();
     super.dispose();
   }
