@@ -142,10 +142,13 @@ class _MachineItemState extends State<MachineItem> {
         children: <Widget>[
           ListTile(
             title: Text(
-                widget.partNumber.toString() == ""
-                    ? "PartNo und Partname sind leer"
-                    : widget.partNumber + ' | ' + widget.partName,
-                style: GoogleFonts.lexend(color: Color(0xff336699))),
+                widget.machineQrCode +
+                    ' ' +
+                    widget.partNumber +
+                    ' | ' +
+                    widget.partName,
+                style: GoogleFonts.lexend(
+                    color: Color(0xff336699), fontWeight: FontWeight.w600)),
             subtitle: Text(
               widget.shift,
               style: TextStyle(
@@ -292,6 +295,8 @@ class _MachineItemState extends State<MachineItem> {
                                     value['hours'] * 60 + value['minutes'];
                               });
                             },
+                            defaultHours: widget.remainingProductionTime ~/ 60,
+                            defaultMinutes: widget.remainingProductionTime % 60,
                           ),
                         ]),
                         SizedBox(
@@ -310,6 +315,7 @@ class _MachineItemState extends State<MachineItem> {
                               _remainingProductionDays = index;
                             });
                           },
+                          selectedDate: widget.remainingProductionDays,
                         )
                       ],
                     ))

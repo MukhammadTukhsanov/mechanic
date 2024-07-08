@@ -6,7 +6,7 @@ import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ModalCupertinoPicker extends StatefulWidget {
-  String? label = '';
+  String? label = '12';
 
   int selectedDate = 1;
   double? labelFontSize;
@@ -15,15 +15,22 @@ class ModalCupertinoPicker extends StatefulWidget {
 
   bool? error;
 
+  int? defaultHours;
+  int? defaultMinutes;
+  int? defaultIndex;
+
   Function(int)? onSelect;
   Function? onSetHour;
   ModalCupertinoPicker(
       {this.label,
+      this.defaultHours,
+      this.defaultMinutes,
       this.hours,
       this.labelFontSize,
       this.selectedDate = 0,
       this.onSelect,
       this.onSetHour,
+      this.defaultIndex,
       this.error = false});
   @override
   State<ModalCupertinoPicker> createState() => _ModalCupertinoPickerState();
@@ -36,6 +43,13 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
   String selectedHours =
       "00 ${S.current.hours[0]} - 00 ${S.current.minutes[0]}";
   bool days = true;
+
+  // Initial load
+  @override
+  void initState() {
+    super.initState();
+    selectedHours = "${widget.defaultHours} - ${widget.defaultMinutes}";
+  }
 
   @override
   Widget build(BuildContext context) {
