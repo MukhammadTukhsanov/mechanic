@@ -65,30 +65,45 @@ class _EditInfoState extends State {
         body: SingleChildScrollView(
             child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
-              children: editedDevices.map((e) {
-            return new MachineItem(
-              id: e['id'].toString(),
-              pieceNumber: e['pieceNumber'] ?? 0,
-              token: e['token'] ?? '',
-              toolMounted: e['toolMounted'] ?? false,
-              machineStopped: e['machineStopped'] ?? false,
-              machineQrCode: e['machineQrCode'] ?? '',
-              createdAt: e['createdAt']?.toString() ?? '',
-              shift: e['shift'] ?? '',
-              barcodeProductionNo: e['barcodeProductionNo'] ?? 0,
-              partName: e['partnumber'] ?? '',
-              partNumber: e['partnumber'] ?? '',
-              cavity: e['cavity'] ?? 0,
-              cycleTime: e['cycleTime'] ?? '',
-              partStatus: e['partStatus'] ?? false,
-              note: e['note'] ?? '',
-              toolCleaning: e['toolCleaning'] ?? false,
-              remainingProductionTime: e['remainingProductionTime'] ?? 0,
-              remainingProductionDays: e['remainingProductionDays'] ?? 0,
-              operatingHours: e['operatingHours'] ?? '',
-            );
-          }).toList()),
+          child: editedDevices.length == 0
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.info, size: 100, color: Colors.blue[200]),
+                      SizedBox(height: 20),
+                      Text("Warten auf neue Schichtdaten",
+                          style: TextStyle(
+                              color: Colors.blue[200],
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                )
+              : Column(
+                  children: editedDevices.map((e) {
+                  return new MachineItem(
+                    id: e['id'].toString(),
+                    pieceNumber: e['pieceNumber'] ?? 0,
+                    token: e['token'] ?? '',
+                    toolMounted: e['toolMounted'] ?? false,
+                    machineStopped: e['machineStopped'] ?? false,
+                    machineQrCode: e['machineQrCode'] ?? '',
+                    createdAt: e['createdAt']?.toString() ?? '',
+                    shift: e['shift'] ?? '',
+                    barcodeProductionNo: e['barcodeProductionNo'] ?? 0,
+                    partName: e['partnumber'] ?? '',
+                    partNumber: e['partnumber'] ?? '',
+                    cavity: e['cavity'] ?? 0,
+                    cycleTime: e['cycleTime'] ?? '',
+                    partStatus: e['partStatus'] ?? false,
+                    note: e['note'] ?? '',
+                    toolCleaning: e['toolCleaning'] ?? false,
+                    remainingProductionTime: e['remainingProductionTime'] ?? 0,
+                    remainingProductionDays: e['remainingProductionDays'] ?? 0,
+                    operatingHours: e['operatingHours'] ?? '',
+                  );
+                }).toList()),
         )));
   }
 }

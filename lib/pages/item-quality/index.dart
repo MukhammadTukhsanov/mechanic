@@ -62,6 +62,9 @@ class _ItemQualityState extends State<ItemQuality> {
           });
         },
       ).toList();
+
+      data = data.where((element) => element["partnumber"] != '0').toList();
+
       setState(() {
         changes = machinesNameList;
         machinesList = data;
@@ -212,222 +215,234 @@ class _ItemQualityState extends State<ItemQuality> {
                   ))
                 : SingleChildScrollView(
                     child: Column(children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          border: BorderDirectional(
-                            bottom: BorderSide(
-                              color: Color(0xff336699).withOpacity(.3),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  "Alle OK",
-                                  style: GoogleFonts.lexend(
-                                      color: Color(0xff336699), fontSize: 24),
+                    machinesList.length == 0
+                        ? SizedBox()
+                        : Padding(
+                            padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                border: BorderDirectional(
+                                  bottom: BorderSide(
+                                    color: Color(0xff336699).withOpacity(.3),
+                                    width: 1,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: onChangeAll,
-                                  child: Container(
-                                    width: 55,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      color: widget._allPartStatusOK
-                                          ? Color(0xff336699)
-                                          : Color(0xff848484),
-                                      borderRadius: BorderRadius.circular(40),
-                                      border: Border.all(
-                                        color: Color(0xff848484),
-                                        width: 1.5,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "Alle OK",
+                                        style: GoogleFonts.lexend(
+                                            color: Color(0xff336699),
+                                            fontSize: 24),
                                       ),
                                     ),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(),
+                                  ),
+                                  Expanded(
+                                    child: SizedBox(),
+                                  ),
+                                  Expanded(
                                     child: Center(
-                                      child: Stack(children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 3),
-                                          child: Center(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(S.of(context).yes,
-                                                    style: GoogleFonts.lexend(
-                                                      textStyle: TextStyle(
-                                                          color: widget
-                                                                  ._allPartStatusOK
-                                                              ? Colors.white
-                                                              : Colors
-                                                                  .transparent,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
-                                                Text(S.of(context).no,
-                                                    style: GoogleFonts.lexend(
-                                                        textStyle: TextStyle(
-                                                            color: widget
-                                                                    ._allPartStatusOK
-                                                                ? Colors
-                                                                    .transparent
-                                                                : Colors.white,
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold))),
-                                              ],
+                                      child: GestureDetector(
+                                        onTap: onChangeAll,
+                                        child: Container(
+                                          width: 55,
+                                          height: 25,
+                                          decoration: BoxDecoration(
+                                            color: widget._allPartStatusOK
+                                                ? Color(0xff336699)
+                                                : Color(0xff848484),
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            border: Border.all(
+                                              color: Color(0xff848484),
+                                              width: 1.5,
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              widget._allPartStatusOK
-                                                  ? MainAxisAlignment.end
-                                                  : MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 21.5,
-                                              height: 21.5,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(40),
+                                          child: Center(
+                                            child: Stack(children: [
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 3),
+                                                child: Center(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(S.of(context).yes,
+                                                          style: GoogleFonts
+                                                              .lexend(
+                                                            textStyle: TextStyle(
+                                                                color: widget
+                                                                        ._allPartStatusOK
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .transparent,
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                      Text(S.of(context).no,
+                                                          style: GoogleFonts.lexend(
+                                                              textStyle: TextStyle(
+                                                                  color: widget
+                                                                          ._allPartStatusOK
+                                                                      ? Colors
+                                                                          .transparent
+                                                                      : Colors
+                                                                          .white,
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              Row(
+                                                mainAxisAlignment: widget
+                                                        ._allPartStatusOK
+                                                    ? MainAxisAlignment.end
+                                                    : MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 21.5,
+                                                    height: 21.5,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ]),
+                                          ),
                                         ),
-                                      ]),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                      child: Container(
-                        // padding: EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          border: BorderDirectional(
-                            bottom: BorderSide(
-                              color: Color(0xff336699).withOpacity(.3),
-                              width: 1,
                             ),
                           ),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              right: BorderSide(
-                                  width: 1,
-                                  color: Color(0xff336699).withOpacity(.3)),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          left: BorderSide(
-                                              width: 1,
-                                              color: Color(0xff336699)
-                                                  .withOpacity(.3)))),
-                                  child: Center(
-                                    child: Text(
-                                      "Maschine",
-                                      style: GoogleFonts.lexend(
-                                          color: Color(0xff336699),
-                                          fontSize: 24),
-                                    ),
+                    machinesList.length == 0
+                        ? SizedBox()
+                        : Padding(
+                            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                            child: Container(
+                              // padding: EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                border: BorderDirectional(
+                                  bottom: BorderSide(
+                                    color: Color(0xff336699).withOpacity(.3),
+                                    width: 1,
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          left: BorderSide(
-                                              width: 1,
-                                              color: Color(0xff336699)
-                                                  .withOpacity(.3)))),
-                                  child: Center(
-                                    child: Text(
-                                      "TeileNr",
-                                      style: GoogleFonts.lexend(
-                                          color: Color(0xff336699),
-                                          fontSize: 24),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          left: BorderSide(
-                                              width: 1,
-                                              color: Color(0xff336699)
-                                                  .withOpacity(.3)))),
-                                  child: Center(
-                                    child: Text(
-                                      "Teilename",
-                                      style: GoogleFonts.lexend(
-                                          color: Color(0xff336699),
-                                          fontSize: 24),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                    left: BorderSide(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    right: BorderSide(
                                         width: 1,
                                         color:
                                             Color(0xff336699).withOpacity(.3)),
-                                  )),
-                                  child: Center(
-                                    child: Text(
-                                      "Teilstatus OK",
-                                      style: GoogleFonts.lexend(
-                                          color: Color(0xff336699),
-                                          fontSize: 24),
-                                    ),
                                   ),
                                 ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                left: BorderSide(
+                                                    width: 1,
+                                                    color: Color(0xff336699)
+                                                        .withOpacity(.3)))),
+                                        child: Center(
+                                          child: Text(
+                                            "Maschine",
+                                            style: GoogleFonts.lexend(
+                                                color: Color(0xff336699),
+                                                fontSize: 24),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                left: BorderSide(
+                                                    width: 1,
+                                                    color: Color(0xff336699)
+                                                        .withOpacity(.3)))),
+                                        child: Center(
+                                          child: Text(
+                                            "TeileNr",
+                                            style: GoogleFonts.lexend(
+                                                color: Color(0xff336699),
+                                                fontSize: 24),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                left: BorderSide(
+                                                    width: 1,
+                                                    color: Color(0xff336699)
+                                                        .withOpacity(.3)))),
+                                        child: Center(
+                                          child: Text(
+                                            "Teilename",
+                                            style: GoogleFonts.lexend(
+                                                color: Color(0xff336699),
+                                                fontSize: 24),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                          left: BorderSide(
+                                              width: 1,
+                                              color: Color(0xff336699)
+                                                  .withOpacity(.3)),
+                                        )),
+                                        child: Center(
+                                          child: Text(
+                                            "Teilstatus OK",
+                                            style: GoogleFonts.lexend(
+                                                color: Color(0xff336699),
+                                                fontSize: 24),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                       child: Container(
@@ -436,55 +451,93 @@ class _ItemQualityState extends State<ItemQuality> {
                                 right: BorderSide(
                                     width: 1,
                                     color: Color(0xff336699).withOpacity(.3)))),
-                        child: Column(
-                            children: machinesList.map((e) {
-                          return MachineQualityItem(
-                              id: e["id"].toString(),
-                              token: e["token"].toString(),
-                              pieceNumber: e["pieceNumber"],
-                              toolMounted: e["toolMounted"],
-                              machineStopped: e["machineStopped"],
-                              machineQrCode: e["machineQrCode"].toString(),
-                              createdAt: e["createdAt"].toString(),
-                              shift: e["shift"].toString(),
-                              barcodeProductionNo: e["barcodeProductionNo"],
-                              cavity: e["cavity"],
-                              cycleTime: e["cycleTime"].toString(),
-                              partStatus: e["partStatus"],
-                              note: e["note"].toString(),
-                              toolCleaning: e["toolCleaning"],
-                              remainingProductionTime:
-                                  e["remainingProductionTime"],
-                              remainingProductionDays:
-                                  e["remainingProductionDays"],
-                              operatingHours: e["operatingHours"],
-                              partName: e["partname"],
-                              partNumber: e["partnumber"],
-                              onSaveDate: widget._saveDate,
-                              toolNo: e["toolNo"],
-                              onStateChange: _handleChildStateChange,
-                              allPartStatusOK: widget.changeAll);
-                        }).toList()),
+                        child: machinesList.length == 0
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.info,
+                                        size: 100, color: Colors.blue[200]),
+                                    SizedBox(height: 20),
+                                    Text("Warten auf neue Schichtdaten",
+                                        style: GoogleFonts.lexend(
+                                            textStyle: const TextStyle(
+                                                color: Color(0xff848484),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600)))
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                children: machinesList.map((e) {
+                                // .where((element) => element.partnumber != 12345).toList()
+                                // e.partnumber == 12345 ? SizedBox() :
+                                return MachineQualityItem(
+                                    id: e["id"].toString(),
+                                    token: e["token"].toString(),
+                                    pieceNumber: e["pieceNumber"],
+                                    toolMounted: e["toolMounted"],
+                                    machineStopped: e["machineStopped"],
+                                    machineQrCode:
+                                        e["machineQrCode"].toString(),
+                                    createdAt: e["createdAt"].toString(),
+                                    shift: e["shift"].toString(),
+                                    barcodeProductionNo:
+                                        e["barcodeProductionNo"],
+                                    cavity: e["cavity"],
+                                    cycleTime: e["cycleTime"].toString(),
+                                    partStatus: e["partStatus"],
+                                    note: e["note"].toString(),
+                                    toolCleaning: e["toolCleaning"],
+                                    remainingProductionTime:
+                                        e["remainingProductionTime"],
+                                    remainingProductionDays:
+                                        e["remainingProductionDays"],
+                                    operatingHours: e["operatingHours"],
+                                    partName: e["partname"],
+                                    partNumber: e["partnumber"],
+                                    onSaveDate: widget._saveDate,
+                                    toolNo: e["toolNo"],
+                                    onStateChange: _handleChildStateChange,
+                                    allPartStatusOK: widget.changeAll);
+                              }).toList()),
                       ),
                     ),
                     // Save button
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(children: [
-                        Expanded(child: SizedBox()),
-                        SizedBox(width: 20.0),
-                        Expanded(
-                            child: Button(
-                          // loading: loadSaving,
-                          text: S.of(context).save,
-                          onPressed: () {
-                            setState(() {
-                              widget._saveDate = !widget._saveDate;
-                            });
-                          },
-                        ))
-                      ]),
-                    )
+                    machinesList.length == 0
+                        ? SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(children: [
+                              Expanded(child: SizedBox()),
+                              SizedBox(width: 20.0),
+                              Expanded(
+                                  child: Button(
+                                // loading: loadSaving,
+                                text: S.of(context).save,
+                                onPressed: () {
+                                  setState(() {
+                                    widget._saveDate = !widget._saveDate;
+                                  });
+
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text(
+                                      "Daten gespeichert",
+                                      style: GoogleFonts.lexend(
+                                          textStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    backgroundColor: Color(0xff336699),
+                                  );
+
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                },
+                              ))
+                            ]),
+                          )
                   ]))));
   }
 }
