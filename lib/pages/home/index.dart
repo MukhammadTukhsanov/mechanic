@@ -833,12 +833,12 @@ class _HomePageState extends State<HomePage> {
                       });
                     } else {
                       setState(() {
-                        barcodeIsDisabled = true;
+                        // barcodeIsDisabled = true;
                         toolIdIsDisabled = false;
                       });
                     }
                   },
-                  // disabled: barcodeIsDisabled,
+                  disabled: barcodeIsDisabled,
                   hassError: false,
                   validator:
                       _machineStopped || barcodeIsDisabled ? false : true,
@@ -866,10 +866,13 @@ class _HomePageState extends State<HomePage> {
                           });
                         }
                       },
+                      keyboardType: TextInputType.number,
+                      numericOnly: true,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: toolIdIsDisabled ? false : true,
                       controller: toolNumberController,
                       labelText: S.of(context).toolId,
-                      // disabled: toolIdIsDisabled,
+                      disabled: toolIdIsDisabled,
                     ),
                   )
                 : SizedBox(height: 0.0),
