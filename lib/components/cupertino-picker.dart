@@ -48,7 +48,7 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
   @override
   void initState() {
     super.initState();
-    selectedHours = "${widget.defaultHours} - ${widget.defaultMinutes}";
+    // selectedHours = "${widget.defaultHours} - ${widget.defaultMinutes}";
   }
 
   @override

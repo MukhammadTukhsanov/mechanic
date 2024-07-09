@@ -67,6 +67,41 @@ class _HomePageState extends State<HomePage> {
   late DateTime lastWeekdayOfMonth;
   ConnectivityResult _connectivityResult = ConnectivityResult.none;
 
+  Future<void> getMachinesList() async {
+    var shiftStatusResponse =
+        await http.get(Uri.parse('http://$ipAdress/api/machines/$key'));
+    if (shiftStatusResponse.statusCode == 200) {
+      var data = jsonDecode(shiftStatusResponse.body);
+      if (data.isNotEmpty && data[0].containsKey('toolCleaning')) {
+        print("data: ${data[data.length - 1]}");
+        setState(() {
+          shiftText = "${data[data.length - 1]['toolCleaning']!}";
+          lastShift = "${data[data.length - 1]['shift']}";
+        });
+      }
+    }
+    try {
+      final machinesResponse =
+          await http.get(Uri.parse('http://$ipAdress/api/machines'));
+
+      if (machinesResponse.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(machinesResponse.body);
+
+        setState(() {
+          globalDevices =
+              data.map((e) => e['machineQrCode'].toString()).toList();
+        });
+      } else {
+        // Handle the error response
+        print(
+            'Failed to load machines. Status code: ${machinesResponse.statusCode}');
+      }
+    } catch (error) {
+      // Handle any exceptions that occur during the HTTP request
+      print('Error occurred while fetching machines: $error');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -98,27 +133,6 @@ class _HomePageState extends State<HomePage> {
     _machineQRFocus.dispose();
     _productionNoFocus.dispose();
     super.dispose();
-  }
-
-  Future<void> getMachinesList() async {
-    var shiftStatusResponse =
-        await http.get(Uri.parse('http://$ipAdress/api/machines/$key'));
-    if (shiftStatusResponse.statusCode == 200) {
-      var data = jsonDecode(shiftStatusResponse.body);
-      setState(() {
-        shiftText = "${data[0]['toolCleaning']}";
-        lastShift = "${data[0]['shift']}";
-      });
-    }
-
-    var machinesResponse =
-        await http.get(Uri.parse('http://$ipAdress/api/machines'));
-    if (machinesResponse.statusCode == 200) {
-      var data = jsonDecode(machinesResponse.body);
-      setState(() {
-        globalDevices = data.map((e) => e['machineQrCode']).toList();
-      });
-    }
   }
 
   void lastDay() {
@@ -959,19 +973,13 @@ class _HomePageState extends State<HomePage> {
             : Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                    // shiftText + lastShift
-                    (shiftText == "false" && lastShift == "F1") ||
-                            (shiftText == "false" && lastShift == "S2")
-                        ? "Achtung - Werkzeugreinigung in notwending!"
-                        : (shiftText == "true" && lastShift == "F1")
-                            ? "Ist erledigt"
-                            : "Werkzeugreinigung in Schicht F1 erledigt?",
+                    (shiftText != "true" && lastShift != "N3")
+                        ? "Achtung – Werkzeugreinigung notwendig! Ist erledigt?"
+                        : "Werkzeugreinigung in Schicht F1 erledigt?",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lexend(
                         textStyle: TextStyle(
-                            color: (shiftText == "false" &&
-                                        lastShift == "F1") ||
-                                    (shiftText == "false" && lastShift == "S2")
+                            color: (shiftText != "true" && lastShift != "N3")
                                 ? Colors.red
                                 : Color(0xff336699),
                             fontSize: 22,
