@@ -870,9 +870,10 @@ class _HomePageState extends State<HomePage> {
                           });
                         }
                       },
-                      keyboardType: TextInputType.number,
-                      numericOnly: true,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9]')),
+                      ],
                       validator: toolIdIsDisabled ? false : true,
                       controller: toolNumberController,
                       labelText: S.of(context).toolId,
