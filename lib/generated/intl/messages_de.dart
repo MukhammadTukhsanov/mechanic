@@ -129,7 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "entriesAddedForAllMachines": MessageLookupByLibrary.simpleMessage(
             "Einträge für alle Maschinen hinzugefügt"),
         "waitingForMaterial":
-            MessageLookupByLibrary.simpleMessage("Warten auf Material"),
+            MessageLookupByLibrary.simpleMessage("Warten auf QS Freigabe"),
         "noMaterial": MessageLookupByLibrary.simpleMessage("Kein Material"),
         "noStaff": MessageLookupByLibrary.simpleMessage("Kein Personal"),
         "materialNotDry":
@@ -142,7 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "peripheralDefective":
             MessageLookupByLibrary.simpleMessage("Peripherie defekt"),
         "noteTextCombinations":
-            MessageLookupByLibrary.simpleMessage("Notiz - Vortagen"),
+            MessageLookupByLibrary.simpleMessage("Notiz - Vorlagen"),
         "toolId": MessageLookupByLibrary.simpleMessage("Werkzeugnummer"),
       };
 }
