@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   bool operatingHoursErr = false;
   bool toolIdIsDisabled = false;
   bool barcodeIsDisabled = false;
+  bool shiftStatusListIsItEmpty = true;
 
   String radioValue = "yes";
   String errText = '';
@@ -72,11 +73,20 @@ class _HomePageState extends State<HomePage> {
         await http.get(Uri.parse('http://$ipAdress/api/machines/$key'));
     if (shiftStatusResponse.statusCode == 200) {
       var data = jsonDecode(shiftStatusResponse.body);
-      if (data.isNotEmpty && data[0].containsKey('toolCleaning')) {
-        print("data: ${data[data.length - 1]}");
+      if (data.isNotEmpty &&
+          data.length != globalDevices.length &&
+          data[data.length - 1].containsKey('toolCleaning')) {
+        setState(() {
+          shiftStatusListIsItEmpty = false;
+        });
+        print("data: ${data}");
         setState(() {
           shiftText = "${data[data.length - 1]['toolCleaning']!}";
           lastShift = "${data[data.length - 1]['shift']}";
+        });
+      } else {
+        setState(() {
+          shiftStatusListIsItEmpty = true;
         });
       }
     }
@@ -105,10 +115,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getMachinesList();
     _timer();
     getTimePeriod();
     lastDay();
+    getMachinesList();
     _machineQRFocus.addListener(_onFocusChange);
     _productionNoFocus.addListener(setProductionNo);
     _checkConnectivity();
@@ -558,25 +568,6 @@ class _HomePageState extends State<HomePage> {
                                                     .of(context)
                                                     .scanMachineQRCode),
                                             SizedBox(height: 16.0),
-
-                                            // Radio boxes
-                                            // Align(
-                                            //     alignment: Alignment.centerLeft,
-                                            //     child: Text(
-                                            //         S
-                                            //             .of(context)
-                                            //             .toolCleaningShiftF1Done,
-                                            //         textAlign: TextAlign.left,
-                                            //         style: GoogleFonts.lexend(
-                                            //             textStyle:
-                                            //                 const TextStyle(
-                                            //                     color: Color(
-                                            //                         0xff336699),
-                                            //                     fontSize: 22,
-                                            //                     fontWeight:
-                                            //                         FontWeight
-                                            //                             .w600)))),
-                                            // SizedBox(width: 20.0),
                                             Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -735,7 +726,6 @@ class _HomePageState extends State<HomePage> {
                                             _machineStopped
                                                 ? SizedBox(height: 0.0)
                                                 : IsStoped(),
-
                                             Column(
                                               children: [
                                                 if (operatingHoursImportant)
@@ -935,17 +925,6 @@ class _HomePageState extends State<HomePage> {
                     // FilteringTextInputFormatter.allow(RegExp(r'[0-9-><,]'))
                   ]),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
-        // _toolMounted
-        //     ? SizedBox(height: 0.0)
-        //     : SwitchWithText(
-        //         value: _partStatusOK,
-        //         label: S.of(context).partStatusOk,
-        //         onChange: () {
-        //           setState(() {
-        //             _partStatusOK = !_partStatusOK;
-        //           });
-        //         }),
-        // _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
         _toolMounted
             ? SizedBox(height: 0.0)
             : Input(
@@ -973,13 +952,14 @@ class _HomePageState extends State<HomePage> {
             : Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                    (shiftText != "true" && lastShift != "N3")
+                    (shiftText != "true" && !shiftStatusListIsItEmpty)
                         ? "Achtung – Werkzeugreinigung notwendig! Ist erledigt?"
                         : "Werkzeugreinigung in Schicht F1 erledigt?",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.lexend(
                         textStyle: TextStyle(
-                            color: (shiftText != "true" && lastShift != "N3")
+                            color: (shiftText != "true" &&
+                                    !shiftStatusListIsItEmpty)
                                 ? Colors.red
                                 : Color(0xff336699),
                             fontSize: 22,
