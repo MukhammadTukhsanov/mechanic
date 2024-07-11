@@ -247,8 +247,8 @@ class _HomePageState extends State<HomePage> {
               ? 0
               : double.parse(productionNumberController.text),
           "toolNo": toolNumberController.text.isEmpty
-              ? 0
-              : double.parse(toolNumberController.text),
+              ? "0"
+              : toolNumberController.text,
           "cavity": cavityController.text.isEmpty
               ? 0
               : double.parse(cavityController.text),
