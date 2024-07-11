@@ -153,7 +153,11 @@ class _machineQualityItemState extends State<MachineQualityItem> {
   @override
   Widget build(BuildContext context) {
     return Table(
-      columnWidths: {3: FixedColumnWidth(144)},
+      columnWidths: {
+        0: FixedColumnWidth(165),
+        1: FixedColumnWidth(200),
+        3: FixedColumnWidth(144)
+      },
       border:
           TableBorder.all(color: Color(0xff336699).withOpacity(0.3), width: 1),
       children: [
@@ -162,39 +166,36 @@ class _machineQualityItemState extends State<MachineQualityItem> {
             TableCell(
               verticalAlignment: TableCellVerticalAlignment.middle,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    widget.machineQrCode,
-                    style: GoogleFonts.lexend(
-                        color: Color(0xff336699), fontSize: 24),
-                  ),
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  "Emac50-3",
+                  // widget.machineQrCode,
+                  style: GoogleFonts.lexend(
+                      color: Color(0xff336699), fontSize: 24),
                 ),
               ),
             ),
             TableCell(
               verticalAlignment: TableCellVerticalAlignment.middle,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    widget.partNumber,
-                    style: GoogleFonts.lexend(
-                        color: Color(0xff336699), fontSize: 24),
-                  ),
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  "00502-T4M27",
+                  // widget.partNumber,
+                  style: GoogleFonts.lexend(
+                      color: Color(0xff336699), fontSize: 24),
                 ),
               ),
             ),
             TableCell(
               verticalAlignment: TableCellVerticalAlignment.middle,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    widget.partName,
-                    style: GoogleFonts.lexend(
-                        color: Color(0xff336699), fontSize: 24),
-                  ),
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  // widget.partName,
+                  "Rastkurve rechts Actros (Camform right)",
+                  style: GoogleFonts.lexend(
+                      color: Color(0xff336699), fontSize: 24),
                 ),
               ),
             ),

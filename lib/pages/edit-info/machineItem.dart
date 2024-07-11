@@ -141,14 +141,22 @@ class _MachineItemState extends State<MachineItem> {
       child: Column(
         children: <Widget>[
           ListTile(
-            title: Text(
-                widget.machineQrCode +
-                    ' ' +
-                    widget.partNumber +
-                    ' | ' +
-                    widget.partName,
-                style: GoogleFonts.lexend(
-                    color: Color(0xff336699), fontWeight: FontWeight.w600)),
+            title: Row(
+              children: [
+                Text(widget.machineQrCode,
+                    style: GoogleFonts.lexend(
+                        color: Color(0xff336699), fontWeight: FontWeight.w600)),
+                SizedBox(
+                  width: 50,
+                ),
+                Text(
+                    // widget.machineQrCode +
+                    //     '       ' +
+                    widget.partNumber + ' | ' + widget.partName,
+                    style: GoogleFonts.lexend(
+                        color: Color(0xff336699), fontWeight: FontWeight.w600)),
+              ],
+            ),
             subtitle: Text(
               widget.shift,
               style: TextStyle(

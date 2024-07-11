@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
         }),
       );
       var data = jsonDecode(response.body);
-      print("data $data");
+      print("datasssss $data");
 
       if (response.statusCode == 200) {
         showSnackBarFun(context, S.of(context).entryAdded, "success");

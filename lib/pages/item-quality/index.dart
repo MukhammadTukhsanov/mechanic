@@ -63,7 +63,7 @@ class _ItemQualityState extends State<ItemQuality> {
         },
       ).toList();
 
-      data = data.where((element) => element["partnumber"] != '0').toList();
+      // data = data.where((element) => element["partnumber"] != '0').toList();
 
       setState(() {
         changes = machinesNameList;
@@ -245,7 +245,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                             "Alle OK",
                                             style: GoogleFonts.lexend(
                                                 color: Color(0xff336699),
-                                                fontSize: 24,
+                                                fontSize: 22,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -354,57 +354,55 @@ class _ItemQualityState extends State<ItemQuality> {
                               border: TableBorder.all(
                                   color: Color(0xff336699).withOpacity(.3),
                                   width: 1),
-                              columnWidths: {3: FixedColumnWidth(145)},
+                              columnWidths: {
+                                0: FixedColumnWidth(165),
+                                1: FixedColumnWidth(200),
+                                3: FixedColumnWidth(145)
+                              },
                               children: [
                                 TableRow(children: [
                                   TableCell(
                                       verticalAlignment:
-                                          TableCellVerticalAlignment.fill,
+                                          TableCellVerticalAlignment.middle,
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Text(
-                                            "Maschine",
-                                            style: GoogleFonts.lexend(
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xff336699),
-                                                fontSize: 24),
-                                          ),
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Text(
+                                          "Maschine",
+                                          style: GoogleFonts.lexend(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff336699),
+                                              fontSize: 24),
                                         ),
                                       )),
                                   TableCell(
                                       verticalAlignment:
-                                          TableCellVerticalAlignment.fill,
+                                          TableCellVerticalAlignment.middle,
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Text(
-                                            "TeileNr",
-                                            style: GoogleFonts.lexend(
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xff336699),
-                                                fontSize: 24),
-                                          ),
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Text(
+                                          "TeileNr",
+                                          style: GoogleFonts.lexend(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff336699),
+                                              fontSize: 24),
                                         ),
                                       )),
                                   TableCell(
                                       verticalAlignment:
-                                          TableCellVerticalAlignment.fill,
+                                          TableCellVerticalAlignment.middle,
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Text(
-                                            "Teilename",
-                                            style: GoogleFonts.lexend(
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xff336699),
-                                                fontSize: 24),
-                                          ),
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Text(
+                                          "Teilename",
+                                          style: GoogleFonts.lexend(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff336699),
+                                              fontSize: 24),
                                         ),
                                       )),
                                   TableCell(
                                       child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(12.0),
                                     child: Center(
                                       child: Text(
                                         "Teilstatus OK",

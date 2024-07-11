@@ -92,7 +92,7 @@ class _EditInfoState extends State {
                     createdAt: e['createdAt']?.toString() ?? '',
                     shift: e['shift'] ?? '',
                     barcodeProductionNo: e['barcodeProductionNo'] ?? 0,
-                    partName: e['partnumber'] ?? '',
+                    partName: e['partname'] ?? '',
                     partNumber: e['partnumber'] ?? '',
                     cavity: e['cavity'] ?? 0,
                     cycleTime: e['cycleTime'] ?? '',
