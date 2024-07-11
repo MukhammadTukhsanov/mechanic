@@ -37,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   bool toolIdIsDisabled = false;
   bool barcodeIsDisabled = false;
   bool shiftStatusListIsItEmpty = true;
+  bool toolMounted = true;
+  bool machineStopped = false;
 
   String radioValue = "yes";
   String errText = '';
@@ -241,14 +243,14 @@ class _HomePageState extends State<HomePage> {
           "token": key.toString(),
           "createdAt": DateTime.now().toString(),
           "machineQrCode": machineQRCodeController.text,
-          "toolMounted": _toolMounted,
-          "machineStopped": _machineStopped,
+          "toolMounted": toolMounted,
+          "machineStopped": machineStopped,
           "barcodeProductionNo": productionNumberController.text.isEmpty
               ? 0
               : double.parse(productionNumberController.text),
           "toolNo": toolNumberController.text.isEmpty
-              ? "0"
-              : toolNumberController.text,
+              ? 0
+              : double.parse(toolNumberController.text),
           "cavity": cavityController.text.isEmpty
               ? 0
               : double.parse(cavityController.text),
@@ -272,7 +274,9 @@ class _HomePageState extends State<HomePage> {
       print("datasssss $data");
 
       if (response.statusCode == 200) {
-        showSnackBarFun(context, S.of(context).entryAdded, "success");
+        print(response.statusCode);
+
+        // Navigate based on the condition
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -281,13 +285,20 @@ class _HomePageState extends State<HomePage> {
                 : HomePage(),
           ),
         );
+        showSnackBarFun(context, S.of(context).entryAdded, "success");
       } else {
         showSnackBarFun(context, S.of(context).errorSaving, "error");
+
+        // Decode and print error data
         var errorData = jsonDecode(response.body);
-        print("Error 400: ${errorData['message']}");
+        print("Error ${response.statusCode}: ${errorData['message']}");
         print("Error: ${errorData}");
+
+        // Navigate to HomePage
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
       }
     } catch (e) {
       // Handle any errors that occur during the HTTP request
@@ -316,17 +327,43 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void showSnackBarFun(BuildContext context, String text, String status) {
+  void showSnackBarFun(BuildContext context, String message, String status) {
+    final Color backgroundColor;
+
+    // Set the background color based on the status
+    switch (status) {
+      case 'success':
+        backgroundColor = Colors.green;
+        break;
+      case 'error':
+        backgroundColor = Colors.red;
+        break;
+      case 'info':
+        backgroundColor = Colors.blue;
+        break;
+      default:
+        backgroundColor = Colors.grey;
+    }
+
+    // Create a SnackBar
     final snackBar = SnackBar(
-      content: Text(text, style: TextStyle(fontSize: 20, color: Colors.white)),
-      backgroundColor: status == "success" ? Colors.green : Colors.red,
-      behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).size.height - 150,
         left: 10,
         right: 10,
       ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: backgroundColor,
+      duration: Duration(seconds: 3),
+      content: Text(
+        message,
+        style: TextStyle(
+            fontSize: 16,
+            color: Colors.white), // Optional: Customize the text style
+      ),
     );
+
+    // Show the SnackBar
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -585,6 +622,10 @@ class _HomePageState extends State<HomePage> {
                                                                     0xff336699)),
                                                             onChanged: (value) {
                                                               setState(() {
+                                                                machineStopped =
+                                                                    false;
+                                                                toolMounted =
+                                                                    true;
                                                                 barcodeIsDisabled =
                                                                     false;
                                                                 _machineStopped =
@@ -595,10 +636,6 @@ class _HomePageState extends State<HomePage> {
                                                                     value
                                                                         as String;
                                                               });
-                                                              // }
-                                                              // setState(() {
-                                                              //   _toolMounted = !_toolMounted;
-                                                              // });
                                                             })),
                                                     Text('Maschine läuft',
                                                         style: GoogleFonts.lexend(
@@ -652,6 +689,10 @@ class _HomePageState extends State<HomePage> {
                                                                 mradioValue =
                                                                     value
                                                                         as String;
+                                                                machineStopped =
+                                                                    false;
+                                                                toolMounted =
+                                                                    false;
                                                               });
                                                             })),
                                                     Text(
@@ -700,6 +741,10 @@ class _HomePageState extends State<HomePage> {
                                                                 mradioValue =
                                                                     value
                                                                         as String;
+                                                                machineStopped =
+                                                                    true;
+                                                                toolMounted =
+                                                                    true;
                                                               });
                                                             })),
                                                     Text(
