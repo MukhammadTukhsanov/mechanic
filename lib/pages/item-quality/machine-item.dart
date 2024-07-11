@@ -152,136 +152,127 @@ class _machineQualityItemState extends State<MachineQualityItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        border: BorderDirectional(
-          bottom: BorderSide(
-            color: Color(0xff336699).withOpacity(.3),
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                  border: BorderDirectional(
-                      end: BorderSide(
-                          color: Color(0xff336699).withOpacity(.3), width: 1),
-                      start: BorderSide(
-                          color: Color(0xff336699).withOpacity(.3), width: 1))),
-              child: Center(
-                child: Text(
-                  widget.machineQrCode,
-                  style: GoogleFonts.lexend(
-                      color: Color(0xff336699), fontSize: 24),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              height: 60,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  border: BorderDirectional(
-                      end: BorderSide(
-                          color: Color(0xff336699).withOpacity(.3), width: 1))),
-              child: Center(
-                child: Text(
-                  widget.partNumber,
-                  style: GoogleFonts.lexend(
-                      color: Color(0xff336699), fontSize: 24),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              height: 60,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  border: BorderDirectional(
-                      end: BorderSide(
-                          color: Color(0xff336699).withOpacity(.3), width: 1))),
-              child: Center(
-                child: Text(
-                  widget.partName,
-                  style: GoogleFonts.lexend(
-                      color: Color(0xff336699), fontSize: 24),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-              child: Center(
-            child: GestureDetector(
-              onTap: toggleState,
-              child: Container(
-                width: 55,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: _partStatusOK ? Color(0xff336699) : Color(0xff848484),
-                  borderRadius: BorderRadius.circular(40),
-                  border: Border.all(
-                    color: Color(0xff848484),
-                    width: 1.5,
+    return Table(
+      columnWidths: {3: FixedColumnWidth(144)},
+      border:
+          TableBorder.all(color: Color(0xff336699).withOpacity(0.3), width: 1),
+      children: [
+        TableRow(
+          children: [
+            TableCell(
+              verticalAlignment: TableCellVerticalAlignment.middle,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    widget.machineQrCode,
+                    style: GoogleFonts.lexend(
+                        color: Color(0xff336699), fontSize: 24),
                   ),
                 ),
+              ),
+            ),
+            TableCell(
+              verticalAlignment: TableCellVerticalAlignment.middle,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Center(
-                  child: Stack(children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 3),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(S.of(context).yes,
-                                style: GoogleFonts.lexend(
-                                  textStyle: TextStyle(
-                                      color: _partStatusOK
-                                          ? Colors.white
-                                          : Colors.transparent,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                            Text(S.of(context).no,
-                                style: GoogleFonts.lexend(
-                                    textStyle: TextStyle(
-                                        color: _partStatusOK
-                                            ? Colors.transparent
-                                            : Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold))),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: _partStatusOK
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 21.5,
-                          height: 21.5,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
+                  child: Text(
+                    widget.partNumber,
+                    style: GoogleFonts.lexend(
+                        color: Color(0xff336699), fontSize: 24),
+                  ),
                 ),
               ),
             ),
-          ))
-        ],
-      ),
+            TableCell(
+              verticalAlignment: TableCellVerticalAlignment.middle,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    widget.partName,
+                    style: GoogleFonts.lexend(
+                        color: Color(0xff336699), fontSize: 24),
+                  ),
+                ),
+              ),
+            ),
+            TableCell(
+              verticalAlignment: TableCellVerticalAlignment.middle,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: toggleState,
+                    child: Container(
+                      width: 55,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: _partStatusOK
+                            ? Color(0xff336699)
+                            : Color(0xff848484),
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(
+                          color: Color(0xff848484),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Stack(children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 3),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(S.of(context).yes,
+                                      style: GoogleFonts.lexend(
+                                        textStyle: TextStyle(
+                                            color: _partStatusOK
+                                                ? Colors.white
+                                                : Colors.transparent,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  Text(S.of(context).no,
+                                      style: GoogleFonts.lexend(
+                                          textStyle: TextStyle(
+                                              color: _partStatusOK
+                                                  ? Colors.transparent
+                                                  : Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold))),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: _partStatusOK
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 21.5,
+                                height: 21.5,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

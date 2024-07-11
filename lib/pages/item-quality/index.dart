@@ -63,7 +63,7 @@ class _ItemQualityState extends State<ItemQuality> {
         },
       ).toList();
 
-      data = data.where((element) => element["partnumber"] != '0').toList();
+      // data = data.where((element) => element["partnumber"] != '0').toList();
 
       setState(() {
         changes = machinesNameList;
@@ -141,7 +141,6 @@ class _ItemQualityState extends State<ItemQuality> {
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-                // title: Text(S.of(context).modeSelection,
                 title: Text("Artikelqualität eintragen",
                     style: TextStyle(
                         color: Color(0xff336699),
@@ -232,104 +231,115 @@ class _ItemQualityState extends State<ItemQuality> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        "Alle OK",
-                                        style: GoogleFonts.lexend(
-                                            color: Color(0xff336699),
-                                            fontSize: 24),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
                                     child: SizedBox(),
                                   ),
                                   Expanded(
                                     child: SizedBox(),
                                   ),
+                                  Expanded(child: SizedBox()),
                                   Expanded(
-                                    child: Center(
-                                      child: GestureDetector(
-                                        onTap: onChangeAll,
-                                        child: Container(
-                                          width: 55,
-                                          height: 25,
-                                          decoration: BoxDecoration(
-                                            color: widget._allPartStatusOK
-                                                ? Color(0xff336699)
-                                                : Color(0xff848484),
-                                            borderRadius:
-                                                BorderRadius.circular(40),
-                                            border: Border.all(
-                                              color: Color(0xff848484),
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Stack(children: [
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 3),
-                                                child: Center(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(S.of(context).yes,
-                                                          style: GoogleFonts
-                                                              .lexend(
-                                                            textStyle: TextStyle(
-                                                                color: widget
-                                                                        ._allPartStatusOK
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .transparent,
-                                                                fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )),
-                                                      Text(S.of(context).no,
-                                                          style: GoogleFonts.lexend(
-                                                              textStyle: TextStyle(
-                                                                  color: widget
-                                                                          ._allPartStatusOK
-                                                                      ? Colors
-                                                                          .transparent
-                                                                      : Colors
-                                                                          .white,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold))),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: widget
-                                                        ._allPartStatusOK
-                                                    ? MainAxisAlignment.end
-                                                    : MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width: 21.5,
-                                                    height: 21.5,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              40),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ]),
+                                    child: Row(
+                                      children: [
+                                        Center(
+                                          child: Text(
+                                            "Alle OK",
+                                            style: GoogleFonts.lexend(
+                                                color: Color(0xff336699),
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                      ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Center(
+                                          child: GestureDetector(
+                                            onTap: onChangeAll,
+                                            child: Container(
+                                              width: 55,
+                                              height: 25,
+                                              decoration: BoxDecoration(
+                                                color: widget._allPartStatusOK
+                                                    ? Color(0xff336699)
+                                                    : Color(0xff848484),
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                                border: Border.all(
+                                                  color: Color(0xff848484),
+                                                  width: 1.5,
+                                                ),
+                                              ),
+                                              child: Center(
+                                                child: Stack(children: [
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 3),
+                                                    child: Center(
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              S.of(context).yes,
+                                                              style: GoogleFonts
+                                                                  .lexend(
+                                                                textStyle: TextStyle(
+                                                                    color: widget._allPartStatusOK
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .transparent,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )),
+                                                          Text(S.of(context).no,
+                                                              style: GoogleFonts.lexend(
+                                                                  textStyle: TextStyle(
+                                                                      color: widget._allPartStatusOK
+                                                                          ? Colors
+                                                                              .transparent
+                                                                          : Colors
+                                                                              .white,
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold))),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: widget
+                                                            ._allPartStatusOK
+                                                        ? MainAxisAlignment.end
+                                                        : MainAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: 21.5,
+                                                        height: 21.5,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(40),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ]),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -339,108 +349,75 @@ class _ItemQualityState extends State<ItemQuality> {
                     machinesList.length == 0
                         ? SizedBox()
                         : Padding(
-                            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                            child: Container(
-                              // padding: EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                border: BorderDirectional(
-                                  bottom: BorderSide(
-                                    color: Color(0xff336699).withOpacity(.3),
-                                    width: 1,
-                                  ),
-                                ),
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    right: BorderSide(
-                                        width: 1,
-                                        color:
-                                            Color(0xff336699).withOpacity(.3)),
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                left: BorderSide(
-                                                    width: 1,
-                                                    color: Color(0xff336699)
-                                                        .withOpacity(.3)))),
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                            child: Table(
+                              border: TableBorder.all(
+                                  color: Color(0xff336699).withOpacity(.3),
+                                  width: 1),
+                              columnWidths: {3: FixedColumnWidth(145)},
+                              children: [
+                                TableRow(children: [
+                                  TableCell(
+                                      verticalAlignment:
+                                          TableCellVerticalAlignment.fill,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Center(
                                           child: Text(
                                             "Maschine",
                                             style: GoogleFonts.lexend(
+                                                fontWeight: FontWeight.bold,
                                                 color: Color(0xff336699),
                                                 fontSize: 24),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                left: BorderSide(
-                                                    width: 1,
-                                                    color: Color(0xff336699)
-                                                        .withOpacity(.3)))),
+                                      )),
+                                  TableCell(
+                                      verticalAlignment:
+                                          TableCellVerticalAlignment.fill,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Center(
                                           child: Text(
                                             "TeileNr",
                                             style: GoogleFonts.lexend(
+                                                fontWeight: FontWeight.bold,
                                                 color: Color(0xff336699),
                                                 fontSize: 24),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                left: BorderSide(
-                                                    width: 1,
-                                                    color: Color(0xff336699)
-                                                        .withOpacity(.3)))),
+                                      )),
+                                  TableCell(
+                                      verticalAlignment:
+                                          TableCellVerticalAlignment.fill,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
                                         child: Center(
                                           child: Text(
                                             "Teilename",
                                             style: GoogleFonts.lexend(
+                                                fontWeight: FontWeight.bold,
                                                 color: Color(0xff336699),
                                                 fontSize: 24),
                                           ),
                                         ),
+                                      )),
+                                  TableCell(
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Teilstatus OK",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lexend(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff336699),
+                                            fontSize: 24),
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                          left: BorderSide(
-                                              width: 1,
-                                              color: Color(0xff336699)
-                                                  .withOpacity(.3)),
-                                        )),
-                                        child: Center(
-                                          child: Text(
-                                            "Teilstatus OK",
-                                            style: GoogleFonts.lexend(
-                                                color: Color(0xff336699),
-                                                fontSize: 24),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  )),
+                                ])
+                              ],
                             ),
                           ),
                     Padding(
@@ -470,8 +447,6 @@ class _ItemQualityState extends State<ItemQuality> {
                               )
                             : Column(
                                 children: machinesList.map((e) {
-                                // .where((element) => element.partnumber != 12345).toList()
-                                // e.partnumber == 12345 ? SizedBox() :
                                 return MachineQualityItem(
                                     id: e["id"].toString(),
                                     token: e["token"].toString(),
