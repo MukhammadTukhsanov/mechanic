@@ -168,8 +168,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  "Emac50-3",
-                  // widget.machineQrCode,
+                  widget.machineQrCode,
                   style: GoogleFonts.lexend(
                       color: Color(0xff336699), fontSize: 24),
                 ),
@@ -180,8 +179,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  "00502-T4M27",
-                  // widget.partNumber,
+                  widget.partNumber,
                   style: GoogleFonts.lexend(
                       color: Color(0xff336699), fontSize: 24),
                 ),
@@ -192,8 +190,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  // widget.partName,
-                  "Rastkurve rechts Actros (Camform right)",
+                  widget.partName,
                   style: GoogleFonts.lexend(
                       color: Color(0xff336699), fontSize: 24),
                 ),

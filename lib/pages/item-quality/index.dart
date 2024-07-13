@@ -63,7 +63,7 @@ class _ItemQualityState extends State<ItemQuality> {
         },
       ).toList();
 
-      // data = data.where((element) => element["partnumber"] != '0').toList();
+      data = data.where((element) => element["partnumber"] != '0').toList();
 
       setState(() {
         changes = machinesNameList;
