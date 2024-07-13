@@ -143,18 +143,38 @@ class _MachineItemState extends State<MachineItem> {
           ListTile(
             title: Row(
               children: [
-                Text(widget.machineQrCode,
-                    style: GoogleFonts.lexend(
-                        color: Color(0xff336699), fontWeight: FontWeight.w600)),
-                SizedBox(
-                  width: 50,
+                Container(
+                  width: 150,
+                  child: Text(widget.machineQrCode,
+                      style: GoogleFonts.lexend(
+                          color: Color(0xff336699),
+                          fontWeight: FontWeight.w600)),
                 ),
-                Text(
-                    // widget.machineQrCode +
-                    //     '       ' +
-                    widget.partNumber + ' | ' + widget.partName,
-                    style: GoogleFonts.lexend(
-                        color: Color(0xff336699), fontWeight: FontWeight.w600)),
+                Row(
+                  children: [
+                    Text(
+                      widget.partNumber,
+                      style: TextStyle(
+                          color: Color(0xff336699),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18),
+                    ),
+                    Text(
+                      ' | ',
+                      style: TextStyle(
+                          color: Color(0xff336699),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18),
+                    ),
+                    Text(
+                      widget.partName,
+                      style: TextStyle(
+                          color: Color(0xff336699),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18),
+                    ),
+                  ],
+                )
               ],
             ),
             subtitle: Text(
