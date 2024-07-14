@@ -250,7 +250,7 @@ class _HomePageState extends State<HomePage> {
               : double.parse(productionNumberController.text),
           "toolNo": toolNumberController.text.isEmpty
               ? "0"
-              : toolNumberController.text,
+              : toolNumberController.text.toUpperCase(),
           "cavity": cavityController.text.isEmpty
               ? 0
               : double.parse(cavityController.text),
