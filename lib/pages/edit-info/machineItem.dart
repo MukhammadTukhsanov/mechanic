@@ -133,8 +133,20 @@ class _MachineItemState extends State<MachineItem> {
     });
   }
 
+  String decodeText(String text) {
+    // Decode from Latin-1 to bytes
+    List<int> latin1Bytes = latin1.encode(text);
+
+    // Convert bytes to UTF-8 string
+    String utf8String = utf8.decode(latin1Bytes);
+
+    return utf8String;
+  }
+
   @override
   Widget build(BuildContext context) {
+    String decodedPartName = decodeText(widget.partName);
+    String decodedPartNumber = decodeText(widget.partNumber);
     return Card(
       margin: EdgeInsets.all(10),
       color: Colors.white,
@@ -153,7 +165,7 @@ class _MachineItemState extends State<MachineItem> {
                 Row(
                   children: [
                     Text(
-                      widget.partNumber,
+                      decodedPartNumber,
                       style: TextStyle(
                           color: Color(0xff336699),
                           fontWeight: FontWeight.w700,
@@ -167,7 +179,7 @@ class _MachineItemState extends State<MachineItem> {
                           fontSize: 18),
                     ),
                     Text(
-                      widget.partName,
+                      decodedPartName,
                       style: TextStyle(
                           color: Color(0xff336699),
                           fontWeight: FontWeight.w700,
