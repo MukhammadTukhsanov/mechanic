@@ -107,10 +107,25 @@ class _DashboardState extends State<Dashboard> {
             'status': "danger",
             'barcodeProductionNo': data['barcodeProductionNo'],
           });
-        } else if (data['toolMounted'] == false) {
+        } else if (data['machineStopped'] == false) {
           devices.add({
             'machineName': machineName,
             'status': "success",
+            'barcodeProductionNo': data['barcodeProductionNo'],
+          });
+        } else if (data['remainingProductionTime'] == 0 &&
+            data['remainingProductionDays'] == 0 &&
+            data['toolMounted'] == false) {
+          devices.add({
+            'machineName': machineName,
+            'status': "danger",
+            'barcodeProductionNo': data['barcodeProductionNo'],
+          });
+        } else if (data['toolMounted'] == true &&
+            data['machineStopped'] == true) {
+          devices.add({
+            'machineName': machineName,
+            'status': "warning",
             'barcodeProductionNo': data['barcodeProductionNo'],
           });
         } else {
@@ -356,12 +371,19 @@ class _DashboardState extends State<Dashboard> {
           child: statusLine(
               context,
               "$partNumber/$partName/${finishingDate.toString().substring(0, 16)}",
-              e['data']['machineStopped'] == false &&
-                      e['data']['toolMounted'] == false
+              e['data']['machineStopped'] == false
+                  // && e['data']['toolMounted'] == false
                   ? 'success'
-                  : e['data']['machineStopped'] == true
+                  : e['data']['remainingProductionDays'] == 0 &&
+                          e['data']['remainingProductionTime'] == 0 &&
+                          e['data']['toolMounted'] == false
                       ? 'danger'
-                      : 'transparent',
+                      : e['data']['toolMounted'] == false &&
+                              e['data']['machineStopped'] == true
+                          ? 'warning'
+                          : e['data']['machineStopped'] == true
+                              ? 'danger'
+                              : 'transparent',
               (e['data']['remainingProductionTime'] ?? 0).toDouble(),
               e["createdAt"] == null ? DateTime.now() : e["createdAt"],
               (e['data']['remainingProductionDays'] ?? 0).toDouble(),
@@ -520,7 +542,9 @@ class _DashboardState extends State<Dashboard> {
             ? Color(0xff5CB85C)
             : color == 'danger'
                 ? Color(0xffcc0000)
-                : Colors.transparent,
+                : color == 'warning'
+                    ? Colors.amber[600]
+                    : Colors.transparent,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 7),
           child: Align(
@@ -529,7 +553,11 @@ class _DashboardState extends State<Dashboard> {
               text,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.lexend(
-                  fontSize: color == 'success' || color == 'danger' ? 18 : 0,
+                  fontSize: color == 'success' ||
+                          color == 'warning' ||
+                          color == 'danger'
+                      ? 18
+                      : 0,
                   color: Colors.white,
                   fontWeight: FontWeight.w500),
             ),
@@ -588,7 +616,9 @@ class _DashboardState extends State<Dashboard> {
                     ? Color(0xff5CB85C)
                     : statusColor == 'danger'
                         ? Color(0xffcc0000)
-                        : Colors.transparent,
+                        : statusColor == 'warning'
+                            ? Colors.amber[600]
+                            : Colors.transparent,
               ),
             ),
           ),
