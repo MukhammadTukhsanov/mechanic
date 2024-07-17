@@ -824,6 +824,16 @@ class _HomePageState extends State<HomePage> {
                   ])));
   }
 
+  String decodeText(String text) {
+    // Decode from Latin-1 to bytes
+    List<int> latin1Bytes = latin1.encode(text);
+
+    // Convert bytes to UTF-8 string
+    String utf8String = utf8.decode(latin1Bytes);
+
+    return utf8String;
+  }
+
   setProductionNo() {
     if (productionNumberController.text.length < 9) {
       setState(() {
@@ -846,8 +856,8 @@ class _HomePageState extends State<HomePage> {
     response.then((value) {
       var data = jsonDecode(value.body);
       if (data["Partnumber"] != "0" && data['Partname'] != "0") {
-        partNumberController.text = "${data['Partnumber']}";
-        partNameController.text = "${data['Partname']}";
+        partNumberController.text = "${decodeText(data['Partnumber'])}";
+        partNameController.text = "${decodeText(data['Partname'])}";
       } else {
         partNumberController.text = "Not Found";
         partNameController.text = "Not Found";

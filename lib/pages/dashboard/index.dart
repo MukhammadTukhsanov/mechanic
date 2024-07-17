@@ -294,12 +294,22 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget statusLineSquares(context, e) {
+    String decodeText(String text) {
+      // Decode from Latin-1 to bytes
+      List<int> latin1Bytes = latin1.encode(text);
+
+      // Convert bytes to UTF-8 string
+      String utf8String = utf8.decode(latin1Bytes);
+
+      return utf8String;
+    }
+
     // print(
     //     "remainingProductionDays ${e['data']['remainingProductionDays'] is int}");
     // print(
     //     "remainingProductionTime ${e['data']['remainingProductionTime'] is int}");
-    String partName = e['data']['partname'].toString();
-    String partNumber = e['data']['partnumber'].toString();
+    String partName = decodeText(e['data']['partname'].toString());
+    String partNumber = decodeText(e['data']['partnumber'].toString());
     DateTime finishingDate = e['data']['remainingProductionDays'] is int
         ? e['createdAt'].add(Duration(
             days: e['data']['remainingProductionDays'],
@@ -380,6 +390,19 @@ class _DashboardState extends State<Dashboard> {
 
   OverlayEntry _createPopupOverlayEntry(BuildContext context, Offset offset,
       String partName, String partNumber, String finishingDate) {
+    String decodeText(String text) {
+      // Decode from Latin-1 to bytes
+      List<int> latin1Bytes = latin1.encode(text);
+
+      // Convert bytes to UTF-8 string
+      String utf8String = utf8.decode(latin1Bytes);
+
+      return utf8String;
+    }
+
+    String decodedPartName = decodeText(partName);
+    String decodedPartNumber = decodeText(partNumber);
+
     return OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
@@ -407,7 +430,7 @@ class _DashboardState extends State<Dashboard> {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text(partNumber,
+                      Text(decodedPartNumber,
                           style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
@@ -421,7 +444,7 @@ class _DashboardState extends State<Dashboard> {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text(partName,
+                      Text(decodedPartName,
                           style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
