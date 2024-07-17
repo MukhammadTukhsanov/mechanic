@@ -101,40 +101,23 @@ class _DashboardState extends State<Dashboard> {
               : null,
           'data': data,
         };
-        if (data['machineStopped'] == true) {
-          devices.add({
-            'machineName': machineName,
-            'status': "danger",
-            'barcodeProductionNo': data['barcodeProductionNo'],
-          });
-        } else if (data['machineStopped'] == false) {
-          devices.add({
-            'machineName': machineName,
-            'status': "success",
-            'barcodeProductionNo': data['barcodeProductionNo'],
-          });
+        String status;
+
+        if (data['machineStopped']) {
+          status = data['toolMounted'] ? "warning" : "danger";
         } else if (data['remainingProductionTime'] == 0 &&
             data['remainingProductionDays'] == 0 &&
-            data['toolMounted'] == false) {
-          devices.add({
-            'machineName': machineName,
-            'status': "danger",
-            'barcodeProductionNo': data['barcodeProductionNo'],
-          });
-        } else if (data['toolMounted'] == true &&
-            data['machineStopped'] == true) {
-          devices.add({
-            'machineName': machineName,
-            'status': "warning",
-            'barcodeProductionNo': data['barcodeProductionNo'],
-          });
+            !data['toolMounted']) {
+          status = "danger";
         } else {
-          devices.add({
-            'machineName': machineName,
-            'status': "transparent",
-            'barcodeProductionNo': data['barcodeProductionNo'],
-          });
+          status = "success";
         }
+
+        devices.add({
+          'machineName': machineName,
+          'status': status,
+          'barcodeProductionNo': data['barcodeProductionNo'],
+        });
         setState(() {
           devicesInformation = [...devicesInformation, info];
         });
@@ -335,6 +318,19 @@ class _DashboardState extends State<Dashboard> {
         //     e['data']['remainingProductionDays'],
         //     e['data']['remainingProductionTime'])
         : DateTime.now();
+
+    String status;
+
+    if (e['data']['machineStopped']) {
+      status = e['data']['toolMounted'] ? 'warning' : 'danger';
+    } else if (e['data']['remainingProductionDays'] == "0" &&
+        e['data']['remainingProductionTime'] == "0" &&
+        !e['data']['toolMounted']) {
+      status = 'danger';
+    } else {
+      status = 'success';
+    }
+
     return Stack(
       clipBehavior: Clip.hardEdge,
       alignment: FractionalOffset.centerLeft,
@@ -371,19 +367,7 @@ class _DashboardState extends State<Dashboard> {
           child: statusLine(
               context,
               "$partNumber/$partName/${finishingDate.toString().substring(0, 16)}",
-              e['data']['machineStopped'] == false
-                  // && e['data']['toolMounted'] == false
-                  ? 'success'
-                  : e['data']['remainingProductionDays'] == 0 &&
-                          e['data']['remainingProductionTime'] == 0 &&
-                          e['data']['toolMounted'] == false
-                      ? 'danger'
-                      : e['data']['toolMounted'] == false &&
-                              e['data']['machineStopped'] == true
-                          ? 'warning'
-                          : e['data']['machineStopped'] == true
-                              ? 'danger'
-                              : 'transparent',
+              status,
               (e['data']['remainingProductionTime'] ?? 0).toDouble(),
               e["createdAt"] == null ? DateTime.now() : e["createdAt"],
               (e['data']['remainingProductionDays'] ?? 0).toDouble(),
