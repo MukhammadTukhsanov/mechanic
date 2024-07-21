@@ -30,7 +30,7 @@ class Button extends StatelessWidget {
                 )
               : Text(
                   text!,
-                  style: GoogleFonts.lexend(
+                  style: GoogleFonts.roboto(
                       textStyle: TextStyle(
                     color: type == "outline" ? Color(0xff848484) : Colors.white,
                     fontSize: 19,

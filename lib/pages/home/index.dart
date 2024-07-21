@@ -448,7 +448,7 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xff336699), size: 30.0),
                         SizedBox(width: 10.0),
                         Text(user,
-                            style: GoogleFonts.lexend(
+                            style: GoogleFonts.roboto(
                               fontSize: 20,
                               color: Color(0xff336699),
                             )),
@@ -485,7 +485,7 @@ class _HomePageState extends State<HomePage> {
                       Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
                       SizedBox(height: 20),
                       Text(S.of(context).noInternetConnection,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               textStyle: const TextStyle(
                                   color: Color(0xff848484),
                                   fontSize: 20,
@@ -547,7 +547,7 @@ class _HomePageState extends State<HomePage> {
                                                         // "${S.of(context).shift}  ${shift}",
                                                         textAlign:
                                                             TextAlign.left,
-                                                        style: GoogleFonts.lexend(
+                                                        style: GoogleFonts.roboto(
                                                             textStyle: TextStyle(
                                                                 color: Color(
                                                                     0xff848484),
@@ -580,7 +580,7 @@ class _HomePageState extends State<HomePage> {
                                                             SizedBox(
                                                                 width: 20.0),
                                                             Text(errText,
-                                                                style: GoogleFonts.lexend(
+                                                                style: GoogleFonts.roboto(
                                                                     textStyle: TextStyle(
                                                                         color: Colors
                                                                             .white,
@@ -638,7 +638,7 @@ class _HomePageState extends State<HomePage> {
                                                               });
                                                             })),
                                                     Text('Maschine läuft',
-                                                        style: GoogleFonts.lexend(
+                                                        style: GoogleFonts.roboto(
                                                             textStyle: const TextStyle(
                                                                 color: Color(
                                                                     0xff336699),
@@ -697,7 +697,7 @@ class _HomePageState extends State<HomePage> {
                                                             })),
                                                     Text(
                                                         'Maschine läuft nicht und kein Werkzeug gerüstet',
-                                                        style: GoogleFonts.lexend(
+                                                        style: GoogleFonts.roboto(
                                                             textStyle: const TextStyle(
                                                                 color: Color(
                                                                     0xff336699),
@@ -751,7 +751,7 @@ class _HomePageState extends State<HomePage> {
                                                         'Maschine läuft nicht aber Werkzeug ist gerüstet',
                                                         overflow: TextOverflow
                                                             .ellipsis,
-                                                        style: GoogleFonts.lexend(
+                                                        style: GoogleFonts.roboto(
                                                             textStyle: TextStyle(
                                                                 color: Color(
                                                                     0xff336699),
@@ -856,6 +856,7 @@ class _HomePageState extends State<HomePage> {
     response.then((value) {
       var data = jsonDecode(value.body);
       if (data["Partnumber"] != "0" && data['Partname'] != "0") {
+        print(data);
         partNumberController.text = "${decodeText(data['Partnumber'])}";
         partNameController.text = "${decodeText(data['Partname'])}";
       } else {
@@ -1012,7 +1013,7 @@ class _HomePageState extends State<HomePage> {
                         ? "Achtung – Werkzeugreinigung notwendig! Ist erledigt?"
                         : "Werkzeugreinigung in Schicht F1 erledigt?",
                     textAlign: TextAlign.left,
-                    style: GoogleFonts.lexend(
+                    style: GoogleFonts.roboto(
                         textStyle: TextStyle(
                             color: (shiftText != "true" &&
                                     !shiftStatusListIsItEmpty)
@@ -1038,7 +1039,7 @@ class _HomePageState extends State<HomePage> {
                             });
                           })),
                   Text(S.of(context).yes,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: const TextStyle(
                               color: Color(0xff336699),
                               fontSize: 22,
@@ -1058,7 +1059,7 @@ class _HomePageState extends State<HomePage> {
                             });
                           })),
                   Text(S.of(context).no,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: const TextStyle(
                               color: Color(0xff336699),
                               fontSize: 22,
@@ -1078,7 +1079,7 @@ class _HomePageState extends State<HomePage> {
                             });
                           })),
                   Text(S.of(context).notNeeded,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                               color: Color(0xff336699),
                               fontSize: 22,
@@ -1137,7 +1138,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: Text(S.of(context).noteTextCombinations,
-              style: GoogleFonts.lexend(
+              style: GoogleFonts.roboto(
                   textStyle: const TextStyle(
                       color: Color(0xff336699),
                       fontSize: 22,
@@ -1147,7 +1148,7 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Text(
                   "Template",
-                  style: GoogleFonts.lexend(
+                  style: GoogleFonts.roboto(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Color(0xff336699),
@@ -1166,7 +1167,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).waitingForMaterial,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1189,7 +1190,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).noMaterial,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1212,7 +1213,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).noStaff,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1235,7 +1236,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).materialNotDry,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1258,7 +1259,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).startInTheNextShift,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1281,7 +1282,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).wzDefective,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1304,7 +1305,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).machineDefective,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1327,7 +1328,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Text(
                       S.of(context).peripheralDefective,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 19,
@@ -1343,7 +1344,7 @@ class _HomePageState extends State<HomePage> {
             // not needed button
             TextButton(
               child: Text(S.of(context).notNeeded,
-                  style: GoogleFonts.lexend(
+                  style: GoogleFonts.roboto(
                       textStyle: const TextStyle(
                           color: Color(0xff336699),
                           fontSize: 22,

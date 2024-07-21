@@ -239,7 +239,7 @@ class _ModalCupertinoPickerState extends State<ModalCupertinoPicker> {
                     days
                         ? "${widget.selectedDate} ${S.of(context).days}"
                         : selectedHours,
-                    style: GoogleFonts.lexend(
+                    style: GoogleFonts.roboto(
                       textStyle: TextStyle(
                         color: Color(0xff848484),
                         fontSize: 24,

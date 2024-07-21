@@ -37,7 +37,7 @@ class DashboardLeftSide extends StatelessWidget {
               child: Container(
                   child: Center(
                       child: Text(S.of(context).machine,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 19,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w500))))),
@@ -57,7 +57,7 @@ class DashboardLeftSide extends StatelessWidget {
               ),
               child: Center(
                   child: Text(S.of(context).status,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           fontSize: 19,
                           color: Color(0xff336699),
                           fontWeight: FontWeight.w500)))),
@@ -66,7 +66,7 @@ class DashboardLeftSide extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Center(
                       child: Text(S.of(context).ProductNo,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 19,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w500))))),
@@ -98,7 +98,7 @@ class DashboardLeftSide extends StatelessWidget {
             children: [
               Text(
                 "${S.of(context).today}:",
-                style: GoogleFonts.lexend(
+                style: GoogleFonts.roboto(
                   color: Color(0xff336699),
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
@@ -111,7 +111,7 @@ class DashboardLeftSide extends StatelessWidget {
                       monthNames[DateTime.now().month - 1] +
                       " " +
                       DateTime.now().year.toString(),
-                  style: GoogleFonts.lexend(
+                  style: GoogleFonts.roboto(
                     color: Color(0xff336699),
                     fontSize: 22,
                     fontWeight: FontWeight.w200,
@@ -123,7 +123,7 @@ class DashboardLeftSide extends StatelessWidget {
             DateTime.now().hour.toString().padLeft(2, '0') +
                 ":" +
                 DateTime.now().minute.toString().padLeft(2, '0'),
-            style: GoogleFonts.lexend(
+            style: GoogleFonts.roboto(
               color: Color(0xff336699),
               fontSize: 22,
               fontWeight: FontWeight.w500,

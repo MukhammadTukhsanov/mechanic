@@ -64,7 +64,7 @@ class DashboardRightSide extends StatelessWidget {
             child: Center(
               child: Text(
                 e,
-                style: GoogleFonts.lexend(
+                style: GoogleFonts.roboto(
                   fontSize: 22,
                   color: Color(0xff336699),
                   fontWeight: FontWeight.w200,
@@ -107,7 +107,7 @@ class DashboardRightSide extends StatelessWidget {
                         date.day.toString().padLeft(2, '0') +
                         " " +
                         monthNames[date.month - 1],
-                    style: GoogleFonts.lexend(
+                    style: GoogleFonts.roboto(
                       fontSize: 22,
                       color: Color(0xff336699),
                       fontWeight: FontWeight.w400,

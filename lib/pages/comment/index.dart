@@ -116,7 +116,7 @@ class _CommentState extends State<CommentPage> {
             backgroundColor: Colors.white,
             appBar: AppBar(
                 title: Text(S.of(context).modifyExistingEntries,
-                    style: GoogleFonts.lexend(
+                    style: GoogleFonts.roboto(
                         textStyle: TextStyle(
                             color: Color(0xff336699),
                             fontSize: 25,
@@ -144,7 +144,7 @@ class _CommentState extends State<CommentPage> {
                             color: Color(0xff336699), size: 30),
                         SizedBox(width: 10.0),
                         Text(S.of(context).user,
-                            style: GoogleFonts.lexend(
+                            style: GoogleFonts.roboto(
                                 textStyle: TextStyle(
                                     color: Color(0xff336699), fontSize: 20)))
                       ])),
@@ -175,7 +175,7 @@ class _CommentState extends State<CommentPage> {
                       Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
                       SizedBox(height: 20),
                       Text(S.of(context).noInternetConnection,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               textStyle: const TextStyle(
                                   color: Color(0xff848484),
                                   fontSize: 20,
@@ -202,14 +202,14 @@ class _CommentState extends State<CommentPage> {
                               children: [
                                 Text(
                                     "${S.of(context).date} / ${S.of(context).time}",
-                                    style: GoogleFonts.lexend(
+                                    style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
                                             color: Color(0xff336699),
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold))),
                                 SizedBox(width: 50.0),
                                 Text(DateTime.now().toString().substring(0, 10),
-                                    style: GoogleFonts.lexend(
+                                    style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
                                             color: Color(0xff848484),
                                             fontSize: 20,
@@ -224,7 +224,7 @@ class _CommentState extends State<CommentPage> {
                                 SizedBox(width: 10.0),
                                 Text(
                                     DateTime.now().toString().substring(11, 16),
-                                    style: GoogleFonts.lexend(
+                                    style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
                                             color: Color(0xff848484),
                                             fontSize: 20,

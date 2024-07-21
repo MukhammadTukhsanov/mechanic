@@ -171,7 +171,7 @@ class _ItemQualityState extends State<ItemQuality> {
                             color: Color(0xff336699), size: 30.0),
                         SizedBox(width: 10.0),
                         Text(user,
-                            style: GoogleFonts.lexend(
+                            style: GoogleFonts.roboto(
                               fontSize: 20,
                               color: Color(0xff336699),
                             )),
@@ -205,7 +205,7 @@ class _ItemQualityState extends State<ItemQuality> {
                       Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
                       SizedBox(height: 20),
                       Text(S.of(context).noInternetConnection,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               textStyle: const TextStyle(
                                   color: Color(0xff848484),
                                   fontSize: 20,
@@ -243,7 +243,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                         Center(
                                           child: Text(
                                             "Alle OK",
-                                            style: GoogleFonts.lexend(
+                                            style: GoogleFonts.roboto(
                                                 color: Color(0xff336699),
                                                 fontSize: 22,
                                                 fontWeight: FontWeight.bold),
@@ -298,7 +298,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                                                             .bold),
                                                               )),
                                                           Text(S.of(context).no,
-                                                              style: GoogleFonts.lexend(
+                                                              style: GoogleFonts.roboto(
                                                                   textStyle: TextStyle(
                                                                       color: widget._allPartStatusOK
                                                                           ? Colors
@@ -368,7 +368,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                         padding: const EdgeInsets.all(12.0),
                                         child: Text(
                                           "Maschine",
-                                          style: GoogleFonts.lexend(
+                                          style: GoogleFonts.roboto(
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xff336699),
                                               fontSize: 24),
@@ -381,7 +381,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                         padding: const EdgeInsets.all(12.0),
                                         child: Text(
                                           "TeileNr",
-                                          style: GoogleFonts.lexend(
+                                          style: GoogleFonts.roboto(
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xff336699),
                                               fontSize: 24),
@@ -394,7 +394,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                         padding: const EdgeInsets.all(12.0),
                                         child: Text(
                                           "Teilename",
-                                          style: GoogleFonts.lexend(
+                                          style: GoogleFonts.roboto(
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xff336699),
                                               fontSize: 24),
@@ -407,7 +407,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                       child: Text(
                                         "Teilstatus OK",
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.lexend(
+                                        style: GoogleFonts.roboto(
                                             fontWeight: FontWeight.bold,
                                             color: Color(0xff336699),
                                             fontSize: 24),
@@ -435,7 +435,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                         size: 100, color: Colors.blue[200]),
                                     SizedBox(height: 20),
                                     Text("Warten auf neue Schichtdaten",
-                                        style: GoogleFonts.lexend(
+                                        style: GoogleFonts.roboto(
                                             textStyle: const TextStyle(
                                                 color: Color(0xff848484),
                                                 fontSize: 20,
@@ -496,7 +496,7 @@ class _ItemQualityState extends State<ItemQuality> {
                                   SnackBar snackBar = SnackBar(
                                     content: Text(
                                       "Daten gespeichert",
-                                      style: GoogleFonts.lexend(
+                                      style: GoogleFonts.roboto(
                                           textStyle: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20,

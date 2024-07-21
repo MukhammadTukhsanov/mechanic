@@ -39,7 +39,7 @@ class _ScanBarCodeState extends State<ScanBarCode> {
               Icon(Icons.qr_code, color: const Color(0xff848484), size: 30),
               const SizedBox(width: 10.0),
               Text("${widget.code == "" ? widget.labelText : widget.code}",
-                  style: GoogleFonts.lexend(
+                  style: GoogleFonts.roboto(
                       textStyle: const TextStyle(
                           color: Color(0xff848484),
                           fontSize: 20,

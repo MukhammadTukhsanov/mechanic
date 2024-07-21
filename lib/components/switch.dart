@@ -18,7 +18,7 @@ class SwitchWithText extends StatelessWidget {
       children: [
         Text(
           label!,
-          style: GoogleFonts.lexend(
+          style: GoogleFonts.roboto(
               textStyle: TextStyle(
                   color: Color(0xff336699),
                   fontSize: 22,
@@ -51,7 +51,7 @@ class SwitchWithText extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(S.of(context).yes,
-                            style: GoogleFonts.lexend(
+                            style: GoogleFonts.roboto(
                               textStyle: TextStyle(
                                   color:
                                       value ? Colors.white : Colors.transparent,
@@ -59,7 +59,7 @@ class SwitchWithText extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             )),
                         Text(S.of(context).no,
-                            style: GoogleFonts.lexend(
+                            style: GoogleFonts.roboto(
                                 textStyle: TextStyle(
                                     color: value
                                         ? Colors.transparent

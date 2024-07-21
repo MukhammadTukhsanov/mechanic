@@ -177,7 +177,7 @@ class _DashboardState extends State<Dashboard> {
                         color: Color(0xff336699), size: 30.0),
                     SizedBox(width: 10.0),
                     Text(user,
-                        style: GoogleFonts.lexend(
+                        style: GoogleFonts.roboto(
                           fontSize: 20,
                           color: Color(0xff336699),
                         )),
@@ -432,12 +432,12 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     children: [
                       Text(S.of(context).partNumber + ": ",
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
                       Text(decodedPartNumber,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
                               color: Color(0xff336699))),
@@ -446,12 +446,12 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     children: [
                       Text(S.of(context).partName + ": ",
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
                       Text(decodedPartName,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
                               color: Color(0xff336699))),
@@ -460,12 +460,12 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     children: [
                       Text(S.of(context).date + ": ",
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
                       Text(finishingDate,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
                               color: Color(0xff336699))),
@@ -536,7 +536,7 @@ class _DashboardState extends State<Dashboard> {
             child: Text(
               text,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.lexend(
+              style: GoogleFonts.roboto(
                   fontSize: color == 'success' ||
                           color == 'warning' ||
                           color == 'danger'
@@ -575,7 +575,7 @@ class _DashboardState extends State<Dashboard> {
                   height: 50,
                   child: Center(
                       child: Text(device,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),
@@ -624,7 +624,7 @@ class _DashboardState extends State<Dashboard> {
                   child: Center(
                       child: Text(
                           productionNo == null ? '---' : "$productionNo",
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),

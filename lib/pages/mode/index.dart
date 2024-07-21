@@ -127,7 +127,7 @@ class _ChooseModeState extends State<ChooseMode> {
                         color: Color(0xff336699), size: 30.0),
                     SizedBox(width: 10.0),
                     Text(user,
-                        style: GoogleFonts.lexend(
+                        style: GoogleFonts.roboto(
                           fontSize: 20,
                           color: Color(0xff336699),
                         )),
@@ -160,7 +160,7 @@ class _ChooseModeState extends State<ChooseMode> {
                   Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
                   SizedBox(height: 20),
                   Text(S.of(context).noInternetConnection,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           textStyle: const TextStyle(
                               color: Color(0xff848484),
                               fontSize: 20,
@@ -194,7 +194,7 @@ class _ChooseModeState extends State<ChooseMode> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(S.of(context).newEntry,
-                                        style: GoogleFonts.lexend(
+                                        style: GoogleFonts.roboto(
                                           fontSize: 30,
                                           color: Color(0xff336699),
                                         )),
@@ -226,7 +226,7 @@ class _ChooseModeState extends State<ChooseMode> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(S.of(context).changeEntry,
-                                          style: GoogleFonts.lexend(
+                                          style: GoogleFonts.roboto(
                                             fontSize: 30,
                                             color: Color(0xff336699),
                                           )),
@@ -260,7 +260,7 @@ class _ChooseModeState extends State<ChooseMode> {
                                       // text align center
                                       textAlign: TextAlign.center,
                                       softWrap: true,
-                                      style: GoogleFonts.lexend(
+                                      style: GoogleFonts.roboto(
                                         fontSize: 30,
                                         color: Color(0xff336699),
                                       )),
@@ -289,7 +289,7 @@ class _ChooseModeState extends State<ChooseMode> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(S.of(context).dashboard,
-                                        style: GoogleFonts.lexend(
+                                        style: GoogleFonts.roboto(
                                           fontSize: 30,
                                           color: Color(0xff336699),
                                         )),

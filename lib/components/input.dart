@@ -54,7 +54,7 @@ class Input extends StatelessWidget {
         label == ''
             ? SizedBox(height: 0)
             : Text(label!,
-                style: GoogleFonts.lexend(
+                style: GoogleFonts.roboto(
                   textStyle: TextStyle(
                     color: Color(0xff336699),
                     fontSize: 22,
@@ -65,7 +65,7 @@ class Input extends StatelessWidget {
         Container(
           color: disabled ? Color.fromARGB(30, 132, 132, 132) : Colors.white,
           child: TextFormField(
-            style: GoogleFonts.lexend(
+            style: GoogleFonts.roboto(
               textStyle: TextStyle(
                 color: Color(0xff000000),
                 fontSize: fontSize,

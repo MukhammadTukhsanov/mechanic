@@ -150,8 +150,21 @@ class _machineQualityItemState extends State<MachineQualityItem> {
     });
   }
 
+  String decodeText(String text) {
+    // Decode from Latin-1 to bytes
+    List<int> latin1Bytes = latin1.encode(text);
+
+    // Convert bytes to UTF-8 string
+    String utf8String = utf8.decode(latin1Bytes);
+
+    return utf8String;
+  }
+
   @override
   Widget build(BuildContext context) {
+    String decodedPartName = decodeText(widget.partName);
+    String decodedPartNumber = decodeText(widget.partNumber);
+
     return Table(
       columnWidths: {
         0: FixedColumnWidth(165),
@@ -169,7 +182,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
                   widget.machineQrCode,
-                  style: GoogleFonts.lexend(
+                  style: GoogleFonts.roboto(
                       color: Color(0xff336699), fontSize: 24),
                 ),
               ),
@@ -179,8 +192,8 @@ class _machineQualityItemState extends State<MachineQualityItem> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  widget.partNumber,
-                  style: GoogleFonts.lexend(
+                  decodedPartNumber,
+                  style: GoogleFonts.roboto(
                       color: Color(0xff336699), fontSize: 24),
                 ),
               ),
@@ -190,8 +203,8 @@ class _machineQualityItemState extends State<MachineQualityItem> {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  widget.partName,
-                  style: GoogleFonts.lexend(
+                  decodedPartName,
+                  style: GoogleFonts.roboto(
                       color: Color(0xff336699), fontSize: 24),
                 ),
               ),
@@ -226,7 +239,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(S.of(context).yes,
-                                      style: GoogleFonts.lexend(
+                                      style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
                                             color: _partStatusOK
                                                 ? Colors.white
@@ -235,7 +248,7 @@ class _machineQualityItemState extends State<MachineQualityItem> {
                                             fontWeight: FontWeight.bold),
                                       )),
                                   Text(S.of(context).no,
-                                      style: GoogleFonts.lexend(
+                                      style: GoogleFonts.roboto(
                                           textStyle: TextStyle(
                                               color: _partStatusOK
                                                   ? Colors.transparent

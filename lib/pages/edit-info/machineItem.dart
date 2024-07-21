@@ -158,7 +158,7 @@ class _MachineItemState extends State<MachineItem> {
                 Container(
                   width: 150,
                   child: Text(widget.machineQrCode,
-                      style: GoogleFonts.lexend(
+                      style: GoogleFonts.roboto(
                           color: Color(0xff336699),
                           fontWeight: FontWeight.w600)),
                 ),

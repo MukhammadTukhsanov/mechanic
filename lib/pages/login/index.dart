@@ -190,7 +190,7 @@ class _LoginState extends State<Login> {
                       Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
                       SizedBox(height: 20),
                       Text(S.of(context).noInternetConnection,
-                          style: GoogleFonts.lexend(
+                          style: GoogleFonts.roboto(
                               textStyle: const TextStyle(
                                   color: Color(0xff848484),
                                   fontSize: 20,
@@ -204,11 +204,13 @@ class _LoginState extends State<Login> {
                         child: Row(children: [
                           Container(
                             width: MediaQuery.of(context).size.width / 3,
-                            child: Image(
-                                width: 160,
-                                height: 160,
-                                image:
-                                    AssetImage('assets/images/terminal.png')),
+                            child: Image.asset('assets/images/terminal.png',
+                                width: 160, height: 160),
+                            // child: Image(
+                            //     width: 160,
+                            //     height: 160,
+                            //     image:
+                            //         AssetImage('assets/images/terminal.png')),
                           ),
                           Expanded(
                               child: Center(
@@ -250,7 +252,7 @@ class _LoginState extends State<Login> {
                                                               S
                                                                   .of(context)
                                                                   .login,
-                                                              style: GoogleFonts.lexend(
+                                                              style: GoogleFonts.roboto(
                                                                   textStyle: const TextStyle(
                                                                       color: Color(
                                                                           0xff336699),
@@ -259,13 +261,18 @@ class _LoginState extends State<Login> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w600))),
-                                                          const Positioned(
+                                                          Positioned(
                                                               right: 0,
-                                                              child: Image(
+                                                              child: Image.asset(
+                                                                  'assets/images/terminal.png',
                                                                   width: 40,
-                                                                  height: 40,
-                                                                  image: AssetImage(
-                                                                      'assets/images/nfc.png')))
+                                                                  height: 40)
+                                                              // child: Image(
+                                                              //     width: 40,
+                                                              //     height: 40,
+                                                              //     image: AssetImage(
+                                                              //         'assets/images/nfc.png'))
+                                                              )
                                                         ],
                                                       ),
                                                     ),
@@ -290,7 +297,7 @@ class _LoginState extends State<Login> {
                                                                     width: 1)),
                                                             child: Row(
                                                                 children: [
-                                                                  const Padding(
+                                                                  Padding(
                                                                       padding: EdgeInsets.symmetric(
                                                                           horizontal:
                                                                               10,
@@ -308,7 +315,7 @@ class _LoginState extends State<Login> {
                                                                           .of(
                                                                               context)
                                                                           .tokenNotValid,
-                                                                      style: GoogleFonts.lexend(
+                                                                      style: GoogleFonts.roboto(
                                                                           textStyle: const TextStyle(
                                                                               color: Colors.red,
                                                                               fontSize: 14,
@@ -336,43 +343,53 @@ class _LoginState extends State<Login> {
                                                             FilteringTextInputFormatter
                                                                 .digitsOnly
                                                           ],
-                                                          style: GoogleFonts.lexend(
+                                                          style: GoogleFonts.roboto(
                                                               textStyle: const TextStyle(
                                                                   color: Color(
                                                                       0xff848484),
                                                                   fontSize:
                                                                       14)),
-                                                          decoration: InputDecoration(
-                                                              errorBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          6),
-                                                                  borderSide: const BorderSide(
-                                                                      color: Color(
-                                                                          0xff848484),
-                                                                      width:
-                                                                          .5)),
-                                                              focusedBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          6),
-                                                                  borderSide: const BorderSide(
-                                                                      color: Color(
-                                                                          0xff336699),
-                                                                      width:
-                                                                          .5)),
-                                                              focusedErrorBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          6),
-                                                                  borderSide: const BorderSide(
-                                                                      color: Color(0xff336699),
-                                                                      width: .5)),
-                                                              contentPadding: const EdgeInsets.all(14),
-                                                              labelText: S.of(context).tokenId,
-                                                              labelStyle: GoogleFonts.lexend(textStyle: const TextStyle(color: Color(0xff848484), fontSize: 14)),
-                                                              prefixIcon: const Align(widthFactor: 1.0, heightFactor: 1.0, child: Image(image: AssetImage('assets/images/idCard.png'))),
-                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xff848484), width: .5))),
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  errorBorder: OutlineInputBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              6),
+                                                                      borderSide: const BorderSide(
+                                                                          color: Color(
+                                                                              0xff848484),
+                                                                          width:
+                                                                              .5)),
+                                                                  focusedBorder: OutlineInputBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              6),
+                                                                      borderSide: const BorderSide(
+                                                                          color: Color(
+                                                                              0xff336699),
+                                                                          width:
+                                                                              .5)),
+                                                                  focusedErrorBorder: OutlineInputBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              6),
+                                                                      borderSide: const BorderSide(
+                                                                          color: Color(
+                                                                              0xff336699),
+                                                                          width:
+                                                                              .5)),
+                                                                  contentPadding:
+                                                                      const EdgeInsets.all(
+                                                                          14),
+                                                                  labelText: S.of(context).tokenId,
+                                                                  labelStyle: GoogleFonts.roboto(textStyle: const TextStyle(color: Color(0xff848484), fontSize: 14)),
+                                                                  prefixIcon: Align(
+                                                                      widthFactor: 1.0,
+                                                                      heightFactor: 1.0,
+                                                                      child:
+                                                                          // Image(image: AssetImage('assets/images/idCard.png'))
+                                                                          Image.asset('assets/images/idCard.png', width: 20, height: 20)),
+                                                                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xff848484), width: .5))),
                                                         )),
                                                     SizedBox(
                                                         height: 50,
@@ -394,7 +411,7 @@ class _LoginState extends State<Login> {
                                                                         AlwaysStoppedAnimation<Color>(Colors
                                                                             .white))
                                                                 : Text(S.of(context).login,
-                                                                    style: GoogleFonts.lexend(textStyle: const TextStyle(color: Colors.white, fontSize: 14))),
+                                                                    style: GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.white, fontSize: 14))),
                                                             onPressed: login))
                                                   ])))))))
                         ])))),
