@@ -101,26 +101,15 @@ class _DashboardState extends State<Dashboard> {
               : null,
           'data': data,
         };
+        print("info: $data");
         String status() {
-          var sts;
-          if (data['machineStopped'] == true) {
-            sts = 'danger';
-          }
-          if (data["machineStopped"] == false) {
-            sts = 'success';
-          }
-          if (data['remainingProductionTime'] == 0 &&
-              data['remainingProductionDays'] == 0 &&
-              data['toolMounted'] == false) {
-            sts = 'danger';
-          }
-          if (data['toolMounted'] == true && data['machineStopped'] == true) {
-            sts = 'warning';
-          }
+          var _status;
           if (data['status'] == "Invalid") {
-            sts = 'transparent';
+            _status = 'transparent';
+          } else {
+            _status = data['status'];
           }
-          return sts;
+          return _status;
         }
 
         devices.add({
@@ -128,53 +117,7 @@ class _DashboardState extends State<Dashboard> {
           'status': status(),
           'barcodeProductionNo': data['barcodeProductionNo'],
         });
-        // if (data['machineStopped'] == true) {
-        //   devices.removeWhere((item) => item['machineName'] == machineName);
-        //   devices.add({
-        //     'machineName': machineName,
-        //     'status': "danger",
-        //     'barcodeProductionNo': data['barcodeProductionNo'],
-        //   });
-        // }
 
-        // if (data["machineStopped"] == false) {
-        //   devices.removeWhere((item) => item['machineName'] == machineName);
-        //   devices.add({
-        //     'machineName': machineName,
-        //     'status': "success",
-        //     'barcodeProductionNo': data['barcodeProductionNo'],
-        //   });
-        // }
-
-        // if (data['remainingProductionTime'] == "0" &&
-        //     data['remainingProductionDays'] == "0" &&
-        //     data['toolMounted'] == false) {
-        //   devices.removeWhere((item) => item['machineName'] == machineName);
-        //   devices.add({
-        //     'machineName': machineName,
-        //     'status': "danger",
-        //     'barcodeProductionNo': data['barcodeProductionNo'],
-        //   });
-        // }
-
-        // if (data["toolMounted"] == true && data["machineStopped"] == true) {
-        //   // if this machine already has first remove it and add it again
-        //   devices.removeWhere((item) => item['machineName'] == machineName);
-
-        //   devices.add({
-        //     'machineName': machineName,
-        //     'status': "warning",
-        //     'barcodeProductionNo': data['barcodeProductionNo'],
-        //   });
-        // }
-        // if (data['status'] == "Invalid") {
-        //   devices.removeWhere((item) => item['machineName'] == machineName);
-        //   devices.add({
-        //     'machineName': machineName,
-        //     'status': "transparent",
-        //     'barcodeProductionNo': data['barcodeProductionNo'],
-        //   });
-        // }
         setState(() {
           devicesInformation = [...devicesInformation, info];
         });
@@ -379,23 +322,10 @@ class _DashboardState extends State<Dashboard> {
 
     String status() {
       var sts;
-      if (e['data']['machineStopped'] == true) {
-        sts = 'danger';
-      }
-      if (e["data"]["machineStopped"] == false) {
-        sts = 'success';
-      }
-      if (e['data']['remainingProductionTime'] == 0 &&
-          e['data']['remainingProductionDays'] == 0 &&
-          e['data']['toolMounted'] == false) {
-        sts = 'danger';
-      }
-      if (e['data']['toolMounted'] == true &&
-          e['data']['machineStopped'] == true) {
-        sts = 'warning';
-      }
       if (e['data']['status'] == "Invalid") {
         sts = 'transparent';
+      } else {
+        sts = e['data']['status'];
       }
       return sts;
     }
@@ -437,19 +367,6 @@ class _DashboardState extends State<Dashboard> {
               context,
               "$partNumber/$partName/${finishingDate.toString().substring(0, 16)}",
               status(),
-              // e['data']['machineStopped'] == false
-              //     // && e['data']['toolMounted'] == false
-              //     ? 'success'
-              //     : e['data']['remainingProductionDays'] == 0 &&
-              //             e['data']['remainingProductionTime'] == 0 &&
-              //             e['data']['toolMounted'] == false
-              //         ? 'danger'
-              //         : e['data']['toolMounted'] == false &&
-              //                 e['data']['machineStopped'] == true
-              //             ? 'warning'
-              //             : e['data']['machineStopped'] == true
-              //                 ? 'danger'
-              //                 : 'transparent',
               (e['data']['remainingProductionTime'] ?? 0).toDouble(),
               e["createdAt"] == null ? DateTime.now() : e["createdAt"],
               (e['data']['remainingProductionDays'] ?? 0).toDouble(),
@@ -578,8 +495,6 @@ class _DashboardState extends State<Dashboard> {
       String partName,
       String partNumber,
       String finishingDate) {
-    print("remainingProductionDays $remainingProductionDays");
-    print("remainingProductionTime $remainingProductionTime");
     double lineWidth =
         (remainingProductionTime / 60 + remainingProductionDays * 24) * 15.75 -
             (DateTime(
@@ -589,8 +504,7 @@ class _DashboardState extends State<Dashboard> {
                     ).difference(createdAt).inHours +
                     1) *
                 15.75 -
-            (!isToday(createdAt) ? 0 : (createdAt.hour - 1) * 15.75) +
-            8;
+            (!isToday(createdAt) ? 0 : (createdAt.hour - 1) * 15.75);
     // !isToday(e["createdAt"]
     //               ? 0
     //               : (e["createdAt"].hour * 15.75).toDouble());
@@ -622,7 +536,7 @@ class _DashboardState extends State<Dashboard> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              text,
+              color == "success" || color == "warning" ? text : "",
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.lexend(
                   fontSize: color == 'success' ||

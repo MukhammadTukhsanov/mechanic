@@ -1008,17 +1008,18 @@ class _HomePageState extends State<HomePage> {
             ? SizedBox(height: 0.0)
             : Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                    (shiftText != "true" && !shiftStatusListIsItEmpty)
-                        ? "Achtung – Werkzeugreinigung notwendig! Ist erledigt?"
-                        : "Werkzeugreinigung in Schicht F1 erledigt?",
+                child: Text(toolCleaningStatus['text'],
+                    // toolCleaningText,
+
+                    // (shiftText != "true" && !shiftStatusListIsItEmpty)
+                    //     ? "Achtung – Werkzeugreinigung notwendig! Ist erledigt?"
+                    //     : "Werkzeugreinigung in Schicht F1 erledigt?",
                     textAlign: TextAlign.left,
                     style: GoogleFonts.roboto(
                         textStyle: TextStyle(
-                            color: (shiftText != "true" &&
-                                    !shiftStatusListIsItEmpty)
-                                ? Colors.red
-                                : Color(0xff336699),
+                            color: (toolCleaningStatus['color'] == 'success')
+                                ? Color(0xff336699)
+                                : Colors.red,
                             fontSize: 22,
                             fontWeight: FontWeight.w600)))),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(width: 20.0),
@@ -1357,5 +1358,26 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  Map<String, dynamic> toolCleaningStatus = {
+    "text": "Werkzeugreinigung in Schicht F1 erledigt?",
+    "color": "success"
+  };
+
+  Future<void> _toolCleaningText(BuildContext context) async {
+    http.get(Uri.parse('http://$ipAdress/api/current'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    }).then((value) {
+      var data = jsonDecode(value.body);
+      setState(() {
+        toolCleaningStatus = {"text": data['text'], "color": data['status']};
+      });
+    }).catchError((error) {
+      print(error);
+      setState(() {
+        toolCleaningStatus = {"text": error.toString(), "color": 'danger'};
+      });
+    });
   }
 }
