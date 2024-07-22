@@ -101,26 +101,84 @@ class _DashboardState extends State<Dashboard> {
               : null,
           'data': data,
         };
-        String status;
-
-        if (data['machineStopped']) {
-          status = data['toolMounted'] ? "warning" : "danger";
-        } else if (data['remainingProductionTime'] == 0 &&
-            data['remainingProductionDays'] == 0 &&
-            !data['toolMounted']) {
-          status = "danger";
-        } else {
-          status = "success";
+        String status() {
+          var sts;
+          if (data['machineStopped'] == true) {
+            sts = 'danger';
+          }
+          if (data["machineStopped"] == false) {
+            sts = 'success';
+          }
+          if (data['remainingProductionTime'] == 0 &&
+              data['remainingProductionDays'] == 0 &&
+              data['toolMounted'] == false) {
+            sts = 'danger';
+          }
+          if (data['toolMounted'] == true && data['machineStopped'] == true) {
+            sts = 'warning';
+          }
+          if (data['status'] == "Invalid") {
+            sts = 'transparent';
+          }
+          return sts;
         }
 
         devices.add({
           'machineName': machineName,
-          'status': status,
+          'status': status(),
           'barcodeProductionNo': data['barcodeProductionNo'],
         });
+        // if (data['machineStopped'] == true) {
+        //   devices.removeWhere((item) => item['machineName'] == machineName);
+        //   devices.add({
+        //     'machineName': machineName,
+        //     'status': "danger",
+        //     'barcodeProductionNo': data['barcodeProductionNo'],
+        //   });
+        // }
+
+        // if (data["machineStopped"] == false) {
+        //   devices.removeWhere((item) => item['machineName'] == machineName);
+        //   devices.add({
+        //     'machineName': machineName,
+        //     'status': "success",
+        //     'barcodeProductionNo': data['barcodeProductionNo'],
+        //   });
+        // }
+
+        // if (data['remainingProductionTime'] == "0" &&
+        //     data['remainingProductionDays'] == "0" &&
+        //     data['toolMounted'] == false) {
+        //   devices.removeWhere((item) => item['machineName'] == machineName);
+        //   devices.add({
+        //     'machineName': machineName,
+        //     'status': "danger",
+        //     'barcodeProductionNo': data['barcodeProductionNo'],
+        //   });
+        // }
+
+        // if (data["toolMounted"] == true && data["machineStopped"] == true) {
+        //   // if this machine already has first remove it and add it again
+        //   devices.removeWhere((item) => item['machineName'] == machineName);
+
+        //   devices.add({
+        //     'machineName': machineName,
+        //     'status': "warning",
+        //     'barcodeProductionNo': data['barcodeProductionNo'],
+        //   });
+        // }
+        // if (data['status'] == "Invalid") {
+        //   devices.removeWhere((item) => item['machineName'] == machineName);
+        //   devices.add({
+        //     'machineName': machineName,
+        //     'status': "transparent",
+        //     'barcodeProductionNo': data['barcodeProductionNo'],
+        //   });
+        // }
         setState(() {
           devicesInformation = [...devicesInformation, info];
         });
+        print(data);
       } catch (e) {
         print(e);
       }
@@ -177,7 +235,7 @@ class _DashboardState extends State<Dashboard> {
                         color: Color(0xff336699), size: 30.0),
                     SizedBox(width: 10.0),
                     Text(user,
-                        style: GoogleFonts.roboto(
+                        style: GoogleFonts.lexend(
                           fontSize: 20,
                           color: Color(0xff336699),
                         )),
@@ -319,16 +377,27 @@ class _DashboardState extends State<Dashboard> {
         //     e['data']['remainingProductionTime'])
         : DateTime.now();
 
-    String status;
-
-    if (e['data']['machineStopped']) {
-      status = e['data']['toolMounted'] ? 'warning' : 'danger';
-    } else if (e['data']['remainingProductionDays'] == "0" &&
-        e['data']['remainingProductionTime'] == "0" &&
-        !e['data']['toolMounted']) {
-      status = 'danger';
-    } else {
-      status = 'success';
+    String status() {
+      var sts;
+      if (e['data']['machineStopped'] == true) {
+        sts = 'danger';
+      }
+      if (e["data"]["machineStopped"] == false) {
+        sts = 'success';
+      }
+      if (e['data']['remainingProductionTime'] == 0 &&
+          e['data']['remainingProductionDays'] == 0 &&
+          e['data']['toolMounted'] == false) {
+        sts = 'danger';
+      }
+      if (e['data']['toolMounted'] == true &&
+          e['data']['machineStopped'] == true) {
+        sts = 'warning';
+      }
+      if (e['data']['status'] == "Invalid") {
+        sts = 'transparent';
+      }
+      return sts;
     }
 
     return Stack(
@@ -367,7 +436,20 @@ class _DashboardState extends State<Dashboard> {
           child: statusLine(
               context,
               "$partNumber/$partName/${finishingDate.toString().substring(0, 16)}",
-              status,
+              status(),
+              // e['data']['machineStopped'] == false
+              //     // && e['data']['toolMounted'] == false
+              //     ? 'success'
+              //     : e['data']['remainingProductionDays'] == 0 &&
+              //             e['data']['remainingProductionTime'] == 0 &&
+              //             e['data']['toolMounted'] == false
+              //         ? 'danger'
+              //         : e['data']['toolMounted'] == false &&
+              //                 e['data']['machineStopped'] == true
+              //             ? 'warning'
+              //             : e['data']['machineStopped'] == true
+              //                 ? 'danger'
+              //                 : 'transparent',
               (e['data']['remainingProductionTime'] ?? 0).toDouble(),
               e["createdAt"] == null ? DateTime.now() : e["createdAt"],
               (e['data']['remainingProductionDays'] ?? 0).toDouble(),
@@ -384,6 +466,7 @@ class _DashboardState extends State<Dashboard> {
 
   void _showPopup(BuildContext context, Offset offset, String partName,
       String partNumber, String finishingDate) {
+    print("showPopup");
     _popupOverlayEntry = _createPopupOverlayEntry(
         context, offset, partName, partNumber, finishingDate);
     Overlay.of(context).insert(_popupOverlayEntry!);
@@ -396,18 +479,18 @@ class _DashboardState extends State<Dashboard> {
 
   OverlayEntry _createPopupOverlayEntry(BuildContext context, Offset offset,
       String partName, String partNumber, String finishingDate) {
-    String decodeText(String text) {
-      // Decode from Latin-1 to bytes
-      List<int> latin1Bytes = latin1.encode(text);
+    // String decodeText(String text) {
+    //   // Decode from Latin-1 to bytes
+    //   List<int> latin1Bytes = latin1.encode(text);
 
-      // Convert bytes to UTF-8 string
-      String utf8String = utf8.decode(latin1Bytes);
+    //   // Convert bytes to UTF-8 string
+    //   String utf8String = utf8.decode(latin1Bytes);
 
-      return utf8String;
-    }
+    //   return utf8String;
+    // }
 
-    String decodedPartName = decodeText(partName);
-    String decodedPartNumber = decodeText(partNumber);
+    // String decodedPartName = decodeText(partName);
+    // String decodedPartNumber = decodeText(partNumber);
 
     return OverlayEntry(
       builder: (context) => Positioned(
@@ -432,12 +515,13 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     children: [
                       Text(S.of(context).partNumber + ": ",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text(decodedPartNumber,
-                          style: GoogleFonts.roboto(
+                      // Text(decodedPartNumber,
+                      Text(partNumber,
+                          style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
                               color: Color(0xff336699))),
@@ -446,12 +530,13 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     children: [
                       Text(S.of(context).partName + ": ",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
-                      Text(decodedPartName,
-                          style: GoogleFonts.roboto(
+                      // Text(decodedPartName,
+                      Text(partName,
+                          style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
                               color: Color(0xff336699))),
@@ -460,12 +545,12 @@ class _DashboardState extends State<Dashboard> {
                   Row(
                     children: [
                       Text(S.of(context).date + ": ",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color(0xff336699))),
                       Text(finishingDate,
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.lexend(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
                               color: Color(0xff336699))),
@@ -504,13 +589,16 @@ class _DashboardState extends State<Dashboard> {
                     ).difference(createdAt).inHours +
                     1) *
                 15.75 -
-            (!isToday(createdAt) ? 0 : (createdAt.hour - 1) * 15.75);
+            (!isToday(createdAt) ? 0 : (createdAt.hour - 1) * 15.75) +
+            8;
     // !isToday(e["createdAt"]
     //               ? 0
     //               : (e["createdAt"].hour * 15.75).toDouble());
     // newCalculateDaysExcludingWeekends(createdAt, DateTime.now()) *
     //     15.75;
     lineWidth = lineWidth < 0 ? 0 : lineWidth;
+
+    print(color);
     return GestureDetector(
       onTapUp: (details) {
         _removePopup(); // Remove any existing popup
@@ -536,7 +624,7 @@ class _DashboardState extends State<Dashboard> {
             child: Text(
               text,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.roboto(
+              style: GoogleFonts.lexend(
                   fontSize: color == 'success' ||
                           color == 'warning' ||
                           color == 'danger'
@@ -575,7 +663,7 @@ class _DashboardState extends State<Dashboard> {
                   height: 50,
                   child: Center(
                       child: Text(device,
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.lexend(
                               fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),
@@ -624,7 +712,7 @@ class _DashboardState extends State<Dashboard> {
                   child: Center(
                       child: Text(
                           productionNo == null ? '---' : "$productionNo",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.lexend(
                               fontSize: 18,
                               color: Color(0xff336699),
                               fontWeight: FontWeight.w300))))),
