@@ -316,6 +316,7 @@ class _HomePageState extends State<HomePage> {
   void onChangedQrCode(String value) {
     if (globalDevices.contains(value)) {
       _machineQRFocus.unfocus();
+      _toolCleaningText(context, value);
     }
   }
 
@@ -1365,14 +1366,18 @@ class _HomePageState extends State<HomePage> {
     "color": "success"
   };
 
-  Future<void> _toolCleaningText(BuildContext context) async {
-    http.get(Uri.parse('http://$ipAdress/api/current'), headers: {
+  Future<void> _toolCleaningText(BuildContext context, String value) async {
+    http.get(Uri.parse('http://$ipAdress/api/current/$value'), headers: {
       'Content-Type': 'application/json; charset=UTF-8',
     }).then((value) {
       var data = jsonDecode(value.body);
       setState(() {
-        toolCleaningStatus = {"text": data['text'], "color": data['status']};
+        toolCleaningStatus = {
+          "text": decodeText(data['text']),
+          "color": decodeText(data['status'])
+        };
       });
+      print("text changed");
     }).catchError((error) {
       print(error);
       setState(() {
