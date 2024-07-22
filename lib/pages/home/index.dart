@@ -163,6 +163,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onFocusChange() {
+    if (!_machineQRFocus.hasFocus) {
+      checkMachineAvaibility();
+    }
     if (_machineQRFocus.hasFocus) {
       machineQRCodeController.text = "";
     }
@@ -216,11 +219,13 @@ class _HomePageState extends State<HomePage> {
   final minute = DateTime.now().minute.toString().padLeft(2, '0');
 
   Future<void> addEntry() async {
-    if (machineQRCodeController.text.isEmpty && _machineStopped) {
+    if (machineQRCodeController.text.isEmpty && _machineStopped ||
+        isHasMachine) {
       setState(() {
-        errText = S.of(context).fillAllFields;
+        errText = "Maschine wurde nicht gefunden";
         err = true;
       });
+      print("errText: $errText");
       Timer(Duration(seconds: 3), () {
         setState(() {
           err = false;
@@ -315,9 +320,24 @@ class _HomePageState extends State<HomePage> {
 
   void onChangedQrCode(String value) {
     if (globalDevices.contains(value)) {
+      setState(() {
+        isHasMachine = false;
+      });
       _machineQRFocus.unfocus();
       _toolCleaningText(context, value);
     }
+  }
+
+  bool isHasMachine = false;
+
+  void checkMachineAvaibility() {
+    if (globalDevices.contains(machineQRCodeController.text) == false) {
+      print("Machine not found");
+      setState(() {
+        isHasMachine = true;
+      });
+    }
+    ;
   }
 
   void onChangeToolMounted() {
@@ -598,9 +618,12 @@ class _HomePageState extends State<HomePage> {
                                             SizedBox(height: 16.0),
                                             Input(
                                                 onChanged: onChangedQrCode,
+                                                onEditingComplete:
+                                                    checkMachineAvaibility,
                                                 focusNode: _machineQRFocus,
                                                 controller:
                                                     machineQRCodeController,
+                                                hassError: isHasMachine,
                                                 prefixIcon: Icons.qr_code,
                                                 labelText: S
                                                     .of(context)
