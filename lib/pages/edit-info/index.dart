@@ -27,6 +27,7 @@ class _EditInfoState extends State {
     );
     response.then((value) {
       var data = jsonDecode(value.body);
+      print('data: $data');
       setState(() {
         editedDevices = data;
       });

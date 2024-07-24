@@ -1403,8 +1403,9 @@ class _HomePageState extends State<HomePage> {
       print("text changed");
     }).catchError((error) {
       print(error);
-      setState(() {
-        toolCleaningStatus = {"text": error.toString(), "color": 'danger'};
+      // if error set interval and recall the function
+      Timer(Duration(seconds: 3), () {
+        _toolCleaningText(context, value);
       });
     });
   }
