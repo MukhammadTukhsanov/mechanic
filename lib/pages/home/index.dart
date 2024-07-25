@@ -1028,91 +1028,144 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
-        _toolMounted
-            ? SizedBox(height: 0.0)
-            : Align(
-                alignment: Alignment.centerLeft,
-                child: Text(toolCleaningStatus['text'],
-                    // toolCleaningText,
-
-                    // (shiftText != "true" && !shiftStatusListIsItEmpty)
-                    //     ? "Achtung – Werkzeugreinigung notwendig! Ist erledigt?"
-                    //     : "Werkzeugreinigung in Schicht F1 erledigt?",
-                    textAlign: TextAlign.left,
-                    style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                            color: (toolCleaningStatus['color'] == 'success')
-                                ? Color(0xff336699)
-                                : Colors.red,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600)))),
-        _toolMounted ? SizedBox(height: 0.0) : SizedBox(width: 20.0),
-        _toolMounted
-            ? SizedBox(height: 0.0)
-            : Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Row(children: [
-                  Transform.scale(
-                      scale: 1.5,
-                      child: Radio(
-                          value: "yes",
-                          groupValue: radioValue,
-                          fillColor: MaterialStateProperty.all(
-                              const Color(0xff336699)),
-                          onChanged: (value) {
-                            setState(() {
-                              radioValue = value as String;
-                            });
-                          })),
-                  Text(S.of(context).yes,
-                      style: GoogleFonts.roboto(
-                          textStyle: const TextStyle(
-                              color: Color(0xff336699),
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600)))
-                ]),
-                Row(children: [
-                  Transform.scale(
-                      scale: 1.5,
-                      child: Radio(
-                          value: "no",
-                          groupValue: radioValue,
-                          fillColor: MaterialStateProperty.all(
-                              const Color(0xff336699)),
-                          onChanged: (value) {
-                            setState(() {
-                              radioValue = value as String;
-                            });
-                          })),
-                  Text(S.of(context).no,
-                      style: GoogleFonts.roboto(
-                          textStyle: const TextStyle(
-                              color: Color(0xff336699),
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600)))
-                ]),
-                Row(children: [
-                  Transform.scale(
-                      scale: 1.5,
-                      child: Radio(
-                          value: "notNeeded",
-                          groupValue: radioValue,
-                          fillColor:
-                              MaterialStateProperty.all(Color(0xff336699)),
-                          onChanged: (value) {
-                            setState(() {
-                              radioValue = value as String;
-                            });
-                          })),
-                  Text(S.of(context).notNeeded,
-                      style: GoogleFonts.roboto(
-                          textStyle: TextStyle(
-                              color: Color(0xff336699),
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600))),
-                  SizedBox(width: MediaQuery.of(context).size.width / 6),
-                ])
-              ]),
-        _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+        if (toolCleaning == true || shiftF1 == true)
+          Column(
+            children: [
+              _toolMounted
+                  ? SizedBox(height: 0.0)
+                  : Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (toolCleaning)
+                            Text(
+                              "Achtung – Werkzeugreinigung notwendig! Ist erledigt?",
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.roboto(
+                                textStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          if (shiftF1)
+                            Text(
+                              "Werkzeugreinigung in Schicht F1 erledigt?",
+                              textAlign: TextAlign.left,
+                              style: GoogleFonts.roboto(
+                                textStyle: TextStyle(
+                                  color: Color(0xff336699),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+              _toolMounted ? SizedBox(height: 0.0) : SizedBox(width: 20.0),
+              _toolMounted
+                  ? SizedBox(height: 0.0)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.5,
+                              child: Radio(
+                                value: "yes",
+                                groupValue: radioValue,
+                                fillColor: MaterialStateProperty.all(
+                                  const Color(0xff336699),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    radioValue = value as String;
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              S.of(context).yes,
+                              style: GoogleFonts.roboto(
+                                textStyle: const TextStyle(
+                                  color: Color(0xff336699),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.5,
+                              child: Radio(
+                                value: "no",
+                                groupValue: radioValue,
+                                fillColor: MaterialStateProperty.all(
+                                  const Color(0xff336699),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    radioValue = value as String;
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              S.of(context).no,
+                              style: GoogleFonts.roboto(
+                                textStyle: const TextStyle(
+                                  color: Color(0xff336699),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.5,
+                              child: Radio(
+                                value: "notNeeded",
+                                groupValue: radioValue,
+                                fillColor: MaterialStateProperty.all(
+                                  Color(0xff336699),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    radioValue = value as String;
+                                  });
+                                },
+                              ),
+                            ),
+                            Text(
+                              S.of(context).notNeeded,
+                              style: GoogleFonts.roboto(
+                                textStyle: TextStyle(
+                                  color: Color(0xff336699),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 6,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+              _toolMounted ? SizedBox(height: 0.0) : SizedBox(height: 16.0),
+            ],
+          ),
         _toolMounted
             ? SizedBox(height: 0.0)
             : Row(children: [
@@ -1384,9 +1437,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  bool toolCleaning = false;
+  bool shiftF1 = false;
+
   Map<String, dynamic> toolCleaningStatus = {
-    "text": "Werkzeugreinigung in Schicht F1 erledigt?",
-    "color": "success"
+    "status": false,
+    "lastShift": "F1"
   };
 
   Future<void> _toolCleaningText(BuildContext context, String value) async {
@@ -1394,11 +1450,27 @@ class _HomePageState extends State<HomePage> {
       'Content-Type': 'application/json; charset=UTF-8',
     }).then((value) {
       var data = jsonDecode(value.body);
+      data['status'] = 'true';
+      print("data $data");
       setState(() {
-        toolCleaningStatus = {
-          "text": decodeText(data['text']),
-          "color": decodeText(data['status'])
-        };
+        if (data['status'] == "false" && data['last_shift'] != 'N3') {
+          print("is false");
+          setState(() {
+            toolCleaning = true;
+            shiftF1 = false;
+          });
+        } else if (data['last_shift'] == 'N3') {
+          setState(() {
+            shiftF1 = true;
+            toolCleaning = false;
+          });
+        } else {
+          setState(() {
+            radioValue = 'yes';
+            shiftF1 = false;
+            toolCleaning = false;
+          });
+        }
       });
       print("text changed");
     }).catchError((error) {
