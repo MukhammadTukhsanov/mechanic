@@ -1450,10 +1450,8 @@ class _HomePageState extends State<HomePage> {
       'Content-Type': 'application/json; charset=UTF-8',
     }).then((value) {
       var data = jsonDecode(value.body);
-      data['status'] = 'true';
-      print("data $data");
       setState(() {
-        if (data['status'] == "false" && data['last_shift'] != 'N3') {
+        if (data['status'] == false && data['last_shift'] != 'N3') {
           print("is false");
           setState(() {
             toolCleaning = true;
