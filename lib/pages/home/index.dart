@@ -804,7 +804,7 @@ class _HomePageState extends State<HomePage> {
                                                     labelText: S
                                                         .of(context)
                                                         .operatingHours,
-                                                    validator: !_machineStopped,
+                                                    // validator: !_machineStEopped,
                                                     numericOnly: true,
                                                     keyboardType:
                                                         TextInputType.number,
