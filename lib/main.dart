@@ -39,8 +39,8 @@ class Router extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/choose-mode',
-      // initialRoute: token == null ? '/login' : '/choose-mode',
+      // initialRoute: '/choose-mode',
+      initialRoute: token == null ? '/login' : '/choose-mode',
       routes: {
         '/login': (context) => Login(),
         '/choose-mode': (context) => ChooseMode(
