@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:schichtbuch_shift/generated/l10n.dart';
 import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/dashboard/index.dart';
 import 'package:schichtbuch_shift/pages/edit-info/index.dart';
 import 'package:schichtbuch_shift/pages/home/index.dart';
 import 'package:schichtbuch_shift/pages/item-quality/index.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class ChooseMode extends StatefulWidget {
@@ -298,6 +297,44 @@ class _ChooseModeState extends State<ChooseMode> {
                               ),
                             ),
                           )
+                        ],
+                      ),
+                      SizedBox(height: 40),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return HomePage(
+                                      showInput: true,
+                                      title: 'Betriebsstunden hinzufügen');
+                                }));
+                              },
+                              child: Container(
+                                height: 200,
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xff336699), width: 1),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Center(
+                                  child: Text("Betriebsstunden hinzufügen",
+                                      // text align center
+                                      textAlign: TextAlign.center,
+                                      softWrap: true,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 30,
+                                        color: Color(0xff336699),
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 40),
+                          Expanded(child: SizedBox())
                         ],
                       ),
                     ],

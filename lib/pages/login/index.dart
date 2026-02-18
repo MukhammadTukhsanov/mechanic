@@ -1,15 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:schichtbuch_shift/generated/l10n.dart';
-import 'package:schichtbuch_shift/global/index.dart';
-import 'dart:async';
-import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:schichtbuch_shift/generated/l10n.dart';
+import 'package:schichtbuch_shift/global/index.dart';
+import 'package:schichtbuch_shift/pages/mode/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {

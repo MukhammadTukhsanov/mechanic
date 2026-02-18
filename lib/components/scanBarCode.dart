@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ScanBarCode extends StatefulWidget {
@@ -15,21 +14,21 @@ class ScanBarCode extends StatefulWidget {
 }
 
 class _ScanBarCodeState extends State<ScanBarCode> {
-  Future<void> scanCode() async {
-    String code;
-    try {
-      code = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", true, ScanMode.QR);
-    } on PlatformException {
-      code = 'Failed to get platform version.';
-    }
-    widget.setCode!(code);
-  }
+  // Future<void> scanCode() async {
+  //   String code;
+  //   try {
+  //     code = await FlutterBarcodeScanner.scanBarcode(
+  //         "#ff6666", "Cancel", true, ScanMode.QR);
+  //   } on PlatformException {
+  //     code = 'Failed to get platform version.';
+  //   }
+  //   widget.setCode!(code);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: scanCode,
+      // onTap: scanCode,
       child: Container(
         height: 55,
         child: Padding(

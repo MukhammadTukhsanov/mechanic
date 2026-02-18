@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:schichtbuch_shift/components/button.dart';
 import 'package:schichtbuch_shift/components/cupertino-picker.dart';
 import 'package:schichtbuch_shift/components/input.dart';
@@ -14,11 +16,11 @@ import 'package:schichtbuch_shift/global/index.dart';
 import 'package:schichtbuch_shift/pages/comment/index.dart';
 import 'package:schichtbuch_shift/pages/home/machines-list.dart';
 import 'package:schichtbuch_shift/pages/mode/index.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
+  final bool showInput;
+  final String title;
+  HomePage({this.showInput = false, this.title = ''});
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -51,6 +53,8 @@ class _HomePageState extends State<HomePage> {
   int days = 0;
   int instRemainingProductionHours = 0;
   int instRemainingProductionMinute = 0;
+
+  String selectedOption = "Option 1";
 
   final _formKey = GlobalKey<FormState>();
   final machineQRCodeController = TextEditingController();
@@ -117,6 +121,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    selectedOption = widget.showInput ? "Option 2" : "Option 1";
     _timer();
     getTimePeriod();
     lastDay();
@@ -163,11 +168,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onFocusChange() {
-    if (!_machineQRFocus.hasFocus) {
+    if (!_machineQRFocus.hasFocus && machineQRCodeController.text.isNotEmpty) {
       checkMachineAvaibility();
     }
     if (_machineQRFocus.hasFocus) {
       machineQRCodeController.text = "";
+      setState(() {
+        isHasMachine = false;
+      });
     }
   }
 
@@ -219,7 +227,8 @@ class _HomePageState extends State<HomePage> {
   final minute = DateTime.now().minute.toString().padLeft(2, '0');
 
   Future<void> addEntry() async {
-    if (machineQRCodeController.text.isEmpty && _machineStopped ||
+    print('_machineStopped: $_machineStopped');
+    if ((machineQRCodeController.text.isEmpty && _machineStopped) ||
         isHasMachine) {
       setState(() {
         errText = "Maschine wurde nicht gefunden";
@@ -237,6 +246,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       loadSaving = true;
     });
+    print('operatingHours: ${operatingHoursController.text}');
+    print('machineQrCode: ${machineQRCodeController.text}');
 
     try {
       print("key: $key");
@@ -285,9 +296,10 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => data['total'] == globalDevices.length
+            builder: (context) => (data['total'] == globalDevices.length) &&
+                    selectedOption != "Option 2"
                 ? CommentPage()
-                : HomePage(),
+                : HomePage(showInput: selectedOption == "Option 2"),
           ),
         );
         showSnackBarFun(context, S.of(context).entryAdded, "success");
@@ -318,26 +330,36 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void onChangedQrCode(String value) {
-    if (globalDevices.contains(value)) {
-      setState(() {
-        isHasMachine = false;
-      });
-      _machineQRFocus.unfocus();
-      _toolCleaningText(context, value);
-    }
-  }
+  // void onChangedQrCode(String value) {
+  //   if (globalDevices.contains(value)) {
+  //     setState(() {
+  //       isHasMachine = false;
+  //     });
+  //     _machineQRFocus.unfocus();
+  //     _toolCleaningText(context, value);
+  //   }
+  // }
 
   bool isHasMachine = false;
 
   void checkMachineAvaibility() {
-    if (globalDevices.contains(machineQRCodeController.text) == false) {
-      print("Machine not found");
+    if (machineQRCodeController.text.isEmpty) return;
+    if (!globalDevices.contains(machineQRCodeController.text)) {
+      print('Machine not found');
       setState(() {
         isHasMachine = true;
       });
+    } else {
+      setState(() {
+        isHasMachine = false;
+      });
     }
-    ;
+    // if (globalDevices.contains(machineQRCodeController.text) == false) {
+    //   print("Machine not found");
+    //   setState(() {
+    //     isHasMachine = true;
+    //   });
+    // };
   }
 
   void onChangeToolMounted() {
@@ -433,419 +455,500 @@ class _HomePageState extends State<HomePage> {
               context, MaterialPageRoute(builder: (context) => ChooseMode()));
           return false;
         },
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-                title: Text(S.of(context).addEntry,
-                    style: TextStyle(
-                        color: Color(0xff336699),
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold)),
-                leading: Builder(builder: (BuildContext context) {
-                  return IconButton(
-                      icon: Icon(Icons.arrow_back,
-                          color: Color(0xff336699), size: 30),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return ChooseMode();
-                        }));
-                      },
-                      tooltip: MaterialLocalizations.of(context)
-                          .openAppDrawerTooltip);
-                }),
-                actions: [
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6.0),
-                        border:
-                            Border.all(color: Color(0xff336699), width: 1.0)),
-                    child: Row(
-                      children: [
-                        Icon(Icons.person_outline,
-                            color: Color(0xff336699), size: 30.0),
-                        SizedBox(width: 10.0),
-                        Text(user,
-                            style: GoogleFonts.roboto(
-                              fontSize: 20,
-                              color: Color(0xff336699),
-                            )),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 40.0),
-                  Padding(
-                      padding: EdgeInsets.only(right: 20.0),
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              stopTimer = true;
-                            });
-                            removeToken(context);
-                          },
-                          icon: Icon(Icons.logout,
-                              color: Colors.red, size: 30.0)))
-                ],
-                centerTitle: true,
-                flexibleSpace: Container(
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      color: Color.fromARGB(30, 5, 119, 190),
-                      spreadRadius: 0,
-                      blurRadius: 3,
-                      offset: Offset(0, 3))
-                ]))),
-            body: _connectivityResult == ConnectivityResult.none
-                ? Center(
-                    child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
-                      SizedBox(height: 20),
-                      Text(S.of(context).noInternetConnection,
-                          style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                  color: Color(0xff848484),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600)))
-                    ],
-                  ))
-                : Row(children: [
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                  title: Text(
+                      selectedOption == "Option 1"
+                          ? S.of(context).addEntry
+                          : "Betriebsstunden hinzufügen",
+                      style: TextStyle(
+                          color: Color(0xff336699),
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold)),
+                  leading: Builder(builder: (BuildContext context) {
+                    return IconButton(
+                        icon: Icon(Icons.arrow_back,
+                            color: Color(0xff336699), size: 30),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ChooseMode();
+                          }));
+                        },
+                        tooltip: MaterialLocalizations.of(context)
+                            .openAppDrawerTooltip);
+                  }),
+                  actions: [
+                    SizedBox(width: 24.0),
                     Container(
-                        height: MediaQuery.of(context).size.height,
-                        child: SingleChildScrollView(
-                            reverse: false,
-                            child: Container(
-                                color: Colors.white,
-                                width: 145,
-                                child: Column(children: [
-                                  SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  MachineStatusList(
-                                    changeStatus: isStatus,
-                                  ),
-                                ])))),
-                    Expanded(
-                        child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: SingleChildScrollView(
-                                child: Container(
-                                    color: Colors.white,
-                                    width: 120,
-                                    child: Padding(
-                                        padding: EdgeInsets.all(20.0),
-                                        child: Form(
-                                          key: _formKey,
-                                          child: Column(children: [
-                                            Stack(
-                                              children: [
-                                                Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                        DateTime.now()
-                                                                .day
-                                                                .toString() +
-                                                            ' ' +
-                                                            monthNames[
-                                                                DateTime.now()
-                                                                        .month -
-                                                                    1] +
-                                                            ' ' +
-                                                            DateTime.now()
-                                                                .year
-                                                                .toString() +
-                                                            ' | ' +
-                                                            hour +
-                                                            ':' +
-                                                            minute +
-                                                            ' | ' +
-                                                            _state,
-                                                        // "${S.of(context).shift}  ${shift}",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: GoogleFonts.roboto(
-                                                            textStyle: TextStyle(
-                                                                color: Color(
-                                                                    0xff848484),
-                                                                fontSize: 22,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400)))),
-                                                err
-                                                    ? Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            2,
-                                                        height: 40,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.red,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Icon(Icons.error,
-                                                                color: Colors
-                                                                    .white),
-                                                            SizedBox(
-                                                                width: 20.0),
-                                                            Text(errText,
-                                                                style: GoogleFonts.roboto(
-                                                                    textStyle: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            20,
-                                                                        fontWeight:
-                                                                            FontWeight.w400))),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    : SizedBox(height: 0.0),
-                                              ],
-                                            ),
-                                            SizedBox(height: 16.0),
-                                            Input(
-                                                onChanged: onChangedQrCode,
-                                                onEditingComplete:
-                                                    checkMachineAvaibility,
-                                                focusNode: _machineQRFocus,
-                                                controller:
-                                                    machineQRCodeController,
-                                                hassError: isHasMachine,
-                                                prefixIcon: Icons.qr_code,
-                                                labelText: S
-                                                    .of(context)
-                                                    .scanMachineQRCode),
-                                            SizedBox(height: 16.0),
-                                            Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                      child: DropdownButton<String>(
+                          value: selectedOption,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'Option 1',
+                              child: Text('Option 1'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Option 2',
+                              child: Text('Option 2'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedOption = value!;
+                            });
+                          },
+                          underline: const SizedBox(),
+                          dropdownColor: Colors.white,
+                          style: GoogleFonts.roboto(
+                            fontSize: 20,
+                            color: Color(0xff336699),
+                          )),
+                      height: 40,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6.0),
+                          border:
+                              Border.all(color: Color(0xff336699), width: 1.0)),
+                    ),
+                    SizedBox(width: 24.0),
+                    Container(
+                      height: 40,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6.0),
+                          border:
+                              Border.all(color: Color(0xff336699), width: 1.0)),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_outline,
+                              color: Color(0xff336699), size: 30.0),
+                          SizedBox(width: 10.0),
+                          Text(user,
+                              style: GoogleFonts.roboto(
+                                fontSize: 20,
+                                color: Color(0xff336699),
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 24.0),
+                    Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                stopTimer = true;
+                              });
+                              removeToken(context);
+                            },
+                            icon: Icon(Icons.logout,
+                                color: Colors.red, size: 30.0)))
+                  ],
+                  centerTitle: true,
+                  flexibleSpace: Container(
+                      decoration:
+                          BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                        color: Color.fromARGB(30, 5, 119, 190),
+                        spreadRadius: 0,
+                        blurRadius: 3,
+                        offset: Offset(0, 3))
+                  ]))),
+              body: _connectivityResult == ConnectivityResult.none
+                  ? Center(
+                      child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.wifi_off, size: 100, color: Colors.red[200]),
+                        SizedBox(height: 20),
+                        Text(S.of(context).noInternetConnection,
+                            style: GoogleFonts.roboto(
+                                textStyle: const TextStyle(
+                                    color: Color(0xff848484),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600)))
+                      ],
+                    ))
+                  : Row(children: [
+                      Container(
+                          height: MediaQuery.of(context).size.height,
+                          child: SingleChildScrollView(
+                              reverse: false,
+                              child: Container(
+                                  color: Colors.white,
+                                  width: 145,
+                                  child: Column(children: [
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    MachineStatusList(
+                                      changeStatus: isStatus,
+                                    ),
+                                  ])))),
+                      Expanded(
+                          child: Container(
+                              height: MediaQuery.of(context).size.height,
+                              child: SingleChildScrollView(
+                                  child: Container(
+                                      color: Colors.white,
+                                      width: 120,
+                                      child: Padding(
+                                          padding: EdgeInsets.all(20.0),
+                                          child: Form(
+                                            key: _formKey,
+                                            child: Column(children: [
+                                              Stack(
                                                 children: [
-                                                  Row(children: [
-                                                    Transform.scale(
-                                                        scale: 1.5,
-                                                        child: Radio(
-                                                            value: "standard",
-                                                            groupValue:
-                                                                mradioValue,
-                                                            fillColor: MaterialStateProperty
-                                                                .all(const Color(
-                                                                    0xff336699)),
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                machineStopped =
-                                                                    false;
-                                                                toolMounted =
-                                                                    true;
-                                                                barcodeIsDisabled =
-                                                                    false;
-                                                                _machineStopped =
-                                                                    false;
-                                                                _toolMounted =
-                                                                    false;
-                                                                mradioValue =
-                                                                    value
-                                                                        as String;
-                                                              });
-                                                            })),
-                                                    Text('Maschine läuft',
-                                                        style: GoogleFonts.roboto(
-                                                            textStyle: const TextStyle(
-                                                                color: Color(
-                                                                    0xff336699),
-                                                                fontSize: 22,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600)))
-                                                  ]),
-                                                  Row(children: [
-                                                    Transform.scale(
-                                                        scale: 1.5,
-                                                        child: Radio(
-                                                            value: "no",
-                                                            groupValue:
-                                                                mradioValue,
-                                                            fillColor: MaterialStateProperty
-                                                                .all(const Color(
-                                                                    0xff336699)),
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                productionNumberController
-                                                                    .text = "";
-                                                                toolNumberController
-                                                                    .text = "";
-                                                                partNameController
-                                                                    .text = "";
-                                                                partNumberController
-                                                                    .text = "";
-                                                                cavityController
-                                                                    .text = "";
-                                                                cycleTimeController
-                                                                    .text = "";
-                                                                pieceNumberController
-                                                                    .text = "";
-                                                                noteController
-                                                                    .text = "";
-                                                                barcodeIsDisabled =
-                                                                    false;
-                                                                instRemainingProductionHours =
-                                                                    0;
-                                                                instRemainingProductionMinute =
-                                                                    0;
-                                                                days = 0;
-                                                                _machineStopped =
-                                                                    true;
-                                                                _toolMounted =
-                                                                    true;
-                                                                mradioValue =
-                                                                    value
-                                                                        as String;
-                                                                machineStopped =
-                                                                    false;
-                                                                toolMounted =
-                                                                    false;
-                                                              });
-                                                            })),
-                                                    Text(
-                                                        'Maschine läuft nicht und kein Werkzeug gerüstet',
-                                                        style: GoogleFonts.roboto(
-                                                            textStyle: const TextStyle(
-                                                                color: Color(
-                                                                    0xff336699),
-                                                                fontSize: 22,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600)))
-                                                  ]),
-                                                  Row(children: [
-                                                    Transform.scale(
-                                                        scale: 1.5,
-                                                        child: Radio(
-                                                            value: "notNeeded",
-                                                            groupValue:
-                                                                mradioValue,
-                                                            fillColor:
-                                                                MaterialStateProperty
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                          DateTime.now()
+                                                                  .day
+                                                                  .toString() +
+                                                              ' ' +
+                                                              monthNames[DateTime
+                                                                          .now()
+                                                                      .month -
+                                                                  1] +
+                                                              ' ' +
+                                                              DateTime.now()
+                                                                  .year
+                                                                  .toString() +
+                                                              ' | ' +
+                                                              hour +
+                                                              ':' +
+                                                              minute +
+                                                              ' | ' +
+                                                              _state,
+                                                          // "${S.of(context).shift}  ${shift}",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: GoogleFonts.roboto(
+                                                              textStyle: TextStyle(
+                                                                  color: Color(
+                                                                      0xff848484),
+                                                                  fontSize: 22,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)))),
+                                                  err
+                                                      ? Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              2,
+                                                          height: 40,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors.red,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Icon(Icons.error,
+                                                                  color: Colors
+                                                                      .white),
+                                                              SizedBox(
+                                                                  width: 20.0),
+                                                              Text(errText,
+                                                                  style: GoogleFonts.roboto(
+                                                                      textStyle: TextStyle(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontSize:
+                                                                              20,
+                                                                          fontWeight:
+                                                                              FontWeight.w400))),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : SizedBox(height: 0.0),
+                                                ],
+                                              ),
+                                              SizedBox(height: 16.0),
+                                              Input(
+                                                  // onChanged: onChangedQrCode,
+                                                  onEditingComplete:
+                                                      checkMachineAvaibility,
+                                                  focusNode: _machineQRFocus,
+                                                  controller:
+                                                      machineQRCodeController,
+                                                  hassError: isHasMachine,
+                                                  prefixIcon: Icons.qr_code,
+                                                  labelText: S
+                                                      .of(context)
+                                                      .scanMachineQRCode),
+                                              if (selectedOption == "Option 1")
+                                                Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(height: 16.0),
+                                                      Row(children: [
+                                                        Transform.scale(
+                                                            scale: 1.5,
+                                                            child: Radio(
+                                                                value:
+                                                                    "standard",
+                                                                groupValue:
+                                                                    mradioValue,
+                                                                fillColor: MaterialStateProperty.all(
+                                                                    const Color(
+                                                                        0xff336699)),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    machineStopped =
+                                                                        false;
+                                                                    toolMounted =
+                                                                        true;
+                                                                    barcodeIsDisabled =
+                                                                        false;
+                                                                    _machineStopped =
+                                                                        false;
+                                                                    _toolMounted =
+                                                                        false;
+                                                                    mradioValue =
+                                                                        value
+                                                                            as String;
+                                                                  });
+                                                                })),
+                                                        Text('Maschine läuft',
+                                                            style: GoogleFonts.roboto(
+                                                                textStyle: const TextStyle(
+                                                                    color: Color(
+                                                                        0xff336699),
+                                                                    fontSize:
+                                                                        22,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600)))
+                                                      ]),
+                                                      Row(children: [
+                                                        Transform.scale(
+                                                            scale: 1.5,
+                                                            child: Radio(
+                                                                value: "no",
+                                                                groupValue:
+                                                                    mradioValue,
+                                                                fillColor: MaterialStateProperty.all(
+                                                                    const Color(
+                                                                        0xff336699)),
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    productionNumberController
+                                                                        .text = "";
+                                                                    toolNumberController
+                                                                        .text = "";
+                                                                    partNameController
+                                                                        .text = "";
+                                                                    partNumberController
+                                                                        .text = "";
+                                                                    cavityController
+                                                                        .text = "";
+                                                                    cycleTimeController
+                                                                        .text = "";
+                                                                    pieceNumberController
+                                                                        .text = "";
+                                                                    noteController
+                                                                        .text = "";
+                                                                    barcodeIsDisabled =
+                                                                        false;
+                                                                    instRemainingProductionHours =
+                                                                        0;
+                                                                    instRemainingProductionMinute =
+                                                                        0;
+                                                                    days = 0;
+                                                                    _machineStopped =
+                                                                        true;
+                                                                    _toolMounted =
+                                                                        true;
+                                                                    mradioValue =
+                                                                        value
+                                                                            as String;
+                                                                    machineStopped =
+                                                                        false;
+                                                                    toolMounted =
+                                                                        false;
+                                                                  });
+                                                                })),
+                                                        Text(
+                                                            'Maschine läuft nicht und kein Werkzeug gerüstet',
+                                                            style: GoogleFonts.roboto(
+                                                                textStyle: const TextStyle(
+                                                                    color: Color(
+                                                                        0xff336699),
+                                                                    fontSize:
+                                                                        22,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600)))
+                                                      ]),
+                                                      Row(children: [
+                                                        Transform.scale(
+                                                            scale: 1.5,
+                                                            child: Radio(
+                                                                value:
+                                                                    "notNeeded",
+                                                                groupValue:
+                                                                    mradioValue,
+                                                                fillColor: MaterialStateProperty
                                                                     .all(Color(
                                                                         0xff336699)),
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                barcodeIsDisabled =
-                                                                    false;
-                                                                toolIdIsDisabled =
-                                                                    false;
-                                                                cavityController
-                                                                    .text = "";
-                                                                cycleTimeController
-                                                                    .text = "";
-                                                                pieceNumberController
-                                                                    .text = "";
-                                                                instRemainingProductionHours =
-                                                                    0;
-                                                                instRemainingProductionMinute =
-                                                                    0;
-                                                                days = 0;
-                                                                _machineStopped =
-                                                                    false;
-                                                                _toolMounted =
-                                                                    true;
-                                                                mradioValue =
-                                                                    value
-                                                                        as String;
-                                                                machineStopped =
-                                                                    true;
-                                                                toolMounted =
-                                                                    true;
-                                                              });
-                                                            })),
-                                                    Text(
-                                                        'Maschine läuft nicht aber Werkzeug ist gerüstet',
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: GoogleFonts.roboto(
-                                                            textStyle: TextStyle(
-                                                                color: Color(
-                                                                    0xff336699),
-                                                                fontSize: 22,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600))),
-                                                    SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            6),
-                                                  ])
-                                                ]),
-                                            SizedBox(height: 16.0),
-                                            _machineStopped
-                                                ? SizedBox(height: 0.0)
-                                                : IsStoped(),
-                                            Column(
-                                              children: [
-                                                if (operatingHoursImportant)
-                                                  Input(
-                                                    controller:
-                                                        operatingHoursController,
-                                                    labelText: S
-                                                        .of(context)
-                                                        .operatingHours,
-                                                    // validator: !_machineStEopped,
-                                                    numericOnly: true,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .allow(
-                                                              RegExp(r'[0-9]'))
-                                                    ],
-                                                  )
-                                              ],
-                                            ),
-                                            SizedBox(height: 16.0),
-                                            Row(children: [
-                                              Expanded(
-                                                  child: Button(
-                                                      type: "outline",
-                                                      text:
-                                                          S.of(context).cancel,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          stopTimer = true;
-                                                        });
-                                                        Navigator.pop(context);
-                                                      })),
-                                              SizedBox(width: 20.0),
-                                              Expanded(
-                                                  child: Button(
-                                                loading: loadSaving,
-                                                text: S.of(context).save,
-                                                onPressed: () {
-                                                  if (_formKey.currentState!
-                                                          .validate() &&
-                                                      !loadSaving) {
-                                                    addEntry();
-                                                  }
-                                                },
-                                              ))
-                                            ])
-                                          ]),
-                                        ))))))
-                  ])));
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    barcodeIsDisabled =
+                                                                        false;
+                                                                    toolIdIsDisabled =
+                                                                        false;
+                                                                    cavityController
+                                                                        .text = "";
+                                                                    cycleTimeController
+                                                                        .text = "";
+                                                                    pieceNumberController
+                                                                        .text = "";
+                                                                    instRemainingProductionHours =
+                                                                        0;
+                                                                    instRemainingProductionMinute =
+                                                                        0;
+                                                                    days = 0;
+                                                                    _machineStopped =
+                                                                        false;
+                                                                    _toolMounted =
+                                                                        true;
+                                                                    mradioValue =
+                                                                        value
+                                                                            as String;
+                                                                    machineStopped =
+                                                                        true;
+                                                                    toolMounted =
+                                                                        true;
+                                                                  });
+                                                                })),
+                                                        Text(
+                                                            'Maschine läuft nicht aber Werkzeug ist gerüstet',
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: GoogleFonts.roboto(
+                                                                textStyle: TextStyle(
+                                                                    color: Color(
+                                                                        0xff336699),
+                                                                    fontSize:
+                                                                        22,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600))),
+                                                        SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                6),
+                                                      ])
+                                                    ]),
+                                              SizedBox(height: 16.0),
+                                              _machineStopped ||
+                                                      selectedOption ==
+                                                          "Option 2"
+                                                  ? SizedBox(height: 0.0)
+                                                  : IsStoped(),
+                                              Column(
+                                                children: [
+                                                  if (operatingHoursImportant &&
+                                                      _state == 'F1')
+                                                    Input(
+                                                      controller:
+                                                          operatingHoursController,
+                                                      labelText: S
+                                                          .of(context)
+                                                          .operatingHours,
+                                                      // validator: !_machineStEopped,
+                                                      numericOnly: true,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .allow(RegExp(
+                                                                r'[0-9]'))
+                                                      ],
+                                                    )
+                                                ],
+                                              ),
+                                              if (!operatingHoursImportant &&
+                                                  selectedOption == "Option 2")
+                                                Column(
+                                                  children: [
+                                                    SizedBox(height: 16.0),
+                                                    Input(
+                                                      controller:
+                                                          operatingHoursController,
+                                                      labelText: S
+                                                          .of(context)
+                                                          .operatingHours,
+                                                      // validator: !_machineStEopped,
+                                                      numericOnly: true,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .allow(RegExp(
+                                                                r'[0-9]'))
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              SizedBox(height: 16.0),
+                                              Row(children: [
+                                                Expanded(
+                                                    child: Button(
+                                                        type: "outline",
+                                                        text: S
+                                                            .of(context)
+                                                            .cancel,
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            stopTimer = true;
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+                                                        })),
+                                                SizedBox(width: 20.0),
+                                                Expanded(
+                                                    child: Button(
+                                                  loading: loadSaving,
+                                                  text: S.of(context).save,
+                                                  onPressed: () {
+                                                    if (_formKey.currentState!
+                                                            .validate() &&
+                                                        !loadSaving) {
+                                                      addEntry();
+                                                    }
+                                                  },
+                                                ))
+                                              ])
+                                            ]),
+                                          ))))))
+                    ])),
+        ));
   }
 
   String decodeText(String text) {
@@ -859,6 +962,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   setProductionNo() {
+    if (productionNumberController.text.length < 8) {
+      setState(() {
+        productionNumberController.text = "";
+      });
+      return;
+    }
     if (productionNumberController.text.length < 9) {
       setState(() {
         productionNumberError = true;
@@ -1445,38 +1554,38 @@ class _HomePageState extends State<HomePage> {
     "lastShift": "F1"
   };
 
-  Future<void> _toolCleaningText(BuildContext context, String value) async {
-    http.get(Uri.parse('http://$ipAdress/api/current/$value'), headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    }).then((value) {
-      var data = jsonDecode(value.body);
-      setState(() {
-        if (data['status'] == false && data['last_shift'] != 'N3') {
-          print("is false");
-          setState(() {
-            toolCleaning = true;
-            shiftF1 = false;
-          });
-        } else if (data['last_shift'] == 'N3') {
-          setState(() {
-            shiftF1 = true;
-            toolCleaning = false;
-          });
-        } else {
-          setState(() {
-            radioValue = 'yes';
-            shiftF1 = false;
-            toolCleaning = false;
-          });
-        }
-      });
-      print("text changed");
-    }).catchError((error) {
-      print(error);
-      // if error set interval and recall the function
-      Timer(Duration(seconds: 3), () {
-        _toolCleaningText(context, value);
-      });
-    });
-  }
+  // Future<void> _toolCleaningText(BuildContext context, String value) async {
+  //   http.get(Uri.parse('http://$ipAdress/api/current/$value'), headers: {
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //   }).then((value) {
+  //     var data = jsonDecode(value.body);
+  //     setState(() {
+  //       if (data['status'] == false && data['last_shift'] != 'N3') {
+  //         print("is false");
+  //         setState(() {
+  //           toolCleaning = true;
+  //           shiftF1 = false;
+  //         });
+  //       } else if (data['last_shift'] == 'N3') {
+  //         setState(() {
+  //           shiftF1 = true;
+  //           toolCleaning = false;
+  //         });
+  //       } else {
+  //         setState(() {
+  //           radioValue = 'yes';
+  //           shiftF1 = false;
+  //           toolCleaning = false;
+  //         });
+  //       }
+  //     });
+  //     print("text changed");
+  //   }).catchError((error) {
+  //     print(error);
+  //     // if error set interval and recall the function
+  //     Timer(Duration(seconds: 3), () {
+  //       _toolCleaningText(context, value);
+  //     });
+  //   });
+  // }
 }
