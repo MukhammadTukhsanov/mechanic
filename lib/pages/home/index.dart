@@ -962,7 +962,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   setProductionNo() {
-    if (productionNumberController.text.length < 8) {
+    if (productionNumberController.text.length < 9) {
       setState(() {
         productionNumberController.text = "";
       });
